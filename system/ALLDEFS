@@ -7,10 +7,10 @@ to arec x y ()
 to float x y :: fprint ()
 to falseclass x y (isnew)
 to isnew (CODE 5)
-"false_falseclass.
+"false←falseclass.
 "(TITLE USER DO SIZE CODE SELF AREC GLOB MESS RETN CLAS
  length eval or and mod chars error
- ".,/;:-[]~|!#$%}_={}*+?<> go goto turn next contents end &   )
+ ".,/;:-[]~|ⓢ!#$%}←={}*+?<> go goto turn next contents end &   ≤⦂≠)
 
 '^h75.^f1.
 DONT EDIT ABOVE HERE!--These classes and atoms mentioned early to guarantee addresses for machine code.
@@ -24,8 +24,8 @@ HEREWITH A SOMEWHAT WHIMSICAL ANNOTATED VERSION OF SYSDEFS. ANNOTATIONS ARE IN I
 ^h90.^f2.
 BOOTSTRAPPING MAGIC.
 ^h75.^f1.
-	to isnew (null instance?("instance_allocate permsize.
-		instance[0]_class. !true)
+	to isnew (null instance?("instance←allocate permsize.
+		instance[0]←class. !true)
 	!false).^h60.^f0.'
 
 to print (%..)
@@ -53,19 +53,19 @@ to : (CODE 18)
 	'^h75.^f1.
 	to : name
 
-	%" ?(:"name nil ?(!name_caller message quotefetch)
+	%" ?(:"name nil ?(!name←caller message quotefetch)
 				(!caller message quotefetch)
 
 	Fetch the next thing in the message stream unevaluated
 	and bind it to the name if one is there.
 
-	%# ?(:"name nil ?(!name_caller message referencefetch)
+	%# ?(:"name nil ?(!name←caller message referencefetch)
 				(!caller message referencefetch)
 
 	Fetch the reference to next thing in the message stream
 	and bind it to the name if one is there.
 
-		(:"name nil ?(!name_ caller message evalfetch)
+		(:"name nil ?(!name← caller message evalfetch)
 			!caller message evalfetch)
 
 	Fetch the next thing in the message stream evaluated
@@ -75,19 +75,19 @@ to : (CODE 18)
 to % (CODE 17)
 	'^h75.^f1.
 	:"token. token=caller.message.code[caller.message.pc]?
-		(caller.message.pc_caller.message.pc+1. !true) !false.
+		(caller.message.pc←caller.message.pc+1. !true) !false.
 	That is, if a match for the token is found in the message, then
  	gobble it up and return true, else return false.
 	^h60.^f0.'
 
 to  ( CODE 39 )
 
-to  ( CODE 36 )
+to ⦂ ( CODE 36 )
 
 to ! (CODE 13)
 	'^h75.^f1.
 	:x. then do a return, and apply x to any further message. Note
-	that in (... !x+3. "y_y-2), the assignment to y will never
+	that in (... !x+3. "y←y-2), the assignment to y will never
 	happen, since ! causes a return.
 	^h60.^f0.'
 
@@ -116,35 +116,35 @@ to repeat token (:#token. CODE 1)
 to done x (%with?(:x. CODE 25) CODE 25)
 	'^h75.^f1.
 	done causes a pop out of the nearest enclosing repeat, for, or do.  
-	done with val will cause the repeat to have value val
+	↪done with val↪ will cause the repeat to have value val
 	^h60.^f0.'
 
 to again (CODE 6)
 	'^h75.^f1.
-	repeat ("active_active caller. eq active. class #repeat?(done)).
+	repeat ("active←active caller. eq active. class #repeat?(done)).
 	That is, redo the most recent repeat, for, or do loop.
 	^h60.^f0.'
 
 to if exp (:exp?(%then?(:exp. %else?(:". exp)exp)error "(no then))
 		%then?(:".   %else?(:exp) false)error "(no then))
 	'^h75.^f1.
-	The ALGOL if ... then ... else ...
+	The ALGOL ↪if ... then ... else ...↪
 	^h60.^f0.'
 
 to for token step stop var start exp (
-	:"var. (%_?(:start.)"start_1).
-	(%to?(:stop.)"stop_start.)
-	(%by?(:step.)"step_1.)
+	:"var. (%←?(:start.)"start←1).
+	(%to?(:stop.)"stop←start.)
+	(%by?(:step.)"step←1.)
 	%do. :#exp. CODE 24)
 	'^h75.^f1.
-	An Algol-like for.
-	Note the default values if _,to,by,etc., are omitted.
-	CODE 24 means  --repeat(exp eval).	This implies done and again
+	An Algol-like ↪for↪.
+	Note the default values if ↪←↪,↪to↪,↪by↪,etc., are omitted.
+	CODE 24 means  --repeat(exp eval).	This implies ↪done↪ and ↪again↪
 	will work, which is correct.
 	^h60.^f0.'
 
 to do token step stop var start exp (
-	"step_"start_1. :stop. :#exp. CODE 24)
+	"step←"start←1. :stop. :#exp. CODE 24)
 
 
 
@@ -169,7 +169,7 @@ to PUT x y z (:#x. :y. :z. CODE 12)
 
 to GET x y (:#x. :y. CODE 28)
 	'^h75.^f1.
-	If x is a class table then the binding of the atom in y will be
+	If ↪x↪ is a class table then the binding of the atom in ↪y↪ will be
 	fetched.
 	^h60.^f0.'
 
@@ -180,7 +180,7 @@ to leech field bits : ptr (
 	Lets you subscript any instance
 	a[0] gives you the class, a[1] gives the first field, etc.
 	a[2] gives you the pointer; a[2]&   returns the BITS in an integer
-	a[2]_foo will dereference count previous contents, but a[2]&_ foo
+	a[2]←foo will dereference count previous contents, but a[2]&← foo
 	will not.
 	^h60.^f0.'
 
@@ -189,18 +189,18 @@ PUT falseclass "TITLE "false
 
 PUT atom "DO "(CODE 29
 	'^h75.^f1.
-	%_?(:x.  !x -- Lookup SELF and replace its value by x.)
+	%←?(:x.  !x -- Lookup SELF and replace its value by x.)
 	%eval?(! -- Lookup the binding of SELF)
 	%=?(!SELF=:)
 	%chars?(! -- printname of SELF (a string))
 	^h60.^f0.'
 
 	%is?(ISIT eval)
-	%print?(disp_SELF chars) )
+	%print?(disp←SELF chars) )
 	'^h75.^f1.
-	Done this way (PUT used rather than using to) because we
+	Done this way (PUT used rather than using ↪to↪) because we
 	wanted to know where the system classes are. Hence the initial
-	to atom x y () , for example, in Bootstrapping Magic followed
+	↪to atom x y ()↪ , for example, in ↪Bootstrapping Magic↪ followed
 	by the behavior here.
 	^h60.^f0.'
 
@@ -224,17 +224,17 @@ PUT vector "DO "(CODE 3 ?(!substr SELF x GLOB MESS)
 	isnew?(Allocate vector of length :.
 		Fill vector with nils.)
 	%[?(:x. %].
-		(%_?(:y. !y -- store y into xth element. )
+		(%←?(:y. !y -- store y into xth element. )
 		!  xth element) )
 	%length?(! length of string or vector)
-	%eval?("pc_0. repeat
-		(null SELF["pc_pc+1]?(done)
-		"val_SELF[pc] eval)
+	%eval?("pc←0. repeat
+		(null SELF["pc←pc+1]?(done)
+		"val←SELF[pc] eval)
 		!val) sort of...
 	^h60.^f0.'
 	%is?(ISIT eval)
-	%print?(disp_40. for x to SELF length
-		(disp_32. SELF[x] print). disp_41)
+	%print?(disp←40. for x to SELF length
+		(disp←32. SELF[x] print). disp←41)
 	%map?(:y. for x to SELF length
 		(evapply SELF[x] to y)) )
 
@@ -244,20 +244,20 @@ PUT string "DO "(CODE 3 ?(!substr SELF x GLOB MESS)
 	isnew?(Allocate string of length :.
 		Fill string with 0377s.)
 	%[?(:x. %].
-		(%_?(:y. !y -- store y into xth element. )
+		(%←?(:y. !y -- store y into xth element. )
 		!  xth element) )
 	%length?(! length of string or vector)^h60.^f0.
 '
 
 	%is?(ISIT eval)
-	%print?(0 = "x _ SELF[1 to 9999] find first 39?
-		 (disp _ 39. disp _ SELF. disp _ 39)
+	%print?(0 = "x ← SELF[1 to 9999] find first 39?
+		 (disp ← 39. disp ← SELF. disp ← 39)
 		 SELF[1 to x-1] print. SELF[x+1 to SELF length] print)
 	%=?(:y is string?(SELF length=y length?(
 		for x to SELF length (SELF[x]=y[x]?() !false)) !false)
 		!false)
-	%+?(:y is string?("x_SELF[1 to SELF length+y length].
-		!x[SELF length+1 to x length]_y[1 to y length])
+	%+?(:y is string?("x←SELF[1 to SELF length+y length].
+		!x[SELF length+1 to x length]←y[1 to y length])
 		error "(string not found)) )
 
 PUT number "DO "(CODE 4
@@ -277,37 +277,37 @@ PUT number "DO "(CODE 4
 
 	%is?(ISIT eval)
 	%print?(SELF>0?(nprint SELF)
-		SELF=0?(disp_060)
-		SELF=0100000?(disp_base8 SELF)
-		disp_025. nprint 0-SELF) )
+		SELF=0?(disp←060)
+		SELF=0100000?(disp←base8 SELF)
+		disp←025. nprint 0-SELF) )
 	'^h75.^f1.
 	For floating point stuff see FLOAT
 	^h60.^f0.'
 
-to - x (:x*1)
+to - x (:x*¬1)
 	'^h75.^f1.
 	An often used abbreviation, has to work for float as well.
 	^h60.^f0.'
 
-to base8 i x s (:x. "s_string 7. for i to 7
-	(s[8-i] _ 060 + x &* 7. "x _ x &/ 3). !s)
+to base8 i x s (:x. "s←string 7. for i to 7
+	(s[8-i] ← 060 + x &* 7. "x ← x &/ ¬3). !s)
 	'^h75.^f1.
 	Returns a string containing the octal representation (unsigned) of its
 	integer argument.
 	^h60.^f0.'
  
 
-"ISIT _ "(%~?(!TITLE) !TITLE=:").
+"ISIT ← "(%~?(!TITLE) !TITLE=:").
 
 to nil x (#x)
 	'^h75.^f1.
-	nil is an unbound pointer, which is used	to fill vectors and
+	nil is an ↪unbound pointer↪, which is used	to fill vectors and
 	tables.
 	^h60.^f0.'
 
 to null x (:x. 1 CODE 37)
 	'^h75.^f1.
-	Null returns true if its message is nil, otherwise false.
+	Null returns true if its message is ↪nil↪, otherwise false.
 	^h60.^f0.'
 
 to eq x (CODE 15)
@@ -322,16 +322,16 @@ UTILITIES
  
 to mem x y (:x. CODE 26)
 	'^h75.^f1.
-	to mem x y (:x. %_?(!core/mem x _:)!core/mem x)
+	to mem x y (:x. %←?(!core/mem x ←:)!core/mem x)
 	mem loads integers from and stores them into real core.
 	Tee hee...
-	mem 0430 _ 0  --set alto clock to zero
+	mem 0430 ← 0  --set alto clock to zero
 	mem 0430  ;read the clock
-	for i to 16 (mem 0430+i _ cursor[i])  --put new bits into cursor
-	mem 0424 _ mem 0425 _ 0.  --reset mouse x and y to 0.
-	mem 0105 _ 0.  --disconnect cursor from mouse
-	mem 0426 _ x. mem 0427 _ y.  --move the cursor
-	mem 0107 _ 0177. --make DEL the interrupt char (instead of ESC).
+	for i to 16 (mem 0430+i ← cursor[i])  --put new bits into cursor
+	mem 0424 ← mem 0425 ← 0.  --reset mouse x and y to 0.
+	mem 0105 ← 0.  --disconnect cursor from mouse
+	mem 0426 ← x. mem 0427 ← y.  --move the cursor
+	mem 0107 ← 0177. --make DEL the interrupt char (instead of ESC).
 	mem 0420.  --get pointer to display control block
 	mem 0177034.  --reads the first of 4 keyboard input words
 	mem 0177030. --reads the word with mouse and keyset bits.
@@ -361,26 +361,26 @@ to kbd (0 CODE 20)
 	^h60.^f0.'
 
 to disp x i (
-	%_?(:x is string?(for i to x length (TTY_x[i])) TTY_x)
+	%←?(:x is string?(for i to x length (TTY←x[i])) TTY←x)
 	%clear?() %sub?(:x eval))
 	'^h75.^f1.
 	This disp is used for bootstrapping. Later in these definitions
-	(READER)it will be restored to an instance of display frame.
+	(READER)it will be restored to an instance of ↪display frame.↪
 	^h60.^f0.'
 
 to TTY (0 CODE 20)
 	'^h75.^f1.
-	TTY_<integer> will print an ascii  on the Nova tty. On altos, TTY
+	TTY←<integer> will print an ascii  on the Nova tty. On altos, TTY
 	prints in little error window at bottom of screen.
 	^h60.^f0.'
 
-to dsoff (mem 272_0)
+to dsoff (mem 272←0)
 	'^h75.^f1.
 	Turns display off by storing 0 in display control block ptr. Speeds
 	up Alto Smalltalk by factor of 2.
 	^h60.^f0.'
 
-to dson (mem 0420 _ 072)
+to dson (mem 0420 ← 072)
 	'^h75.^f1.
 	Turns display back on by refreshing display control block
 	pointer.
@@ -398,14 +398,14 @@ to evapply x y (:x. %to?(:y. %in?(:GLOB. CODE 10) CODE 10)
 	specify another context.
 	^h60.^f0.'
 
-to cr (disp_13).  to sp (disp_32)
+to cr (disp←13).  to sp (disp←32)
 
-"true_"true
-"eval_"eval
+"true←"true
+"eval←"eval
 to is ( %~?(!"untyped):". !false)
 	'^h75.^f1.
 	These are used to handle messages to classes which can|t answer
-	queston invoking is, eval, etc.
+	queston invoking ↪is↪, ↪eval↪, etc.
 	^h60.^f0.'
 
 to t nprint substr (ev). t
@@ -414,25 +414,25 @@ to t nprint substr (ev). t
 	^h60.^f0.'
  
 to nprint digit n (:n=0?()
-	"digit_n mod 10. nprint n/10. disp_060+digit)
+	"digit←n mod 10. nprint n/10. disp←060+digit)
 PUT number "nprint #nprint.
 	'^h75.^f1.
-	Prints (non-neg) integers in decimal	with leading zeroes suppressed
+	Prints (non-neg) integers in decimal	with leading zeroes suppressed⇑
 	^h60.^f0.'
  
 to substr op byte s lb ub s2 lb2 ub2 (
-	:#s. :lb. :ub. :MESS. "GLOB_ub.  '^f1.tee hee^h60.^f0.
+	:#s. :lb. :ub. :MESS. "GLOB←ub.  '^f1.tee hee^h60.^f0.
 '
 	:ub. (%]?() error "(missing right bracket))
-	"byte _ "lb2 _ "ub2 _ 1.
-	%find? ("op _ (%first?(1) %last?(2) 1)
+	"byte ← "lb2 ← "ub2 ← 1.
+	%find? ("op ← (%first?(1) %last?(2) 1)
 				+ (%non?(2) 0). :byte. CODE 40)
-	%_?  (%all? (:byte. "op_0. CODE 40)
-		:#s2. "op_5.
+	%←?  (%all? (:byte. "op←0. CODE 40)
+		:#s2. "op←5.
 		%[? (:lb2. %to. :ub2. %].  CODE 40)
-			"ub2_9999. CODE 40)
-	"op _ 6. "ub2 _ ub+1-lb.
-	"s2 _ (s is string?(string ub2) vector ub2).  CODE 40).
+			"ub2←9999. CODE 40)
+	"op ← 6. "ub2 ← ub+1-lb.
+	"s2 ← (s is string?(string ub2) vector ub2).  CODE 40).
 PUT string "substr #substr.
 PUT vector "substr #substr.
 done
@@ -447,12 +447,12 @@ done
 	See vecmod for more examples.  String syntax is identical.
 	^h60.^f0.'
  
-to vecmod new end old posn ndel nins ins ("end_10000.
+to vecmod new end old posn ndel nins ins ("end←10000.
 	:old. :posn. :ndel. :ins.
-	"nins_(ins is vector?(ins length-1) null ins?(0) 1).
-	"new _ old[1 to old length+nins-ndel].
-	(ins is vector?(new[posn to end] _ ins[1 to nins]) new[posn]_ins).
-	new[posn+nins to end] _ old[posn+ndel to end].
+	"nins←(ins is vector?(ins length-1) null ins?(0) 1).
+	"new ← old[1 to old length+nins-ndel].
+	(ins is vector?(new[posn to end] ← ins[1 to nins]) new[posn]←ins).
+	new[posn+nins to end] ← old[posn+ndel to end].
 	!new)
 	'^h75.^f1.
 	Vecmod makes a copy of old vector with ndel elements deleted
@@ -460,7 +460,7 @@ to vecmod new end old posn ndel nins ins ("end_10000.
 	the same place. It is the heart of edit.
 	^h60.^f0.'
 
-to addto func v w (:#func. :w. "v_GET func "DO. null v?(error "(no code))
+to addto func v w (:#func. :w. "v←GET func "DO. null v?(error "(no code))
 	PUT func "DO vecmod v v length 0 w)
 	'^h75.^f1.
 	Addto appends code to a class definition.
@@ -468,14 +468,14 @@ to addto func v w (:#func. :w. "v_GET func "DO. null v?(error "(no code))
 
 
 to fill t i l str ( 
-   "l _ :str length.
-    "t _ disp _ kbd.
+   "l ← :str length.
+    "t ← disp ← kbd.
       (t = 10?
-         ("t _ disp _ kbd)).
-    str["i _ 1] _ t.
+         ("t ← disp ← kbd)).
+    str["i ← 1] ← t.
     repeat
       (i = l?(done)
-       10 = str["i _ i + 1] _ disp _ kbd?(done)).
+       10 = str["i ← i + 1] ← disp ← kbd?(done)).
     !str)
 
 
@@ -483,28 +483,28 @@ to stream in : i s l(
    CODE 22
     '^h75.^f1.
     CODE 22 is equivalent to...
-    %_?
+    %←?
       (
         (i = l?
-           ("s _ s[1 to "l _ 2 * l]))
-       !s["i _ i + 1] _ :)
+           ("s ← s[1 to "l ← 2 * l]))
+       !s["i ← i + 1] ← :)
     %next?
       (i = l?(!0)
-       !s["i _ i + 1])
+       !s["i ← i + 1])
     %contents?
       (!s[1 to i])
-     ^h60._f0.'
+     ^h60.←f0.'
     %reset?
-      ("i _ 0)
+      ("i ← 0)
     isnew?
-      ("s _
+      ("s ←
         (%of?(:)
          string 10).
-       "i _
+       "i ←
         (%from?((:)
             - 1)
          0).
-       "l _
+       "l ←
         (%to?(:)
          s length))
     %is?
@@ -515,29 +515,29 @@ to stream in : i s l(
       (
         (i > 0?
            (s[1 to i] print)).
-       disp _ 1.
+       disp ← 1.
        l < i + 1?()
        s[i + 1 to l] print))
 
 to obset i input : vec size end (
-	%add?((size="end_end+1?("vec_vec[1 to "size_size+10]))
-		vec[end]_:)
-	%_?(0=vec[1 to end] find first :input?
+	%add?((size="end←end+1?("vec←vec[1 to "size←size+10]))
+		vec[end]←:)
+	%←?(0=vec[1 to end] find first :input?
 		(SELF add input))
-	%delete?(0="i_vec[1 to end] find first :input?(!false)
-		vec[i to end]_vec[i+1 to end+1]. "end_end-1)
-	%unadd?("input_vec[end]. vec[end]_nil.
-		"end_end-1. !input)
+	%delete?(0="i←vec[1 to end] find first :input?(!false)
+		vec[i to end]←vec[i+1 to end+1]. "end←end-1)
+	%unadd?("input←vec[end]. vec[end]←nil.
+		"end←end-1. !input)
 	%vec?(!vec[1 to end])
-	%map?(:input. for i _ end to 1 by 1 (input eval))
+	%map?(:input. for i ← end to 1 by ¬1 (input eval))
 	%print?(SELF map "(vec[i] print. sp))
 	%is?(ISIT eval)
-	isnew?("end_0. "vec_vector "size_4)
+	isnew?("end←0. "vec←vector "size←4)
 	)
 
-to { set ("set_stream of vector 10. repeat(
+to { set ("set←stream of vector 10. repeat(
 	%}?(!set contents)
-	set _ :)
+	set ← :)
 	)
 
 
@@ -550,38 +550,38 @@ PRETTY-PRINT
 	^h60.^f0.'
 
 to show func t (
-	:#func. "t_GET func "DO.
+	:#func. "t←GET func "DO.
 	null t ? (!"(no code)) pshow t 0.)
 to pshow ptr dent i t :: x tabin index (:ptr :dent.
-	(ptr length>4?(tabin dent)) disp_40.
+	(ptr length>4?(tabin dent)) disp←40.
 	for i to ptr length-1
-		("t _ ptr[i].
+		("t ← ptr[i].
 		t is vector ?(pshow t dent+3.
 			i=ptr length-1?()
-			". = "x_ptr[i+1]?()
+			". = "x←ptr[i+1]?()
 			x is vector?()
 			tabin dent)
 		i=1 ?(t print)
-		0<"x_index "(. ,  [ ] ?) t?
+		0<"x←index "(. , ⓢ [ ] ?) t?
 			(x=1?(t print. ptr[i+1] is vector?() tabin dent)
 							t print)
-		0=index "(: " # ! [ % ? &  ) ptr[i-1]?(disp_32. t print)
+		0=index "(: " # ! [ % ? &  ) ptr[i-1]?(disp←32. t print)
 		t print)
-	disp_41)
+	disp←41)
 to t tabin index (ev)
 t
-to tabin n :: x (:n. disp_13. repeat
+to tabin n :: x (:n. disp←13. repeat
         (n > 6?
-           (disp _ x[6].
-            "n _ n - 6)
+           (disp ← x[6].
+            "n ← n - 6)
          done)
-      disp _ x[n + 1])
+      disp ← x[n + 1])
 (PUT tabin "x {string 0 32 fill string 2 fill string 3
 	fill string 4 fill string 5 fill string 6}).
                        'leave these blanks'
 PUT pshow "tabin #tabin.
 to index op byte s lb ub s2 lb2 ub2 (
-	:s. :byte. "op_"lb_"s2_"lb2_"ub2_1. "ub_9999. CODE 40)
+	:s. :byte. "op←"lb←"s2←"lb2←"ub2←1. "ub←9999. CODE 40)
 	'^h75.^f1.
 	A piece of substr which runs faster.
 	^h60.^f0.'
@@ -609,15 +609,15 @@ PUT float "DO "(0 CODE 42
          (SELF < :x?(!0)
           SELF < x * x?(!1)
           !
-            ("y _ 2 * SELF epart x * x)
+            ("y ← 2 * SELF epart x * x)
           +
             (SELF / x ipow y)
           epart x)
        %is?(ISIT eval)
        %print?
-         (SELF = 0.0?(disp _ 48. disp_46. disp_48)
+         (SELF = 0.0?(disp ← 48. disp←46. disp←48)
           SELF < 0.0?
-            (disp _ 025.
+            (disp ← 025.
              fprint - SELF)
           fprint SELF)
 	)
@@ -626,36 +626,36 @@ t
 to fprint n i p q s : : fuzz ( 
     '^f1.Normalize to [1,10)^f0.'
       (:n < 1?
-         ("p _ -(10.0 / n)
+         ("p ← -(10.0 / n)
           epart 10.0)
-       "p _ n epart 10.0)
-       "n _ fuzz + n / 10.0 ipow p.
+       "p ← n epart 10.0)
+       "n ← fuzz + n / 10.0 ipow p.
     '^f1.Scientific or decimal^f0.'
-      ("q _ p.
-       "s _ fuzz*2.
+      ("q ← p.
+       "s ← fuzz*2.
        p > 6?
-         ("p _ 0)
-       p < 3?
-         ("p _ 0)
-       "q _ 0.
+         ("p ← 0)
+       p < ¬3?
+         ("p ← 0)
+       "q ← 0.
        p < 0?
-         (disp _ 48. disp_46.
-          for i _ p to 2(disp _ 48))
-       "s _ s * 10.0 ipow p)
+         (disp ← 48. disp←46.
+          for i ← p to ¬2(disp ← 48))
+       "s ← s * 10.0 ipow p)
     '^f1.Now print (s suppresses trailing zeros)^f0.'
     for i to 9
-      (disp _ 48 + n ipart.
-       "p _ p - 1.
-       "n _ 10.0 * n fpart.
+      (disp ← 48 + n ipart.
+       "p ← p - 1.
+       "n ← 10.0 * n fpart.
        p < 0?
          (
-            (p = 1?(disp _ 46))
-          n < "s _ 10.0 * s?(done)))
-      (p = 1?(disp _ 48))
+            (p = ¬1?(disp ← 46))
+          n < "s ← 10.0 * s?(done)))
+      (p = ¬1?(disp ← 48))
     q = 0?()
-    disp_0145.
+    disp←0145.
     q print)
-PUT fprint "fuzz 5.0 * 10.0 ipow 9.
+PUT fprint "fuzz 5.0 * 10.0 ipow ¬9.
 PUT float "fprint #fprint.
 done
     
@@ -665,31 +665,31 @@ TEXT DISPLAY ROUTINES
 
 ^h75.^f1.
 Display frames are declared with five parameters. They are a left x, a width, a top y, a height, and a string.  Hence --
-	"yourframe_dispframe 16 256 16 256 string 400.
--- gets you an area on the upper left portion of the display that starts at x,y 16,16 and is 256 bits(raster units) wide and 256 bits high. The string (buf) serves as the text buffer, and is altered by _ and scrolling.
+	"yourframe←dispframe 16 256 16 256 string 400.
+-- gets you an area on the upper left portion of the display that starts at x,y 16,16 and is 256 bits(raster units) wide and 256 bits high. The string (buf) serves as the text buffer, and is altered by ← and scrolling.
 
 There are actually two entities associated with display frames--frames and windows. Currently both are given the same dimensions upon declaration (see isnew).  
 
-The four instance variables defining the window are winx, winwd, winy, and winht.  The boundaries of this rectangle are intersected with the physical display.  The window actually used by the machine language will reduce the size of the window, if necessary, to be confined by the physical display.  Clipping and scrolling are done on the basis of window boundaries.  If a character is in the window it will be displayed.  If a string or character cause overflow of the bottom of the window, scrolling will occur.
+The four instance variables defining the window are ↪winx↪, ↪winwd↪, ↪winy↪, and ↪winht↪.  The boundaries of this rectangle are intersected with the physical display.  The window actually used by the machine language will reduce the size of the window, if necessary, to be confined by the physical display.  Clipping and scrolling are done on the basis of window boundaries.  If a character is in the window it will be displayed.  If a string or character cause overflow of the bottom of the window, scrolling will occur.
 
-The four instance variables defining the frame are frmx, frmwd, frmy, and frmht.   This rectangle may be smaller or larger than its associated window as well as the physical display.   Frame boundaries are the basis for word-wraparound.  (Presently, if frmy+ frmht will cause overflow of the window bottom[winx+winht], frmht will get changed to a height consonant with the bottom of the window.  This has been done to manage scrolling, but may get changed as we get a better handle on the meaning of frames and windows.).
+The four instance variables defining the frame are ↪frmx↪, ↪frmwd↪, ↪frmy↪, and ↪frmht↪.   This rectangle may be smaller or larger than its associated window as well as the physical display.   Frame boundaries are the basis for word-wraparound.  (Presently, if frmy+ frmht will cause overflow of the window bottom[winx+winht], frmht will get changed to a height consonant with the bottom of the window.  This has been done to manage scrolling, but may get changed as we get a better handle on the meaning of frames and windows.).
 
-Buf is the string buffer associated with any given instance of dispframe.  This is the string that is picked on the way to microcode scan conversion.  When scrolling occurs, the first line of characters, according to frame boundaries, is stripped out and the remainder of the buffer mapped back into itself.  If a _ message would overflow this buffer, then scrolling will occur until the input fits.  
+↪Buf↪ is the string buffer associated with any given instance of dispframe.  This is the string that is picked on the way to microcode scan conversion.  When scrolling occurs, the first line of characters, according to frame boundaries, is stripped out and the remainder of the buffer mapped back into itself.  If a ↪←↪ message would overflow this buffer, then scrolling will occur until the input fits.  
 
-Last is a buf subscript, pointing to the current last character in the buffer.  That is, the last character resulting from a _.
+↪Last↪ is a ↪buf↪ subscript, pointing to the current last character in the buffer.  That is, the last character resulting from a ↪←↪.
 
-Lstln also points into the buffer at the character that begins the last line of text in the frame.  It is a starting point for scan conversion in the _ call.
+↪Lstln↪ also points into the buffer at the character that begins the last line of text in the frame.  It is a starting point for scan conversion in the ↪←↪ call.
 
-Mark  is set by dread (see below) and points to the character in the buffer which represents the last prompt output by SMALLTALK; reading begins there. Mark is updated by scrolling, so that it tracks the characters.  One could detect scrolling by watching mark.
+↪Mark↪  is set by dread (see below) and points to the character in the buffer which represents the last prompt output by SMALLTALK; reading begins there. Mark is updated by scrolling, so that it tracks the characters.  One could detect scrolling by watching mark.
 
-Charx and chary  reflect right x and top y of the character pointed to by last.
+↪Charx↪ and ↪chary↪  reflect right x and top y of the character pointed to by ↪last↪.
 
-The reply variable in the instance may be helpful in controlling things.  When the reply is 0, it means everything should be OK. That is, there was intersection between the window and display and intersection between the window and the frame. When reply is 1, there was no intersection between the window and the display. A 2 reply means no intersection between window and frame. A 3 reply means window height less than font height -- hence no room for scan conversion of even one line of text. A 4 means that the frame height has been increased in order to accomodate the input. A 5 means the bottom of the window (i.e. window x + window height) has been overflowed --hence that scrolling took place. A 6 means that both 4 and 5 are true.
+The ↪reply↪ variable in the instance may be helpful in controlling things.  When the reply is 0, it means everything should be OK. That is, there was intersection between the window and display and intersection between the window and the frame. When reply is 1, there was no intersection between the window and the display. A 2 reply means no intersection between window and frame. A 3 reply means window height less than font height -- hence no room for scan conversion of even one line of text. A 4 means that the frame height has been increased in order to accomodate the input. A 5 means the bottom of the window (i.e. window x + window height) has been overflowed --hence that scrolling took place. A 6 means that both 4 and 5 are true.
 
-justify is a toggle for right justifying the  contents of a dispframe.  The default is  0 and means no justification.  Setting it to 1 causes justification on frame boundaries.
+↪justify↪ is a toggle for right justifying the  contents of a dispframe.  The default is  0 and means no justification.  Setting it to 1 causes justification on frame boundaries.
 
-The font variable allows for the association of a font other than the default font with the display frame.  To get a different font into core say "something _ file <fontfilename> intostring. Then you can say disp ("font_something) or you can declare the font at the same time as the tdispframe is declared as e.g.
- "yourframe _ dispframe 3 40 3 40 string 20 font something.
+The ↪font↪ variable allows for the association of a font other than the default font with the display frame.  To get a different font into core say "something ← file <fontfilename> intostring. Then you can say dispⓢ ("font←something) or you can declare the font at the same time as the tdispframe is declared as e.g.
+ "yourframe ← dispframe 3 40 3 40 string 20 font something.
 ^h60.^f0.'  
 
 
@@ -697,17 +697,17 @@ The font variable allows for the association of a font other than the default 
 	: winx winwd winy winht frmx frmwd frmy frmht
 	last mark lstln charx chary reply justify buf font editor
 	: sub frame dread reread defont (
-% _ ?(0 CODE 51)
+% ← ?(0 CODE 51)
 	'^h75.^f1.
 	:s. s is number ? (append this ascii char)
 		s is string ?(append string)
 		error.
 	^h60.^f0.'
 
-%?(!eval)
+%ⓢ?(!⦂eval)
 	'^h75.^f1.
 	Allows access to instance variables. For example, 
-		yourframe ("winx_32) 
+		yourframeⓢ ("winx←32) 
 	will alter the value of window x in the instance of dispframe
 	called "yourframe".
 	^h60.^f0.'
@@ -732,11 +732,11 @@ The font variable allows for the association of a font other than the default 
 	the frame is defined as smaller than the window, only the frame
 	area will be cleared.  If the frame is defined as larger than the
 	window, only the window area will be cleared, since that space
-	is in fact your window on that frame.
+	is in fact your ↪window↪ on that frame.
 	^h60.^f0.'
 
-%put?(:input. %at. "winx_"frmx_:. "winy_"frmy_"chary_:.
-	"last_0. "lstln_1. SELF_input. !charx-winx)
+%put?(:input. %at. "winx←"frmx←:. "winy←"frmy←"chary←:.
+	"last←0. "lstln←1. SELF←input. !charx-winx)
 	'^h75.^f1.
 	For them as would rather do it themselves.
 	^h60.^f0.'
@@ -755,8 +755,8 @@ The font variable allows for the association of a font other than the default 
 
 %clear?(1 CODE 51)
 	'^h75.^f1.
-	Clear does an fclear and sets the last pointer into the string buffer
-	to 0 and lstln to 1. It has the effect of cleaning out the string
+	Clear does an fclear and sets the ↪last↪ pointer into the string buffer
+	to 0 and ↪lstln↪ to 1. It has the effect of cleaning out the string
 	buffer as well as clearing the frame area.
 	^h60.^f0.'
 
@@ -772,7 +772,7 @@ The font variable allows for the association of a font other than the default 
 	If vec[1] is -1 x,y is after the end of the string.
 	If vec[2] is -2 x,y is not in the window.
 	Sample call:
-		"myvec_yourframe mfindc mx my.
+		"myvec←yourframe mfindc mx my.
 	^h60.^f0.'
 
 %mfindw ?(8 CODE 51)
@@ -787,7 +787,7 @@ The font variable allows for the association of a font other than the default 
 	If vec[1] is -1 x,y is after the end of the string.
 	If vec[2] is -2 x,y is not in the window.
 	Sample call:
-		"myvec_yourframe mfindw mx my.
+		"myvec←yourframe mfindw mx my.
 	^h60.^f0.'
 
 %mfindt ?(6 CODE 51)
@@ -810,7 +810,7 @@ The font variable allows for the association of a font other than the default 
 	If vec[1] is -1 x,y is after the end of the string or not in frame.
 	If vec[2] is -2 x,y is not in the window.
 	A sample call--
-		"variable_yourframe mfindt mx my.
+		"variable←yourframe mfindt mx my.
 	^h60.^f0.'
 
 %read?(!dread)
@@ -824,7 +824,7 @@ The font variable allows for the association of a font other than the default 
 	a read from there. See reread below.
 	^h60.^f0.'
 
-%sub?("input _ sub :. SELF show. !input)
+%sub?("input ← sub :. SELF show. !input)
 	'^h75.^f1.
 	Evals its argument in a sub-window.  Used by fix and shift-esc.
 	 See sub below.
@@ -833,10 +833,10 @@ The font variable allows for the association of a font other than the default 
 %knows?(ev)
 	'^h75.^f1.
 	Whilst at the KEYBOARD, one can say 
-		yourframe knows(DOIT)
+		↪yourframe knows(DOIT)↪
 	and get a copy of the evaluator in the context of that instance of
 	dispframe.  Allows access to instance variables without going through
-	the  path.
+	the ⓢ path.
 	^h60.^f0.'
 
 %frame ? (apply frame)
@@ -847,21 +847,21 @@ The font variable allows for the association of a font other than the default 
 
 %is ?(ISIT eval)
 
-isnew ? ("winx_:frmx. "winwd_:frmwd. "chary_"winy_:frmy.
-	:frmht."winht_682-winy. :buf. "lstln_1.
-	"mark_"last_"charx_"reply_"justify_0.
-	"font _ (%font?(:input is string?(input) defont)defont)	%noframe?() frame black)  ))
+isnew ? ("winx←:frmx. "winwd←:frmwd. "chary←"winy←:frmy.
+	:frmht."winht←682-winy. :buf. "lstln←1.
+	"mark←"last←"charx←"reply←"justify←0.
+	"font ← (%font?(:input is string?(input) defont)defont)	%noframe?() frame black)  ))
  
 dispframe knows
 to dread t flag (
-	disp_20. "flag_false. "mark_last.
+	disp←20. "flag←false. "mark←last.
 	(null #DRIBBLE?() DRIBBLE flush)
-	repeat (050>disp_"t_kbd?(
-		t=010?(last<mark?(disp_buf[last+1]) 
+	repeat (050>disp←"t←kbd?(
+		t=010?(last<mark?(disp←buf[last+1]) 
 		'^h75.^f1.
 		Backspace only up to prompt.
 		^h60.^f0.'
-			buf[last+1]=047?("flag_flag is false))
+			buf[last+1]=047?("flag←flag is false))
 			'^h75.^f1.
 			Backspace out of string flips flag.
 			^h60.^f0.'
@@ -869,36 +869,36 @@ to dread t flag (
 		'^h75.^f1.
 		DOIT checks if in a string.
 		^h60.^f0.'
-		t=047?("flag_flag is false)
+		t=047?("flag←flag is false)
 		'^h75.^f1.
 		Flag is true if in a string
 		^h60.^f0.'
-		t=05?(sub "(ev). "last_last-1. disp show)
+		t=05?(sub "(ev). "last←last-1. disp show)
 		'^h75.^f1.
 		Shift-Esc make sub-eval.
 		^h60.^f0.'
-		t=04?(disp_010. "done print. disp_036. !"(done))
+		t=04?(disp←010. "done print. disp←036. !"(done))
 		))
-	disp_13. !read of stream of buf from mark+1 to last)
+	disp←13. !read of stream of buf from mark+1 to last)
 to sub disp (
-	"disp_dispframe winx+48 winwd-64 winy+14 winht-28 string 300	font font. 
+	"disp←dispframe winx+48 winwd-64 winy+14 winht-28 string 300	font font. 
 disp clear. (:)eval)
 	'^h75.^f1.
 	Opens a sub-frame, and evals its argument in that context.
 	^h60.^f0.'
 
-to frame a ("a _ turtle at frmx - 1 frmy - 1.
-	awidth _ 2 . aink_(%white?(1) %black?(3) %color?(:) 3)
+to frame a ("a ← turtle at frmx - 1 frmy - 1.
+	aⓢwidth ← 2 . aⓢink←(%white?(¬1) %black?(¬3) %color?(:) ¬3)
 	do 2 (a turn 90 go frmwd + 2 turn 90 go frmht + 2)	)
 	'^h75.^f1.
 	Draws a double line around the frame.
 	^h60.^f0.'
 
 
-to reread n i p reader ((null :n?("n_1))
-	"p_mark. "last_mark-2. disp show.
+to reread n i p reader ((null :n?("n←1))
+	"p←mark. "last←mark-2. disp show.
 	 for i to n
-		("p_buf[1 to p-1] find last 20.
+		("p←buf[1 to p-1] find last 20.
 		p<1?(done))
 	i<n+1?(error "(no code))
 	!read of stream of buf from p+1 to last)
@@ -912,8 +912,8 @@ done
 to dclear (CODE 52)
 	'^h75.^f1.
 	This function takes five parameters -- 
-	x width y height value, and clears the display rectangle thus
-	defined to the value given. A 0 value, for example, puts all
+	x width y height value, and ↪clears↪ the display rectangle thus
+	defined to the ↪value↪ given. A 0 value, for example, puts all
 	zeros into  the rectangle.
 	^h60.^f0.'
 
@@ -939,7 +939,7 @@ to dmovec (CODE 55)
 	Dmovec takes the same parameters as dmove, but in addition clears
 	the non-intersecting source material. It is the general case of what
 	happens on the display screen during a scroll, i.e. scrolling could be
-	accomplished by saying disp (dmovec winx winwd winy+fontheight
+	accomplished by saying dispⓢ (dmovec winx winwd winy+fontheight
 	winht-fontheight winx winy). A sample call --
 		dmovec 0 256 0 256 256 256. 
 	This will move whatever is in the upper left hand corner of the
@@ -950,11 +950,11 @@ to dmovec (CODE 55)
 to redo (!(disp reread :) eval)
 	'^h75.^f1.
 	Causes re-evaluation of the input typed n prompts before this.
-	Setting last_mark-2 makes the redo statement and its prompt
+	Setting last←mark-2 makes the redo statement and its prompt
 	disappear with a disp show.
 	^h60.^f0.'
 
-to fix vec ("vec_disp reread :.
+to fix vec ("vec←disp reread :.
 	(disp sub "(veced vec)) eval)
 	'^h75.^f1.
 	Like redo, except that the previous input is given to the editor in a
@@ -971,26 +971,26 @@ to turtle var : pen ink width dir x xf y yf frame : f (
 	CODE 21  '%go?(draw a line of length :)
 	          %turn?(turn right : (degrees))
 	          %goto?(draw a line to :(x), :(y))'
-	%?(:"var. %_?(!var _ :)
+	%ⓢ?(:"var. %←?(!var ← :)
 		      !var eval)
-	%pendn?("pen _ 1. !SELF)
-	%penup?("pen _ 0. !SELF)
-	%black?("ink _ 3. !SELF)
-	%white?("ink _ 1. !SELF)
-	%xor?("ink _ 2. !SELF)
+	%pendn?("pen ← 1. !SELF)
+	%penup?("pen ← 0. !SELF)
+	%black?("ink ← ¬3. !SELF)
+	%white?("ink ← ¬1. !SELF)
+	%xor?("ink ← ¬2. !SELF)
 	%is?(ISIT eval)
-	%home?("x _ frame  frmwd/2.
-	       "y _ frame  frmht/2.
-	       "xf _ "yf _ 0. "dir_270. !SELF)
+	%home?("x ← frame ⓢ frmwd/2.
+	       "y ← frame ⓢ frmht/2.
+	       "xf ← "yf ← 0. "dir←270. !SELF)
 	%erase?(frame fclear. !SELF)
-	%up?("dir _ 270. !SELF)
-	isnew?("ink _ 3. "pen _ "width _ 1.
-		(%frame?("frame _ :) "frame _ f)
-		%at?(:x. :y. "xf _ "yf _ 0. "dir_270)
+	%up?("dir ← 270. !SELF)
+	isnew?("ink ← ¬3. "pen ← "width ← 1.
+		(%frame?("frame ← :) "frame ← f)
+		%at?(:x. :y. "xf ← "yf ← 0. "dir←270)
 		SELF home)
 	)
 PUT turtle "f dispframe 0 512 0 684 string 1 noframe.
-"@ _ turtle.
+"@ ← turtle.
 
 
 '^h90.^f2.
@@ -1002,72 +1002,72 @@ FILESMALL: *****Smalltalk file and directory definitions*****
 also see <SMALLTALK> on Maxc for:
 xfer, xplot
 
-a file is found in a directory (dirinst) by its file name (fname), and has a one page, 512 character string (sadr).  rvec is an optional vector of disk addresses used for random page access.
+a file is found in a directory (↪dirinst↪) by its file name (↪fname↪), and has a one ↪page↪, 512 character string (↪sadr↪).  ↪rvec↪ is an optional vector of disk addresses used for random page access.
 
-"fi _
+"fi ←
  <directory> file <string> old -- finds an old file named <string> in <directory> or returns false if does not exist or a disk error occurs.
 
-"fi _
+"fi ←
  <directory> file <string> new -- creates a new file or returns false if it already exists.  if neither old or new is specified, an existing file named <string> will be found or a new file created. if <directory> is not specified, the current default directory is used.
 
 <directory> file <string> delete -- deletes a file from a directory and deallocates its pages.  do not delete the system directory (SYSDIR.) or bittable (SYS.STAT.), or any directories you create.
 
 <directory> file <string> rename <string> -- renames file named by first string in <directory> with second string. currently not implemented for directory files.
 
-<directory> file <string> load -- loads a previously saved memory image (Swat format), thereby destroying your current state.
+<directory> file <string> load -- loads a previously ↪saved↪ memory image (Swat format), thereby destroying your current state.
 
 <directory> file <string> save -- saves your Smalltalk memory.
 
-leader and curadr are the alto disk addresses of page 0 and the current page of the file, respectively.  bytec is a character index into sadr.
+↪leader↪ and ↪curadr↪ are the alto disk addresses of page 0 and the current page of the file, respectively.  ↪bytec↪ is a character index into ↪sadr↪.
 
-dirty = 1 if any label block integers (nextp thru sn2) have been changed; = -1 if sadr has been changed; = 0 if the current page is clean.  the user need not worry about this unless (s)he deals directly with the label or sadr. it might be noted here that multiple instances of the same file do not know of each others activities or sadr|s.
+↪dirty↪ = 1 if any label block integers (↪nextp↪ thru ↪sn2↪) have been changed; = -1 if ↪sadr↪ has been changed; = 0 if the current page is clean.  the user need not worry about this unless (s)he deals directly with the label or ↪sadr↪. it might be noted here that multiple instances of the same file do not know of each others activities or ↪sadr|s.
 
-status is normally 0, -1 if end occurred with the last set; a positive number (machine language pointer to offending disk command block (dcb)) signals a disk error.
+↪status↪ is normally 0, -1 if end occurred with the last ↪set↪; a positive number (machine language pointer to offending disk command block (dcb)) signals a disk error.
 
-the next 8 integers are the alto disk label block.  nextp and backp are the forward and backward alto address pointers. lnused is currently unused. numch is number of characters on the current page, numch must be 512, except on the last page. pagen is the current page number. page numbers are non-negative integers, and the format demands that the difference in consecutive page numbers is 1. normal file access starts at page 1, although all files possess page 0 (the leader page). version numbers > 1 are not implemented. sn1 and sn2 are the unique 2-word serial number for the file. 
+the next 8 integers are the alto disk label block.  ↪nextp↪ and ↪backp↪ are the forward and backward alto address pointers. ↪lnused↪ is currently unused. ↪numch↪ is number of characters on the current page, numch must be 512, except on the last page. ↪pagen↪ is the current page number. page numbers are non-negative integers, and the format demands that the difference in consecutive page numbers is 1. normal file access starts at page 1, although all files possess page 0 (the ↪leader↪ page). ↪version↪ numbers > 1 are not implemented. ↪sn1↪ and ↪sn2↪ are the unique 2-word serial number for the file. 
 
-the class function ncheck checks that file names contain alphabetic or legal characters or digits, and end with a period.
+the class function ↪ncheck↪ checks that file names contain alphabetic or ↪legal↪ characters or digits, and end with a period.
 ^h60.^f0.'
 
 
 (to file : dirinst fname sadr rvec leader curadr bytec dirty status nextp
 	backp lnused numch pagen version sn1 sn2 : ncheck x (
 
-	%_? (17 CODE 50)
+	%←? (17 CODE 50)
 		'^h75.^f1.
-		fi_<integer>, <string>, or <file> --  
-		:x is string? (for i to x length (SELF_x[i]))
-		x is file? (repeat (x end? (done) SELF_x next))
-		(numch<"bytec_bytec+1? 
+		fi←<integer>, <string>, or <file> --  
+		:x is string? (for i to x length (SELF←x[i]))
+		x is file? (repeat (x end? (done) SELF←x next))
+		(numch<"bytec←bytec+1? 
 		  (SELF set to write (pagen+bytec/512) bytec mod 512))
-		sadr[bytec]_x &*  0377
+		sadr[bytec]←x &*  0377
 		^h60.^f0.'
 
-	%next? ((%word? (%_? (7)
+	%next? ((%word? (%←? (7)
 			'^h75.^f1.
-			fi next word_<integer> -- write integer.
+			fi next word←<integer> -- write integer.
 			possibly increment pointer to word boundary.
-			(0=bytec &*  1? () "bytec_bytec+1)
-			SELF _ :x/256. SELF _ x mod 256.
+			(0=bytec &*  1? () "bytec←bytec+1)
+			SELF ← :x/256. SELF ← x mod 256.
 			^h60.^f0.'
 
 			 6)
 			'^h75.^f1.
 			fi next word -- read an integer
-			(0=bytec &*  1? () "bytec_bytec+1)
+			(0=bytec &*  1? () "bytec←bytec+1)
 			!(SELF next*256) + SELF next
 			^h60.^f0.'
 
 		  %into? (16)
 			'^h75.^f1.
 			fi next into <string> -- read a string
-			for i to :x length(x[i]_SELF next).!x
+			for i to :x length(x[i]←SELF next).!x
 			^h60.^f0.'
 
 		  25) CODE 50)
 			'^h75.^f1.
 			fi next -- read a character
-			(numch<"bytec_bytec+1?
+			(numch<"bytec←bytec+1?
 			 (SELF set to read (pagen+bytec/512) 
 			   bytec mod 512? () !0))  !sadr[bytec]
 			^h60.^f0.'
@@ -1082,24 +1082,24 @@ the class function ncheck checks that file names contain alphabetic or legal
 			'^h75.^f1.
 			fi set to write <integer> <integer> -- set file
 			pointer to :spage :schar. if current page is dirty,
-			or reset, set to end or page change
+			or ↪reset↪, ↪set to end↪ or page change
 			occurs, flush current page. read pages until
 			pagen=spage. allocate new pages after end if
 			necessary (-1 512 is treated as start of next
-			page, i.e. pagen+1 0). "bytec_schar
+			page, i.e. pagen+1 0). "bytec←schar
 			^h60.^f0.'
 
 		%read. 4) CODE 50)
 			'^h75.^f1.
-			same as write except stop at end
+			same as ↪write↪ except stop at end
 			^h60.^f0.'
 
 	%skipnext? (18 CODE 50)
 		'^h75.^f1.
 		fi skipnext <integer> -- set character pointer relative to
 		current position. (useful for skipping rather than reading,
-		or for reading and backing up, but end may not work if
-		bytec points off the current page)  "bytec_ bytec + :.
+		or for reading and backing up, but ↪end↪ may not work if
+		↪bytec↪ points off the current page)  "bytec← bytec + :.
 		^h60.^f0.'
 
 	%end? (10 CODE 50)
@@ -1108,7 +1108,7 @@ the class function ncheck checks that file names contain alphabetic or legal
 		nextp=0? (bytec<numch?(!false))!false
 		^h60.^f0.'
 
-	%? (! eval)
+	%ⓢ? (!⦂ eval)
 
 	%flush? (12 CODE 50)
 		'^h75.^f1.
@@ -1118,13 +1118,13 @@ the class function ncheck checks that file names contain alphabetic or legal
 	%writeseq? (22 CODE 50)
 		'^h75.^f1.
 		transfer words from memory to a file
-		:adr. :count. for i_adr to adr+count-1
-		(SELF next word _ mem i)
+		:adr. :count. for i←adr to adr+count-1
+		(SELF next word ← mem i)
 		^h60.^f0.'
 
 	%readseq? (21 CODE 50)
 		'^h75.^f1.
-		...from a file to memory...(mem i _ SELF next word)
+		...from a file to memory...(mem i ← SELF next word)
 		^h60.^f0.'
 
 	%is? (ISIT eval)
@@ -1134,10 +1134,10 @@ the class function ncheck checks that file names contain alphabetic or legal
 		remove file from filesopen list of directory
 		^h60.^f0.'
 
-	%close? (dirinst  bitinst flush.
+	%close? (dirinst ⓢ bitinst flush.
 		 SELF flush. SELF remove. !"closed)
 		'^h75.^f1.
-		fi close or "fi_fi close (if fi is global) -- flush bittable
+		fi close or "fi←fi close (if fi is global) -- flush bittable
 		and current page, remove instance from filesopen list of
 		directory
 		^h60.^f0.'
@@ -1145,11 +1145,11 @@ the class function ncheck checks that file names contain alphabetic or legal
 	%shorten? (%to. %here? (SELF shorten pagen bytec) 14 CODE 50)
 		'^h75.^f1.
 		fi shorten to <integer> <integer> -- shorten a file SELF set
-		to read :spage :schar. "x_nextp. "nextp_0.
-		"numch_schar. "dirty_1. deallocate x and successors
+		to read :spage :schar. "x←nextp. "nextp←0.
+		"numch←schar. "dirty←1. deallocate x and successors
 		^h60.^f0.'
 
-	%print? (disp _ fname)
+	%print? (disp ← fname)
 		'^h75.^f1.
 		file prints its name
 		^h60.^f0.'
@@ -1161,11 +1161,11 @@ the class function ncheck checks that file names contain alphabetic or legal
 		^h60.^f0.'
 
 	%intostring?(SELF set to end.
-  		"x _ string bytec + 512 * pagen - 1.
+  		"x ← string bytec + 512 * pagen - 1.
     		SELF reset.  !SELF next into x)
 
-	%random? (SELF set to end. "rvec _ vector pagen.
-		  for x to rvec length (SELF set x 0. rvec[x] _ curadr))
+	%random? (SELF set to end. "rvec ← vector pagen.
+		  for x to rvec length (SELF set x 0. rvec[x] ← curadr))
 		'^h75.^f1.
 		fi random -- initialize a random access vector to be used
 		in fi set...  new pages appended to the file will not be
@@ -1175,24 +1175,24 @@ the class function ncheck checks that file names contain alphabetic or legal
 	%pages? (20 CODE 50)
 		'^h75.^f1.
 		fi pages <integer> ... <integer> -- out of the same great
-		tradition as mem comes the power to do potentially
+		tradition as ↪mem↪ comes the power to do potentially
 		catastrophic direct disk i/o (not for the faint-hearted).
 		 :coreaddress. :diskaddress. :diskcommand. :startpage.
 		:numberofpages. :coreincrement. if -1 =  coreaddress,
-		copy sadr to a buffer before the i/o call. diskaddress
-		(=-1 yields curadr) and diskcommand are the alto disk
+		copy ↪sadr↪ to a buffer before the i/o call. diskaddress
+		(=-1 yields ↪curadr↪) and diskcommand are the alto disk
 		address and command. startpage is relevant if label checking
 		is performed. numberofpages is the number of disk pages
 		to process. coreincrement is usually 0 (for writing in same
 		buffer) or 256 for using consecutive pages of core.  use
-		label block from instance of fi. copy label block from
-		instance. perform i/o call. copy curadr and label block
+		label block from instance of ↪fi↪. copy label block from
+		instance. perform i/o call. copy ↪curadr↪ and label block
 		into instance. if -1=coreaddress copy buffer to "sadr".
 		^h60.^f0.' 
 
-	isnew? ("fname_ncheck :. fname is false?
+	isnew? ("fname←ncheck :. fname is false?
 			(error "(bad file name) !nil) 
-		(null "dirinst _ #curdir? 			("dirinst _ directory  defdir.  dirinst open)).
+		(null "dirinst ← #curdir? 			("dirinst ← directory ⓢ defdir.  dirinst open)).
 			'^h75.^f1.
 			set directory instance for file. if curdir is nil
 			because file was not called from the context of a 			directory instance, use the default directory
@@ -1209,17 +1209,17 @@ the class function ncheck checks that file names contain alphabetic or legal
 			delete a file (see intro)
 			^h60.^f0.'
 
-		"sadr _ (%using? (:) string 512).
+		"sadr ← (%using? (:) string 512).
 			'^h75.^f1.
 			set up file string buffer
 			^h60.^f0.'
 
-		%rename? ("x _ ncheck :. x is false?
+		%rename? ("x ← ncheck :. x is false?
 				(error "(bad new name)!nil)
 			  file x exists? (error "(name already in use))
-			  2 CODE 50.  "fname _ x.  23 CODE 50.
-			  SELF set 0 12.  SELF _ fname length.
-			  SELF _ fname.  SELF flush.  !fname)
+			  2 CODE 50.  "fname ← x.  23 CODE 50.
+			  SELF set 0 12.  SELF ← fname length.
+			  SELF ← fname.  SELF flush.  !fname)
 			'^h75.^f1.
 			check that the new name is not already in use.
 			lookup the original file and change its name in its
@@ -1231,9 +1231,9 @@ the class function ncheck checks that file names contain alphabetic or legal
 			lookup an old file and load (overlay) a Swat			memory image; return via save.
 			^h60.^f0.'
 		(%old? (2)
-		 sadr[13] _ fname length.
-		 sadr[14 to 13 + fname length] _ fname.
-		 %new? (dirinst  filinst is file? (3) 19)
+		 sadr[13] ← fname length.
+		 sadr[14 to 13 + fname length] ← fname.
+		 %new? (dirinst ⓢ filinst is file? (3) 19)
 		 1) CODE 50.
 			'^h75.^f1.
 			find an old file or add a new entry (with its
@@ -1246,7 +1246,7 @@ the class function ncheck checks that file names contain alphabetic or legal
 			dirinst close.  9 CODE 50)
 
 			'^h75.^f1.
-			allocate a file, close the directory (other files			e.g. DRIBBLE, and directories should be already			closed), and write out the memory image as a Swat			file.  when arriving here from a load, return false;			otherwise return the file instance.
+			allocate a file, close the directory (other files			e.g. DRIBBLE, and directories should be already			closed), and write out the memory image as a Swat			file.  when arriving here from a ↪load↪, return false;			otherwise return the file instance.
 			^h60.^f0.'
 
 		%intostring?(!SELF intostring)
@@ -1255,11 +1255,11 @@ the class function ncheck checks that file names contain alphabetic or legal
 			finally, file puts itself into the filesopen list of its
 			directory
 			^h60.^f0.'
-file (ev)
-to ncheck str i x :: legal ("str_:.
+file ⓢ(ev)
+to ncheck str i x :: legal ("str←:.
 	(str is string?(str length < 255?() !false) !false)
 	for i to str length
-		("x _ str[i].
+		("x ← str[i].
 		0140 < x < 0173? ('lowercase')
 		 057 < x <  072? ('digit')
 	  	   0 < legal[1 to 6] find x? ('legal')
@@ -1275,14 +1275,14 @@ PUT ncheck "legal fill string 6
 done
 
 '^h75.^f1.
-a directory is found in a directory (dirinst), has a bittable file (bitinst) for allocating new pages, a file of file entries (filinst -- file names, disk addresses etc.), and a list of currently open files (filesopen which is an obset). the top level, distinguished node of the directory structure is the system directory dp0 (see directory knows below if you also want dp1). dp0 knows the disk number (dirinst) and the true identity of the bittable. each file must ask its directory for the bittable when page allocation is necessary, and the system directory (via its local directory) for the disk number.
+a directory is found in a directory (↪dirinst↪), has a bittable file (↪bitinst↪) for allocating new pages, a file of file entries (↪filinst↪ -- file names, disk addresses etc.), and a list of currently open files (↪filesopen↪ which is an ↪obset↪). the top level, ↪distinguished node↪ of the directory structure is the system directory ↪dp0↪ (see ↪directory knows↪ below if you also want ↪dp1↪). dp0 knows the disk number (↪dirinst↪) and the true identity of the bittable. each file must ask its directory for the bittable when page allocation is necessary, and the system directory (via its local directory) for the disk number.
 
-"di _
+"di ←
  <directory> directory <string> old/new 
 
 currently, <directory> and old or new must be specified.
 
-dirname is the system directory name and bitname is the bittable name. curdir is a class variable bound to the last directory instance opened, and provides information who called you (i.e. CALLER) to a file or directory. defdir is a default directory, initially set to dp0, which is invoked when curdir fails to be a directory, i.e. file was not called in the context of a directory, but globally
+↪dirname↪ is the system directory name and ↪bitname↪ is the bittable name. ↪curdir↪ is a class variable bound to the last directory instance ↪opened↪, and provides information ↪who called you↪ (i.e. CALLER) to a file or directory. ↪defdir↪ is a default directory, initially set to dp0, which is invoked when ↪curdir↪ fails to be a directory, i.e. file was not called in the context of a directory, but globally
 ^h60.^f0.'
 
 (to directory name exp : dirinst bitinst filinst filesopen : dirname bitname
@@ -1294,60 +1294,60 @@ currently, <directory> and old or new must be specified.
 		(see file intro)
 		^h60.^f0.'
 
-	%open? ("curdir _ SELF.  filinst is file? () 
-		 bitinst?("filinst _ file filinst old. "bitinst _ file bitinst old)
-		 "filinst _ (%new?(file filinst new) file filinst old).  		 "bitinst _ dirinst  bitinst.  dirinst remember SELF)
+	%open? ("curdir ← SELF.  filinst is file? () 
+		 bitinst?("filinst ← file filinst old. "bitinst ← file bitinst old)
+		 "filinst ← (%new?(file filinst new) file filinst old).  		 "bitinst ← dirinst ⓢ bitinst.  dirinst remember SELF)
 		'^h75.^f1.
-		di open -- (normally not user-called since access to the		directory always reopens it) initialize directory file and		bittable instances:  a subdirectory uses the bittable of		its system directory and puts itself into that filesopen list.
+		di open -- (normally not user-called since access to the		directory always reopens it) initialize directory file and		bittable instances:  a ↪subdirectory↪ uses the bittable of		its system directory and puts itself into that filesopen list.
 		^h60.^f0.'
 
 	%is? (ISIT eval)
 
-	%remember? (filesopen _ :)
+	%remember? (filesopen ← :)
 
 	%forget? (filesopen delete :)
 		'^h75.^f1.
 		add or delete file instances in filesopen.
 		^h60.^f0.'
-	%print? (disp_0133. filesopen print. disp_0135)
+	%print? (disp←0133. filesopen print. disp←0135)
 		'^h75.^f1.
 		di or di print. --print the filesopen list.
 		^h60.^f0.'
 
-	%map? (SELF open. "exp _ :. filinst reset.
+	%map? (SELF open. "exp ← :. filinst reset.
 		repeat (filinst end? (cr. done)
-		 1024 > "name_ filinst next word?
+		 1024 > "name← filinst next word?
 			(name < 2? () filinst skipnext 2*name-1)
 		filinst skipnext 10.
-		"name _ filinst next into string filinst next.
+		"name ← filinst next into string filinst next.
 		exp eval))
 		'^h75.^f1.
 		di map <expression> -- evaluate an expression for each
 		file name
 		^h60.^f0.'
 
-	%list? (SELF map "(disp_name. sp))
+	%list? (SELF map "(disp←name. sp))
 		'^h75.^f1.
 		di list -- print the entry names contained in filinst
 		^h60.^f0.'
 
 	%close? ((filinst is file? (filesopen map "(vec[end] close).
-		"filinst _ filinst  fname.  bitinst flush.
-		dirinst is directory? (dirinst forget SELF.  "bitinst _ false)  		"bitinst _ bitinst  fname)). !"closed)
+		"filinst ← filinst ⓢ fname.  bitinst flush.
+		dirinst is directory? (dirinst forget SELF.  "bitinst ← false)  		"bitinst ← bitinst ⓢ fname)). !"closed)
 		'^h75.^f1.
-		di close (e.g. dp0 close) or "di_di close (to release
+		di close (e.g. dp0 close) or "di←di close (to release
 		instance) --close a directory by closing all files and
 		directories in its filesopen list and deleting it from the
 		filesopen list of its directory.  this is currently one way		to regain space by closing unwanted file instances, and		to change disk packs.
 		^h60.^f0.'
 
-	%use? ("defdir _ SELF)
+	%use? ("defdir ← SELF)
 		'^h75.^f1.
 		di use -- change the default directory.
 		^h60.^f0.'
 
-	%? (! eval)
-  	%free? (SELF open.  "exp _ 0.		bitinst set to 1  609*dirinst &/ 1.  		do 609  (255 = "name _ bitinst next? ("exp _ exp + 8)  		name = 0? ()  		repeat ("exp _ exp + name &* 1.     		  0 = "name _ name &/ 1?(done))).  !4872 - exp)
+	%ⓢ? (!⦂ eval)
+  	%free? (SELF open.  "exp ← 0.		bitinst set to 1  609*dirinst &/ ¬1.  		do 609  (255 = "name ← bitinst next? ("exp ← exp + 8)  		name = 0? ()  		repeat ("exp ← exp + name &* 1.     		  0 = "name ← name &/ ¬1?(done))).  !4872 - exp)
 		'^h75.^f1.
 		di free -- return number of free pages from the		bittable associated with this directory.
 		^h60.^f0.'
@@ -1357,27 +1357,27 @@ currently, <directory> and old or new must be specified.
 		instance
 		^h60.^f0.'
 
-	isnew? ("filesopen _ obset.  		%device?("dirinst _ :.  "filinst _ dirname.		     "bitinst _ (1<dirinst?(bitname + "two chars) bitname))
-		 "dirinst _ curdir.  "filinst _ :.  "bitinst _ false. 		%new?(SELF open new) %old.  SELF open)))
+	isnew? ("filesopen ← obset.  		%device?("dirinst ← :.  "filinst ← dirname.		     "bitinst ← (1<dirinst?(bitname + "two chars) bitname))
+		 "dirinst ← curdir.  "filinst ← :.  "bitinst ← false. 		%new?(SELF open new) %old.  SELF open)))
 		'^h75.^f1.
-		store the directory file name in filinst; subdirectories use		curdir as their directory, are flagged by false bitinst and		then opened.  for system directories, dirinst is a number		indicating physical device location and size,  and bitinst		contains the file name for the appropriate bittable.  the		directory is not immediately opened.
+		store the directory file name in filinst; ↪subdirectories↪ use		↪curdir↪ as their directory, are flagged by ↪false bitinst↪ and		then opened.  for system directories, dirinst is a number		indicating physical device location and size,  and bitinst		contains the file name for the appropriate bittable.  the		directory is not immediately opened.
 		^h60.^f0.'
 
-directory (ev)
-"dirname _ fill string 7
+directory ⓢ(ev)
+"dirname ← fill string 7
 SYSDIR.
-"bitname _ fill string 9
+"bitname ← fill string 9
 SYS.STAT.
 	'^h75.^f1.
 	names of the system directory and bittable
 	^h60.^f0.'
 
-"dp0 _ directory device 0. 
-"dp1 _ directory device 1.
-"dp2 _ directory device 2.
-"dp3 _ directory device 3.
+"dp0 ← directory device 0. 
+"dp1 ← directory device 1.
+"dp2 ← directory device 2.
+"dp3 ← directory device 3.
 	'^h75.^f1.
-	create some system directory instances which are initially closed.	dp0 is the same directory that the Operating System believes in.	dp1 can be used to similarly access another Model 31 disk or a Model 44.	dp2 and dp3 provide a mechanism for writing on the other halves of a	Model 44, with some preliminary initialization; files written through	dp2 (dp3) can be read by dp0 (dp1) also.  do not rewrite or delete	such files except through the parent directory, e.g. if a file	created by dp2 is deleted using dp0 or the Operating System, strange	(maybe bad) things can happen.
+	create some system directory instances which are initially closed.	dp0 is the same directory that the Operating System believes in.	dp1 can be used to similarly access another Model 31 disk or a Model 44.	dp2 and dp3 provide a mechanism for writing on the other halves of a	Model 44, with some preliminary initialization; files written through	dp2 (dp3) can be read by dp0 (dp1) also.  do not rewrite or delete	such files except through the ↪parent directory↪, e.g. if a file	created by dp2 is deleted using dp0 or the Operating System, strange	(maybe bad) things can happen.
 	^h60.^f0.'
 donedp0 use
 
@@ -1386,38 +1386,38 @@ donedp0 use
 	^h60.^f0.'
 
  to error adr ptr arec class :: c shocode find sub (
-	(0="adr_mem 0102?(%knows?(ev !) dson. :ptr))
-	"arec_leech AREC.
+	(0="adr←mem 0102?(%knows?(ev !) dson. :ptr))
+	"arec←leech AREC.
 	disp sub "((0=adr?(ptr print)
-		mem 0102_0. disp_0377&*  mem adr.
-		for adr_adr+1 to adr+(mem adr)&/ 9 (
-			"ptr_mem adr.
-			disp_ptr&/ 8. disp_ptr&*  0377))
+		mem 0102←0. disp←0377&*  mem adr.
+		for adr←adr+1 to adr+(mem adr)&/ ¬9 (
+			"ptr←mem adr.
+			disp←ptr&/ ¬8. disp←ptr&*  0377))
 	cr c ev))  
 error knows
 to c class code cpc (
-	null arec[5]?(.) "arec_leech arec[5]. "class_arec[0].
+	null arec[5]?(.) "arec←leech arec[5]. "class←arec[0].
 	(GET class "TITLE) print. ": print.
 	arec[6] is vector?(find arec[1]&   arec[6] ? (shocode))
 	find arec[1]&   GET class "DO ? (shocode).
 	)
 to shocode i (
-	for i_1 to code length
-		(i<cpc-5?(disp_056) i>cpc+5?(disp_056)
-		sp. (i=cpc?(disp_031))
+	for i←1 to code length
+		(i<cpc-5?(disp←056) i>cpc+5?(disp←056)
+		sp. (i=cpc?(disp←031))
 		code[i] is vector?("$ print) code[i] print).
 	)
 to find adr vec vadr l (
 	'^h75.^f1.a tree search in vec for the address adr^h60.^f0.'
-	"adr_:. "l_leech :vec.
+	"adr←:. "l←leech :vec.
 	vec is vector is false?(!false)
-	"vadr_(leech l)[1]&   +1.
+	"vadr←(leech l)[1]&   +1.
 	(adr>vadr?(adr<vadr+vec length+1?
-		("cpc _ adr-vadr. "l_0. "code_vec. !true)))
-	"l_0. for l to vec length
+		("cpc ← adr-vadr. "l←0. "code←vec. !true)))
+	"l←0. for l to vec length
 		(vec[l] is vector?(find adr vec[l]?(!true)))
 	!false)
-to sub disp ("disp _ GET USER "disp. (:) eval)
+to sub disp ("disp ← GET USER "disp. (:) eval)
 done
  
 to kbck (1 CODE 20)
@@ -1437,7 +1437,7 @@ THE SMALLTALK EDITOR ---
  
  
 to edit func t (:#func. 
-	"t_GET func "DO. 
+	"t←GET func "DO. 
 	null t ? (!"(no code))
 	%title? ((veced classprint func header) eval)
 	PUT func "DO veced t. 
@@ -1459,26 +1459,26 @@ to edit func t (:#func.
 (to veced back newdisp  menu x ::  menuwidth menulen menustr
 ed edpush edtarget gettwo bugin getvec  (
 	%knows?(ev)
-	"back_false. 
+	"back←false. 
 	disp fclear.
-	disp ("menu_dispframe winx+winwd-menuwidth menuwidth
+	dispⓢ ("menu←dispframe winx+winwd-menuwidth menuwidth
 			winy (winht>139?(winht) 140) string 70			font font.
-		menu _ menustr.
-		mem 0425 _ winy + 103.
-		"newdisp _ dispframe winx winwd-menuwidth+2
+		menu ← menustr.
+		mem 0425 ← winy + 103.
+		"newdisp ← dispframe winx winwd-menuwidth+2
 			winy winht string buf length 			font font noframe)
-	:x. "x _ indisp newdisp (ed x). 
+	:x. "x ← indisp newdisp (ed x). 
 	disp show.
 	!x)   )
 
 
 veced knows
 
-"menuwidth _ 64.
-"menustr_string 0.
-"menulen _ 10.
-do menulen ("x_fill string 9.
-	"menustr_menustr+x[1 to x[1 to 9]find 13]).
+"menuwidth ← 64.
+"menustr←string 0.
+"menulen ← 10.
+do menulen ("x←fill string 9.
+	"menustr←menustr+x[1 to x[1 to 9]find 13]).
  Add
  Insert
  Replace
@@ -1490,45 +1490,45 @@ do menulen ("x_fill string 9.
  Leave
  Exit
 
-to indisp disp (:disp. !eval)
+to indisp disp (:disp. !⦂eval)
 	'^h75.^f1.
 	used to make DISP a new local.
 	^h60.^f0.'
 
 to ed ptr l n nrun command temp i nv n1 fnth hfnth   (
-	"command _ 0.
-	:ptr. 	"fnth _ (leech dispfont)[2]&  .
-	"hfnth _ fnth/2.
+	"command ← 0.
+	:ptr. 	"fnth ← (leech dispⓢfont)[2]&  .
+	"hfnth ← fnth/2.
 	repeat(
-		"l_ptr length.
+		"l←ptr length.
 		back?(done with ptr) 
-		mem 0424 _ menu  winx + 48.
+		mem 0424 ← menu ⓢ winx + 48.
 		menu show. disp clear
-		"nv_0.
+		"nv←0.
 		for n to l-1
-			(ptr[n] is vector?(disp_044. sp
-				"nv_nv+1. "n1_n)
-			ptr[n] print. disp_32) 
+			(ptr[n] is vector?(disp←044. sp
+				"nv←nv+1. "n1←n)
+			ptr[n] print. disp←32) 
 		cr cr.
-		"command _ edcomp bugin menu menulen both.
-		mem 0424 _ disp  (winx + winwd/2).
+		"command ← edcomp bugin menu menulen both.
+		mem 0424 ← disp ⓢ (winx + winwd/2).
 
 		"(  
-		("ptr_vecmod ptr l 0 read) 
-		("ptr_vecmod ptr edcomp edtarget both 0 read) 
-		(gettwo.  "ptr_vecmod ptr n nrun read)
-		(gettwo. "ptr_vecmod ptr n nrun nil)
-		(gettwo. "temp _ ptr[n to n+nrun]
-			temp[nrun + 1] _ nil.
-			"i_edcomp edtarget both.
-			"ptr_vecmod ptr n nrun nil.
-			(i>n ? ("i_i-nrun))
-			"ptr_vecmod ptr i 0 temp)
-		(getvec?("ptr_vecmod ptr n 1 ptr[n]) again) 
+		("ptr←vecmod ptr l 0 read) 
+		("ptr←vecmod ptr edcomp edtarget both 0 read) 
+		(gettwo.  "ptr←vecmod ptr n nrun read)
+		(gettwo. "ptr←vecmod ptr n nrun nil)
+		(gettwo. "temp ← ptr[n to n+nrun]
+			temp[nrun + 1] ← nil.
+			"i←edcomp edtarget both.
+			"ptr←vecmod ptr n nrun nil.
+			(i>n ? ("i←i-nrun))
+			"ptr←vecmod ptr i 0 temp)
+		(getvec?("ptr←vecmod ptr n 1 ptr[n]) again) 
 		(gettwo. edpush)
-		(getvec?(ptr[n]_ed ptr[n]) again)
+		(getvec?(ptr[n]←ed ptr[n]) again)
 		(done with ptr)	
-		("back_true. done with ptr)
+		("back←true. done with ptr)
 			) [command] eval.
 		)
 	)
@@ -1541,25 +1541,25 @@ to ed ptr l n nrun command temp i nv n1 fnth hfnth   (
 	^h60.^f0.'
 
 
-to edpush ins ("ins_vector 2. 
-	ins[1]_ ptr[n to n+nrun].  ins[1][nrun+1]_nil.
-	"ptr_vecmod ptr n nrun ins)
+to edpush ins ("ins←vector 2. 
+	ins[1]← ptr[n to n+nrun].  ins[1][nrun+1]←nil.
+	"ptr←vecmod ptr n nrun ins)
 
-to gettwo t1 n2 ("n_edcomp edtarget top. 
-                 "n2_edcomp edtarget bot.
-	"nrun _ 1+n2-n.
-	nrun<1?("n_n2. "nrun_2-nrun))
+to gettwo t1 n2 ("n←edcomp edtarget top. 
+                 "n2←edcomp edtarget bot.
+	"nrun ← 1+n2-n.
+	nrun<1?("n←n2. "nrun←2-nrun))
 
 to bugin  someframe  max index(
 	:someframe.
-	"max _ 1+:.
+	"max ← 1+:.
 	repeat (button 0 ? (repeat (
 			button 7 ?(disp sub "(ev))
 			button 0 ?()
 			done) 
 		done) 
 		) 
-        "index_someframe mfindt mx my
+        "index←someframe mfindt mx my
 	0<index[1]< max ?
 		(!index)
 	'^h75.^f1.
@@ -1574,13 +1574,13 @@ to bugin  someframe  max index(
 
 to edtarget (! bugin disp l)
  
-to getvec (nv=1?("n_n1. !true)
-	!ptr["n_edcomp edtarget both] is vector)
+to getvec (nv=1?("n←n1. !true)
+	!ptr["n←edcomp edtarget both] is vector)
 
 to edcomp compvec y hth (:compvec.
-	"y_compvec[4].
-	"hth_(%both?(fnth)%top?(hfnth)
-		%bot?("y_y+hfnth. hfnth))
+	"y←compvec[4].
+	"hth←(%both?(fnth)%top?(hfnth)
+		%bot?("y←y+hfnth. hfnth))
 
 	dcomp compvec[2] compvec[3] y hth
 	!compvec[1]
@@ -1592,119 +1592,119 @@ BOOTSTRAPPING REVISITED
 ^h60.^f0.'
 
 to classprint fn a b i j k flags clsv clsm arecv arecm instv instm code (
-	:#fn. "code _ GET fn "DO. null code?("(no code))
-	"a_leech #fn. "b_vector 1. "b_leech b.  "clsm_"arecm_"instm_0.
-	"k_a[1]&  . "clsv_vector k. "arecv_vector k. "instv_vector k.
+	:#fn. "code ← GET fn "DO. null code?("(no code))
+	"a←leech #fn. "b←vector 1. "b←leech b.  "clsm←"arecm←"instm←0.
+	"k←a[1]&  . "clsv←vector k. "arecv←vector k. "instv←vector k.
 	'^h75.^f1.
 	Pull symbols out of class table
 	^h60.^f0.'
-	for i_4 to 4+2*k by 2
+	for i←4 to 4+2*k by 2
 	'^h75.^f1.
 	k is no. dbl entries -1, here
 	^h60.^f0.'
-		("k_a[i]&  .
-		k=(0-1)?(again).  "flags _ k&/ 14.
+		("k←a[i]&  .
+		k=(0-1)?(again).  "flags ← k&/ ¬14.
 		'^h75.^f1.
 		0=class, 2=arec, 3=inst
 		^h60.^f0.'
 		flags=0?(0="(DO TITLE SIZE) [1 to 3] find a[i]?
-			(clsv["clsm_clsm+1] _ a[i]))
-		b[2]&   _ k&*03777.  "j_a[i+1]&  .
-		(flags=2?(arecv[j-6] _ b[2]. arecm<j-6?("arecm_j-6))
-			instv[j+1] _ b[2]. instm<j+1?("instm_j+1))
+			(clsv["clsm←clsm+1] ← a[i]))
+		b[2]&   ← k&*03777.  "j←a[i+1]&  .
+		(flags=2?(arecv[j-6] ← b[2]. arecm<j-6?("arecm←j-6))
+			instv[j+1] ← b[2]. instm<j+1?("instm←j+1))
 		)
 
 	'^h75.^f1.
 	Now make up input form.
 	^h60.^f0.'
-	"a _ vector 6+arecm+instm+clsm.
-	a[1] _ "to. a[2] _ GET fn "TITLE.
-	a[3 to "j_2+arecm] _ arecv.
-	(0<instm+clsm? (a["j_j+1]_":. a[j+1 to "j_j+instm] _ instv.
-		0<clsm? (a["j_j+1]_":. a[j+1 to "j_j+clsm] _ clsv)))
-	%header?(a[j+1]_code. !a)
-	for i to j (a[i] print. disp_32)
+	"a ← vector 6+arecm+instm+clsm.
+	a[1] ← "to. a[2] ← GET fn "TITLE.
+	a[3 to "j←2+arecm] ← arecv.
+	(0<instm+clsm? (a["j←j+1]←":. a[j+1 to "j←j+instm] ← instv.
+		0<clsm? (a["j←j+1]←":. a[j+1 to "j←j+clsm] ← clsv)))
+	%header?(a[j+1]←code. !a)
+	for i to j (a[i] print. disp←32)
 	showpretty?(pshow code 3) code print)
  
-to show showpretty ("showpretty_true. showev )
+to show showpretty ("showpretty←true. showev ⦂)
  
 to showev shAtom shVal (:shAtom. cr.
 	(shAtom is atom?
-		("shVal _ shAtom eval.
+		("shVal ← shAtom eval.
 		(null GET shVal "DO?
-			("" print. shAtom print. "_ print.
+			("" print. shAtom print. "← print.
 			(shVal is vector? ("" print)
 				null shVal?("nil print))
 			shVal print. ". print)
 		classprint shVal))
 	shAtom print)
-	disp_30.)
+	disp←30.)
 '^h75.^f1.
 *****Keyboard translation*****
 ^h60.^f0.'
 
 to kbd (!kmap[TTY])
-"kmap _ string 0377.
-	for i_0200 to 0377(kmap[i] _ 0177) '^f1.ILLEGAL GETS ^f0.'
-	for i_001 to 0177(kmap[i] _ i) '^f1.^f1.REGULAR ASCII|S^f0.'
+"kmap ← string 0377.
+	for i←0200 to 0377(kmap[i] ← 0177) '^f1.ILLEGAL GETS ^f0.'
+	for i←001 to 0177(kmap[i] ← i) '^f1.^f1.REGULAR ASCII|S^f0.'
 
                                  '^f1.CHAR -- KEYBOARD^f0.'
-kmap[0341]_kmap[0301]_kmap[0274]_kmap[0254]_01.
-                                                       '^f1. -- ^^A or ^^, or ^^SHF,^f0.'
-kmap[0342]_kmap[0302]_kmap[0236]_kmap[0237]_kmap[037]_kmap[036]_02.
+kmap[0341]←kmap[0301]←kmap[0274]←kmap[0254]←01.
+                                                       '^f1.≤ -- ^^A or ^^, or ^^SHF,^f0.'
+kmap[0342]←kmap[0302]←kmap[0236]←kmap[0237]←kmap[037]←kmap[036]←02.
                                              '^f1.  -- ^^B or any TOP BLANK KEY.^f0.'
 
-kmap[0343]_kmap[0303]_kmap[0272]_03. '^f1. -- ^^C or ^^SHF;^f0.'
-kmap[0344]_kmap[0304]_04. 'f1.^^D  |done| ^f0.'
-kmap[0345]_kmap[0305]_kmap[023]_05. '^f1. -- ^^E or ^^SHF ESC^f0.'
-kmap[0346]_kmap[0306]_kmap[0262]_06. '^f1. -- ^^F or ^^2^f0.'
-kmap[0347]_kmap[0307]_kmap[0273]_07. '^f1. -- ^^G or ^^;^f0.'
-kmap[0353]_kmap[0313]_kmap[0245]_013. '^f1. -- ^^K or ^^SHF5^f0.'
-kmap[0356]_kmap[0316]_kmap[0275]_016. '^f1. -- ^^N or ^^=^f0.'
-kmap[0357]_kmap[0317]_kmap[0242]_017. '^f1. -- ^^O or ^^SHF|^f0.'
-kmap[0360]_kmap[0320]_kmap[0271]_020. '^f1. -- ^^P or ^^9^f0.'
-kmap[0361]_kmap[0321]_kmap[0261]_021. '^f1. -- ^^Q or ^^1^f0.'
-kmap[0362]_kmap[0322]_kmap[0300]_022. '^f1. -- ^^R or ^^SHF2^f0.'
-kmap[0363]_kmap[0323]_023.            '^f1. -- ^^s^f0.'
-kmap[0364]_kmap[0324]_024.            '^f1. -- ^^T^f0.'
-kmap[0365]_kmap[0325]_kmap[0255]_kmap[0140]_025. '^f1. -- ^^U or ^^-^f0.'
-kmap[0366]_kmap[0326]_kmap[0265]_026. '^f1. -- ^^V or ^^5^f0.'
-kmap[0367]_kmap[0327]_kmap[0376]_027. '^f1. -- ^^W or ^^SHF6^f0.'
-kmap[0370]_kmap[0330]_kmap[0246]_030. '^f1. -- ^^X or ^^SHF7^f0.'
-kmap[0371]_kmap[0331]_kmap[0277]_031. '^f1. -- ^^Y or ^^SHF/^f0.'
-kmap[0372]_kmap[0332]_kmap[0276]_kmap[0256]_032.
+kmap[0343]←kmap[0303]←kmap[0272]←03. '^f1.⦂ -- ^^C or ^^SHF;^f0.'
+kmap[0344]←kmap[0304]←04. 'f1.^^D  |done| ^f0.'
+kmap[0345]←kmap[0305]←kmap[023]←05. '^f1. -- ^^E or ^^SHF ESC^f0.'
+kmap[0346]←kmap[0306]←kmap[0262]←06. '^f1.≡ -- ^^F or ^^2^f0.'
+kmap[0347]←kmap[0307]←kmap[0273]←07. '^f1.◦ -- ^^G or ^^;^f0.'
+kmap[0353]←kmap[0313]←kmap[0245]←013. '^f1. -- ^^K or ^^SHF5^f0.'
+kmap[0356]←kmap[0316]←kmap[0275]←016. '^f1.≠ -- ^^N or ^^=^f0.'
+kmap[0357]←kmap[0317]←kmap[0242]←017. '^f1.↪ -- ^^O or ^^SHF|^f0.'
+kmap[0360]←kmap[0320]←kmap[0271]←020. '^f1. -- ^^P or ^^9^f0.'
+kmap[0361]←kmap[0321]←kmap[0261]←021. '^f1.⇑ -- ^^Q or ^^1^f0.'
+kmap[0362]←kmap[0322]←kmap[0300]←022. '^f1.≥ -- ^^R or ^^SHF2^f0.'
+kmap[0363]←kmap[0323]←023.            '^f1.ⓢ -- ^^s^f0.'
+kmap[0364]←kmap[0324]←024.            '^f1. -- ^^T^f0.'
+kmap[0365]←kmap[0325]←kmap[0255]←kmap[0140]←025. '^f1.¬ -- ^^U or ^^-^f0.'
+kmap[0366]←kmap[0326]←kmap[0265]←026. '^f1.∢ -- ^^V or ^^5^f0.'
+kmap[0367]←kmap[0327]←kmap[0376]←027. '^f1.⌾ -- ^^W or ^^SHF6^f0.'
+kmap[0370]←kmap[0330]←kmap[0246]←030. '^f1.▱ -- ^^X or ^^SHF7^f0.'
+kmap[0371]←kmap[0331]←kmap[0277]←031. '^f1.➲ -- ^^Y or ^^SHF/^f0.'
+kmap[0372]←kmap[0332]←kmap[0276]←kmap[0256]←032.
                                                         '^f1. -- ^^Z or ^^. or ^^SHF.^f0.'
-kmap[0333]_kmap[0264]_033. '^f1. -- ^^[ or ^^4^f0.'
-kmap[0334]_kmap[0267]_034. '^f1. -- ^^\ or ^^7^f0.'
-kmap[0335]_kmap[0375]_035. '^f1. -- ^^]^f0.'
-kmap[0337]_kmap[0336]_kmap[0222]_kmap[0212]_kmap[022]_kmap[012]_036.
-                          '^f1. -- LF or ^^ _ or ^^SHF_^f0.'
-kmap[0247]_0174.            '^f1.| -- SHF\ or ^^|^f0.'
-kmap[0257]_0176.            '^f1.~ -- SHF6 or ^^/^f0.'
-kmap[0263]_043.            '^f1.# -- SHF3 or ^^3^f0.'
-kmap[0270]_052.            '^f1.* -- SHF8 or ^^8^f0.'
-kmap[0220]_kmap[0210]_kmap[020]_010. '^f1.ALL BS|S^f0.'
-kmap[0225]_kmap[0215]_kmap[025]_015. '^f1.ALL CR|S^f0.'
-kmap[0240]_kmap[0230]_kmap[030]_040. '^f1.ALL SP|S^f0.'
+kmap[0333]←kmap[0264]←033. '^f1.⇒ -- ^^[ or ^^4^f0.'
+kmap[0334]←kmap[0267]←034. '^f1. -- ^^\ or ^^7^f0.'
+kmap[0335]←kmap[0375]←035. '^f1. -- ^^]^f0.'
+kmap[0337]←kmap[0336]←kmap[0222]←kmap[0212]←kmap[022]←kmap[012]←036.
+                          '^f1. -- LF or ^^ ← or ^^SHF←^f0.'
+kmap[0247]←0174.            '^f1.| -- SHF\ or ^^|^f0.'
+kmap[0257]←0176.            '^f1.~ -- SHF6 or ^^/^f0.'
+kmap[0263]←043.            '^f1.# -- SHF3 or ^^3^f0.'
+kmap[0270]←052.            '^f1.* -- SHF8 or ^^8^f0.'
+kmap[0220]←kmap[0210]←kmap[020]←010. '^f1.ALL BS|S^f0.'
+kmap[0225]←kmap[0215]←kmap[025]←015. '^f1.ALL CR|S^f0.'
+kmap[0240]←kmap[0230]←kmap[030]←040. '^f1.ALL SP|S^f0.'
 
-to filout disp flist i showpretty ("showpretty _ %pretty.
-	dsoff (:disp is string? ("disp_file disp? () error "(file error)))
+to filout disp flist i showpretty ("showpretty ← %pretty.
+	dsoff (:disp is string? ("disp←file disp? () error "(file error)))
 	(%add?(disp set to end))
 	(null :flist?(defs map "(showev vec[i]. cr))
-	(flist is atom? (showev flist. "flist_flist eval))
+	(flist is atom? (showev flist. "flist←flist eval))
 	for i to flist length-1 (showev flist[i]. cr)) 
 	disp shorten to here. disp close. dson.)
 	'^h75.^f1.
 	Filout basically does a show in an environment where the display is
 	replaced by a file. filout pretty <file> or <string = file name> add
-	<vector> if pretty is used, the text representation is neater but
-	takes longer to generate. if add is used, function definitions are
-	appended to the file. if <vector> is not specified, defs is
+	<vector> if ↪pretty↪ is used, the text representation is neater but
+	takes longer to generate. if ↪add↪ is used, function definitions are
+	appended to the file. if <vector> is not specified, ↪defs↪ is
 	used.
 	^h60.^f0.'
  
-to filin fi :: ev (%?(!eval)     dsoff. 
-    (:fi is string?("fi _ file fi old?()
+to filin fi :: ev (%ⓢ?(!⦂eval)     dsoff. 
+    (:fi is string?("fi ← file fi old?()
 		dson !false))
     repeat
       (fi end?(done)
@@ -1712,25 +1712,25 @@ to filin fi :: ev (%?(!eval)     dsoff.
        cr (read of fi) eval print.
        dson).
     fi close.
-   )filin (to ev (repeat(cr (read of fi) eval print)))
+   )filinⓢ (to ev (repeat(cr (read of fi) eval print)))
 	'^h75.^f1.
 	Filin basically does a read-eval-print loop, but gets its input from a
 	file instead of a dispframe.
 	^h60.^f0.'
 
 to type f t ((:f is string?(
-		"f _ file f old?(f remove)
+		"f ← file f old?(f remove)
 		!false))
-	"t_string 30.
-	repeat(f end?(done) disp_f next into t))
+	"t←string 30.
+	repeat(f end?(done) disp←f next into t))
 
-to t fool  :: fontname (dispframe  ("defont _  file fontname intostring).	"disp_dispframe 16 480 514 168 string 520.
-	disp _ version. "defs _ obset.
-	"fool_#to. to to toAtm (CODE 19 defs_toAtm. toAtm)
-	PUT USER "DO "(cr read eval print). "t_0.)PUT t "fontname fill string 6ST8.AL
-"version_fill string 34Welcome to SMALLTALK [May 5]               
+to t fool  :: fontname (dispframe ⓢ ("defont ←  file fontname intostring).	"disp←dispframe 16 480 514 168 string 520.
+	disp ← version. "defs ← obset.
+	"fool←#to. to to toAtm (CODE 19 defs←toAtm. toAtm)
+	PUT USER "DO "(cr read eval print). "t←0.)PUT t "fontname fill string 6ST8.AL
+"version←fill string 34Welcome to SMALLTALK [May 5]               
 
-to expand x (:x. disp  ("winy_"frmy_winy-x. frame black)
+to expand x (:x. disp ⓢ ("winy←"frmy←winy-x. frame black)
 	disp show CODE 38)
 	'^h75.^f1.
 	t is called to set up a display frame, and defs and then self-destructs
@@ -1745,18 +1745,18 @@ THE SMALLTALK READ ROUTINE (name changed to protect ev)
 
 (to junta scanner : : read1 tablscan rdnum mknum rdstr rtb1 type
 	letbit digbit sepbit atbits qtbit
-   (%?(!eval)
+   (%ⓢ?(!⦂eval)
     %of?((:scanner is string?
-        ("scanner _ stream of scanner))
-    "scanner _ tablscan scanner type.
+        ("scanner ← stream of scanner))
+    "scanner ← tablscan scanner type.
     !read1 rtb1)
     !disp read))
 
-junta (ev)
+junta ⓢ(ev)
 
 to read1 rbuf rdtb flag ( 
     :rdtb.
-    "rbuf _ stream of vector 10.
+    "rbuf ← stream of vector 10.
     scanner read.
     !rbuf contents)
 
@@ -1764,35 +1764,35 @@ to tablscan mask : source type seq isfil nxtchr (
     %next?
       (CODE 14 next.
        'CODE 14 is equivalent to...
-       :mask=0?("t_string 1. t[1]_nxtchr.
-		"nxtchr_source next. !atom t)
+       :mask=0?("t←string 1. t[1]←nxtchr.
+		"nxtchr←source next. !atom t)
        seq reset.
        repeat
         (0 = nxtchr?(done).
          0 = mask &*  type[nxtchr + 1]?(done).
-         seq _ nxtchr.
-         "nxtchr _ source next)
+         seq ← nxtchr.
+         "nxtchr ← source next)
        !seq contents')
-    %skip?("nxtchr _ source next)
+    %skip?("nxtchr ← source next)
     %read?(repeat
         (rdtb[nxtchr + 1] eval))
     isnew?
       (:source.
        :type.
-       "seq _ stream.
-       (source is file?("isfil _ 1))
+       "seq ← stream.
+       (source is file?("isfil ← 1))
        SELF skip))
 
 to rdnum sign base n fs( 
-    "sign _ (nxtchr=025?(scanner skip. 1)1).
-    "base _ (nxtchr=060?(8)10).
-    "n _ mknum scanner next digbit base.
-    "flag _ false.
+    "sign ← (nxtchr=025?(scanner skip. ¬1)1).
+    "base ← (nxtchr=060?(8)10).
+    "n ← mknum scanner next digbit base.
+    "flag ← false.
     056 = nxtchr?
       (scanner skip.
-       "fs _ scanner next digbit
-       0=fs length?("flag_true. !sign*n)
-       "n _ n + (mknum fs 10)/10.0 ipow fs length.
+       "fs ← scanner next digbit
+       0=fs length?("flag←true. !sign*n)
+       "n ← n + (mknum fs 10)/10.0 ipow fs length.
        nxtchr=0145?(scanner skip. !n*(10.0 ipow rdnum)*sign)
        !n*sign)
     !sign*n)
@@ -1800,80 +1800,80 @@ to rdnum sign base n fs(
 to mknum str base n i( 
     :str.
     :base.
-    "n _ 0.0.
+    "n ← 0.0.
     for i to str length
-      ("n _ (n*base) + str[i]-060)
+      ("n ← (n*base) + str[i]-060)
     !n)
 
 to rdstr t (scanner skip.
-	"t_scanner next qtbit.
+	"t←scanner next qtbit.
 	scanner skip.
-	nxtchr=047?(seq_047. !seq contents+rdstr)
+	nxtchr=047?(seq←047. !seq contents+rdstr)
 	!t)
 
 '^h75.^f1.INITIALIZATION OF READ TABLES
 ^h60.^f0.'
-"rtb1 _ vector 256.
-"type _ string 256.
-"sepbit _ 2 * "letbit _ 2 * "digbit _ 2 * "qtbit _ 1.
-"atbits _ letbit + digbit
+"rtb1 ← vector 256.
+"type ← string 256.
+"sepbit ← 2 * "letbit ← 2 * "digbit ← 2 * "qtbit ← 1.
+"atbits ← letbit + digbit
 to scanner n v i j (
 	:n. :v. repeat (
 	:i.
-	(%to?(:j. for k_i+1 to j+1 (
-		type[k]_n. rtb1[k]_v))
-	type[i+1]_n. rtb1[i+1]_v)
+	(%to?(:j. for k←i+1 to j+1 (
+		type[k]←n. rtb1[k]←v))
+	type[i+1]←n. rtb1[i+1]←v)
 	%and?() done))
-scanner 0 "(rbuf_scanner next 0) 0 to 0377.
-scanner letbit "(rbuf_atom scanner next atbits) 0101 to 0132 and 0141 to 0172.  'letters'
-scanner digbit "(rbuf_rdnum. flag?(rbuf_".)) 060 to 071.  'digits'
-scanner 0 "(rbuf_rdnum. flag?(rbuf_".)) 025.  'high-minus'
+scanner 0 "(rbuf←scanner next 0) 0 to 0377.
+scanner letbit "(rbuf←atom scanner next atbits) 0101 to 0132 and 0141 to 0172.  'letters'
+scanner digbit "(rbuf←rdnum. flag?(rbuf←".)) 060 to 071.  'digits'
+scanner 0 "(rbuf←rdnum. flag?(rbuf←".)) 025.  'high-minus'
 scanner sepbit "(scanner next sepbit) 011 and 014 and 015 and 040.  'tab, LF, FF, CR, blank'
-scanner qtbit "(rbuf _ rdstr) 047.  'string-quote'
-scanner 0 "(scanner skip. rbuf _ (read1 rtb1) eval) 020.  'eval-paren'
-scanner 0 "(scanner skip. rbuf _ read1 rtb1) 050.  'left-paren'
-scanner 0 "(scanner skip. rbuf _ nil. done) 051.  'right-paren'
-scanner 0 "(rbuf _ nil. done) 0 and 036.  'null and DOIT'
-for i to type length (type[i] _ type[i] &-  qtbit)
+scanner qtbit "(rbuf ← rdstr) 047.  'string-quote'
+scanner 0 "(scanner skip. rbuf ← (read1 rtb1) eval) 020.  'eval-paren'
+scanner 0 "(scanner skip. rbuf ← read1 rtb1) 050.  'left-paren'
+scanner 0 "(scanner skip. rbuf ← nil. done) 051.  'right-paren'
+scanner 0 "(rbuf ← nil. done) 0 and 036.  'null and DOIT'
+for i to type length (type[i] ← type[i] &-  qtbit)
 done
-"read _ #junta.
+"read ← #junta.
 PUT read "TITLE "read. '^h75.^f1.cover our tracks^h60.^f0.'
 
 to quit f s t : : r b   (dsoff.
       (null :s?()
-       "f _ file r.
-       "t _ f intostring.
+       "f ← file r.
+       "t ← f intostring.
        f reset.
-       f _ s.
-       f _ 13.
-       f _ t.
+       f ← s.
+       f ← 13.
+       f ← t.
        f close).
     file b load)
 PUT quit "r fill string 7REM.CM.
 PUT quit "b fill string 5BOOT.
 
-to os s : : r b   ("s _ :.
+to os s : : r b   ("s ← :.
     file b save?
       (quit s + r))
 PUT os "b fill string 9BREAK.SV.
 PUT os "r fill string 17;RESUME BREAK.SV.
 
-"fill _ nil
+"fill ← nil
 
-to newchars fil i j new old str    ("fil _ file(:)
+to newchars fil i j new old str    ("fil ← file(:)
     old.
-    "str _ fil intostring.
+    "str ← fil intostring.
     for i to 3
-      ("old _ "(94 22 10)
+      ("old ← "(94 22 10)
       [i].
-       "new _ "(19 21 30)
+       "new ← "(19 21 30)
       [i].
-       "j _ 1.
+       "j ← 1.
        repeat
-        (0 = "j _ str[j to 32767] find first old?(done)
-         str[j] _ disp _ new))
+        (0 = "j ← str[j to 32767] find first old?(done)
+         str[j] ← disp ← new))
     fil reset.
-    fil _ str.
+    fil ← str.
     fil close)
 
 to junta (PUT USER "DO "(t). CODE 31)
