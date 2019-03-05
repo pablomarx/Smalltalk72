@@ -7,13 +7,13 @@ to arec x y ()
 to float x y :: fprint ()
 to falseclass x y (isnew)
 to isnew (CODE 5)
-"false←falseclass.
-"(TITLE USER DO SIZE CODE SELF AREC GLOB MESS RETN CLAS
+☛false←falseclass.
+☛(TITLE USER DO SIZE CODE SELF AREC GLOB MESS RETN CLAS
  length eval or and mod chars error
- ".,/;:-[]~|ⓢ!#$∢}←={}*+⇒<> go goto turn next contents end &   ≤⦂≠)
+ ☛.,/;:-[]~|ⓢ⇑#$∢}←={}*+⇒<> go goto turn next contents end &   ≤⦂≠)
 
 '
-DONT EDIT ABOVE HERE!--These classes and atoms mentioned early to guarantee addresses for machine code.
+DONT EDIT ABOVE HERE⇑--These classes and atoms mentioned early to guarantee addresses for machine code.
  
  
 
@@ -24,9 +24,9 @@ HEREWITH A SOMEWHAT WHIMSICAL ANNOTATED VERSION OF SYSDEFS. ANNOTATIONS ARE IN I
 
 BOOTSTRAPPING MAGIC.
 
-	to isnew (null instance⇒("instance←allocate permsize.
-		instance[0]←class. !true)
-	!false).'
+	to isnew (null instance⇒(☛instance←allocate permsize.
+		instance[0]←class. ⇑true)
+	⇑false).'
 
 to print (∢..)
 	'
@@ -53,20 +53,20 @@ to : (CODE 18)
 	'
 	to : name
 
-	∢" ⇒(:"name nil ⇒(!name←caller message quotefetch)
-				(!caller message quotefetch)
+	∢☛ ⇒(:☛name nil ⇒(⇑name←caller message quotefetch)
+				(⇑caller message quotefetch)
 
 	Fetch the next thing in the message stream unevaluated
 	and bind it to the name if one is there.
 
-	∢# ⇒(:"name nil ⇒(!name←caller message referencefetch)
-				(!caller message referencefetch)
+	∢# ⇒(:☛name nil ⇒(⇑name←caller message referencefetch)
+				(⇑caller message referencefetch)
 
 	Fetch the reference to next thing in the message stream
 	and bind it to the name if one is there.
 
-		(:"name nil ⇒(!name← caller message evalfetch)
-			!caller message evalfetch)
+		(:☛name nil ⇒(⇑name← caller message evalfetch)
+			⇑caller message evalfetch)
 
 	Fetch the next thing in the message stream evaluated
 	and bind it to the name if one is there.
@@ -74,8 +74,8 @@ to : (CODE 18)
 
 to ∢ (CODE 17)
 	'
-	:"token. token=caller.message.code[caller.message.pc]⇒
-		(caller.message.pc←caller.message.pc+1. !true) !false.
+	:☛token. token=caller.message.code[caller.message.pc]⇒
+		(caller.message.pc←caller.message.pc+1. ⇑true) ⇑false.
 	That is, if a match for the token is found in the message, then
  	gobble it up and return true, else return false.
 	'
@@ -84,16 +84,16 @@ to  ( CODE 39 )
 
 to ⦂ ( CODE 36 )
 
-to ! (CODE 13)
+to ⇑ (CODE 13)
 	'
 	:x. then do a return, and apply x to any further message. Note
-	that in (... !x+3. "y←y-2), the assignment to y will never
-	happen, since ! causes a return.
+	that in (... ⇑x+3. ☛y←y-2), the assignment to y will never
+	happen, since ⇑ causes a return.
 	'
 
-to " (CODE 9)
+to ☛ (CODE 9)
 	'
-	!:". That is, get the next thing in the message stream unevalled
+	⇑:☛. That is, get the next thing in the message stream unevalled
 	and active return it (which	causes it to be applied to the message).
 	'
 
@@ -121,20 +121,20 @@ to done x (∢with⇒(:x. CODE 25) CODE 25)
 
 to again (CODE 6)
 	'
-	repeat ("active←active caller. eq active. class #repeat⇒(done)).
+	repeat (☛active←active caller. eq active. class #repeat⇒(done)).
 	That is, redo the most recent repeat, for, or do loop.
 	'
 
-to if exp (:exp⇒(∢then⇒(:exp. ∢else⇒(:". exp)exp)error "(no then))
-		∢then⇒(:".   ∢else⇒(:exp) false)error "(no then))
+to if exp (:exp⇒(∢then⇒(:exp. ∢else⇒(:☛. exp)exp)error ☛(no then))
+		∢then⇒(:☛.   ∢else⇒(:exp) false)error ☛(no then))
 	'
 	The ALGOL ↪if ... then ... else ...↪
 	'
 
 to for token step stop var start exp (
-	:"var. (∢←⇒(:start.)"start←1).
-	(∢to⇒(:stop.)"stop←start.)
-	(∢by⇒(:step.)"step←1.)
+	:☛var. (∢←⇒(:start.)☛start←1).
+	(∢to⇒(:stop.)☛stop←start.)
+	(∢by⇒(:step.)☛step←1.)
 	∢do. :#exp. CODE 24)
 	'
 	An Algol-like ↪for↪.
@@ -144,7 +144,7 @@ to for token step stop var start exp (
 	'
 
 to do token step stop var start exp (
-	"step←"start←1. :stop. :#exp. CODE 24)
+	☛step←☛start←1. :stop. :#exp. CODE 24)
 
 
 
@@ -184,15 +184,15 @@ to leech field bits : ptr (
 	will not.
 	'
 
-PUT USER "TITLE "USER
-PUT falseclass "TITLE "false
+PUT USER ☛TITLE ☛USER
+PUT falseclass ☛TITLE ☛false
 
-PUT atom "DO "(CODE 29
+PUT atom ☛DO ☛(CODE 29
 	'
-	∢←⇒(:x.  !x -- Lookup SELF and replace its value by x.)
-	∢eval⇒(! -- Lookup the binding of SELF)
-	∢=⇒(!SELF=:)
-	∢chars⇒(! -- printname of SELF (a string))
+	∢←⇒(:x.  ⇑x -- Lookup SELF and replace its value by x.)
+	∢eval⇒(⇑ -- Lookup the binding of SELF)
+	∢=⇒(⇑SELF=:)
+	∢chars⇒(⇑ -- printname of SELF (a string))
 	'
 
 	∢is⇒(ISIT eval)
@@ -206,31 +206,31 @@ PUT atom "DO "(CODE 29
 
 to ev (repeat (cr read eval print))
 
-PUT falseclass "DO "(CODE 11
+PUT falseclass ☛DO ☛(CODE 11
 	'
-	∢⇒⇒ (:".)
-	∢or⇒ (!:)
+	∢⇒⇒ (:☛.)
+	∢or⇒ (⇑:)
 	∢and⇒ (:.)
 	∢<⇒ (:.)
 	∢=⇒ (:.)
 	∢>⇒ (:.)
 	'
 
-	∢is⇒(∢false⇒(!true) ∢~⇒ (!"false) :".)
-	∢print⇒("false print) )
+	∢is⇒(∢false⇒(⇑true) ∢~⇒ (⇑☛false) :☛.)
+	∢print⇒(☛false print) )
 
-PUT vector "DO "(CODE 3 ⇒(!substr SELF x GLOB MESS)
+PUT vector ☛DO ☛(CODE 3 ⇒(⇑substr SELF x GLOB MESS)
 	'
 	isnew⇒(Allocate vector of length :.
 		Fill vector with nils.)
 	∢[⇒(:x. ∢].
-		(∢←⇒(:y. !y -- store y into xth element. )
-		!  xth element) )
-	∢length⇒(! length of string or vector)
-	∢eval⇒("pc←0. repeat
-		(null SELF["pc←pc+1]⇒(done)
-		"val←SELF[pc] eval)
-		!val) sort of...
+		(∢←⇒(:y. ⇑y -- store y into xth element. )
+		⇑  xth element) )
+	∢length⇒(⇑ length of string or vector)
+	∢eval⇒(☛pc←0. repeat
+		(null SELF[☛pc←pc+1]⇒(done)
+		☛val←SELF[pc] eval)
+		⇑val) sort of...
 	'
 	∢is⇒(ISIT eval)
 	∢print⇒(disp←40. for x to SELF length
@@ -238,41 +238,41 @@ PUT vector "DO "(CODE 3 ⇒(!substr SELF x GLOB MESS)
 	∢map⇒(:y. for x to SELF length
 		(evapply SELF[x] to y)) )
 
-PUT string "DO "(CODE 3 ⇒(!substr SELF x GLOB MESS)
+PUT string ☛DO ☛(CODE 3 ⇒(⇑substr SELF x GLOB MESS)
 
 	'
 	isnew⇒(Allocate string of length :.
 		Fill string with 0377s.)
 	∢[⇒(:x. ∢].
-		(∢←⇒(:y. !y -- store y into xth element. )
-		!  xth element) )
-	∢length⇒(! length of string or vector)
+		(∢←⇒(:y. ⇑y -- store y into xth element. )
+		⇑  xth element) )
+	∢length⇒(⇑ length of string or vector)
 '
 
 	∢is⇒(ISIT eval)
-	∢print⇒(0 = "x ← SELF[1 to 9999] find first 39⇒
+	∢print⇒(0 = ☛x ← SELF[1 to 9999] find first 39⇒
 		 (disp ← 39. disp ← SELF. disp ← 39)
 		 SELF[1 to x-1] print. SELF[x+1 to SELF length] print)
 	∢=⇒(:y is string⇒(SELF length=y length⇒(
-		for x to SELF length (SELF[x]=y[x]⇒() !false)) !false)
-		!false)
-	∢+⇒(:y is string⇒("x←SELF[1 to SELF length+y length].
-		!x[SELF length+1 to x length]←y[1 to y length])
-		error "(string not found)) )
+		for x to SELF length (SELF[x]=y[x]⇒() ⇑false)) ⇑false)
+		⇑false)
+	∢+⇒(:y is string⇒(☛x←SELF[1 to SELF length+y length].
+		⇑x[SELF length+1 to x length]←y[1 to y length])
+		error ☛(string not found)) )
 
-PUT number "DO "(CODE 4
+PUT number ☛DO ☛(CODE 4
 	'
-	∢+⇒(!val+:)
-	∢-⇒(!val-:)
-	∢*⇒(!val*:)
-	∢/⇒(!val/:)
-	∢<⇒(!val<:)
-	∢=⇒(!val=:
-	∢>⇒(!val>:)
-	∢&  ⇒(∢+⇒(!val OR :)
-		∢-⇒(!val XOR :)
-		∢*⇒(!val AND :)
-		∢/⇒(!val LSHIFT :))
+	∢+⇒(⇑val+:)
+	∢-⇒(⇑val-:)
+	∢*⇒(⇑val*:)
+	∢/⇒(⇑val/:)
+	∢<⇒(⇑val<:)
+	∢=⇒(⇑val=:
+	∢>⇒(⇑val>:)
+	∢&  ⇒(∢+⇒(⇑val OR :)
+		∢-⇒(⇑val XOR :)
+		∢*⇒(⇑val AND :)
+		∢/⇒(⇑val LSHIFT :))
 	'
 
 	∢is⇒(ISIT eval)
@@ -289,15 +289,15 @@ to - x (:x*¬1)
 	An often used abbreviation, has to work for float as well.
 	'
 
-to base8 i x s (:x. "s←string 7. for i to 7
-	(s[8-i] ← 060 + x &* 7. "x ← x &/ ¬3). !s)
+to base8 i x s (:x. ☛s←string 7. for i to 7
+	(s[8-i] ← 060 + x &* 7. ☛x ← x &/ ¬3). ⇑s)
 	'
 	Returns a string containing the octal representation (unsigned) of its
 	integer argument.
 	'
  
 
-"ISIT ← "(∢~⇒(!TITLE) !TITLE=:").
+☛ISIT ← ☛(∢~⇒(⇑TITLE) ⇑TITLE=:☛).
 
 to nil x (#x)
 	'
@@ -313,7 +313,7 @@ to null x (:x. 1 CODE 37)
 to eq x (CODE 15)
  
 	'
-	(!:x is-identical-to :) - compare 2 SMALLTALK pointers.
+	(⇑:x is-identical-to :) - compare 2 SMALLTALK pointers.
 	'
 
 '
@@ -322,7 +322,7 @@ UTILITIES
  
 to mem x y (:x. CODE 26)
 	'
-	to mem x y (:x. ∢←⇒(!core/mem x ←:)!core/mem x)
+	to mem x y (:x. ∢←⇒(⇑core/mem x ←:)⇑core/mem x)
 	mem loads integers from and stores them into real core.
 	Tee hee...
 	mem 0430 ← 0  --set alto clock to zero
@@ -346,8 +346,8 @@ to mouse x (:x. CODE 35)
 	returns the x coordinate of the mouse and mouse 9 returns the y
 	coordinate.
 	'
-to mx (!mouse 8)
-to my (!mouse 9)
+to mx (⇑mouse 8)
+to my (⇑mouse 9)
 
 to core ((mem 077)-mem 076)
 	'
@@ -400,9 +400,9 @@ to evapply x y (:x. ∢to⇒(:y. ∢in⇒(:GLOB. CODE 10) CODE 10)
 
 to cr (disp←13).  to sp (disp←32)
 
-"true←"true
-"eval←"eval
-to is ( ∢~⇒(!"untyped):". !false)
+☛true←☛true
+☛eval←☛eval
+to is ( ∢~⇒(⇑☛untyped):☛. ⇑false)
 	'
 	These are used to handle messages to classes which can|t answer
 	queston invoking ↪is↪, ↪eval↪, etc.
@@ -414,69 +414,69 @@ to t nprint substr (ev). t
 	'
  
 to nprint digit n (:n=0⇒()
-	"digit←n mod 10. nprint n/10. disp←060+digit)
-PUT number "nprint #nprint.
+	☛digit←n mod 10. nprint n/10. disp←060+digit)
+PUT number ☛nprint #nprint.
 	'
 	Prints (non-neg) integers in decimal	with leading zeroes suppressed⇑
 	'
  
 to substr op byte s lb ub s2 lb2 ub2 (
-	:#s. :lb. :ub. :MESS. "GLOB←ub.  '^f1.tee hee
+	:#s. :lb. :ub. :MESS. ☛GLOB←ub.  '^f1.tee hee
 '
-	:ub. (∢]⇒() error "(missing right bracket))
-	"byte ← "lb2 ← "ub2 ← 1.
-	∢find⇒ ("op ← (∢first⇒(1) ∢last⇒(2) 1)
+	:ub. (∢]⇒() error ☛(missing right bracket))
+	☛byte ← ☛lb2 ← ☛ub2 ← 1.
+	∢find⇒ (☛op ← (∢first⇒(1) ∢last⇒(2) 1)
 				+ (∢non⇒(2) 0). :byte. CODE 40)
-	∢←⇒  (∢all⇒ (:byte. "op←0. CODE 40)
-		:#s2. "op←5.
+	∢←⇒  (∢all⇒ (:byte. ☛op←0. CODE 40)
+		:#s2. ☛op←5.
 		∢[⇒ (:lb2. ∢to. :ub2. ∢].  CODE 40)
-			"ub2←9999. CODE 40)
-	"op ← 6. "ub2 ← ub+1-lb.
-	"s2 ← (s is string⇒(string ub2) vector ub2).  CODE 40).
-PUT string "substr #substr.
-PUT vector "substr #substr.
+			☛ub2←9999. CODE 40)
+	☛op ← 6. ☛ub2 ← ub+1-lb.
+	☛s2 ← (s is string⇒(string ub2) vector ub2).  CODE 40).
+PUT string ☛substr #substr.
+PUT vector ☛substr #substr.
 done
 	'
 	substr takes care of copying, moving and searching within strings
 	and vectors.  It first gets its father (string/vector) and the lower
 	bound, and then proceeds to fetch the rest of the message from
 	above.  Some examples:
-		"(a b c d e)[2 to 3] -> (b c)
-		"(a b c d e)[1 to 5] find "c  -> 3
-		"(a b c d e)[1 to 5] find "x  -> 0
+		☛(a b c d e)[2 to 3] -> (b c)
+		☛(a b c d e)[1 to 5] find ☛c  -> 3
+		☛(a b c d e)[1 to 5] find ☛x  -> 0
 	See vecmod for more examples.  String syntax is identical.
 	'
  
-to vecmod new end old posn ndel nins ins ("end←10000.
+to vecmod new end old posn ndel nins ins (☛end←10000.
 	:old. :posn. :ndel. :ins.
-	"nins←(ins is vector⇒(ins length-1) null ins⇒(0) 1).
-	"new ← old[1 to old length+nins-ndel].
+	☛nins←(ins is vector⇒(ins length-1) null ins⇒(0) 1).
+	☛new ← old[1 to old length+nins-ndel].
 	(ins is vector⇒(new[posn to end] ← ins[1 to nins]) new[posn]←ins).
 	new[posn+nins to end] ← old[posn+ndel to end].
-	!new)
+	⇑new)
 	'
 	Vecmod makes a copy of old vector with ndel elements deleted
 	beginning at posn.  If ins is a vector, its elements are inserted	at
 	the same place. It is the heart of edit.
 	'
 
-to addto func v w (:#func. :w. "v←GET func "DO. null v⇒(error "(no code))
-	PUT func "DO vecmod v v length 0 w)
+to addto func v w (:#func. :w. ☛v←GET func ☛DO. null v⇒(error ☛(no code))
+	PUT func ☛DO vecmod v v length 0 w)
 	'
 	Addto appends code to a class definition.
 	'
 
 
 to fill t i l str ( 
-   "l ← :str length.
-    "t ← disp ← kbd.
+   ☛l ← :str length.
+    ☛t ← disp ← kbd.
       (t = 10⇒
-         ("t ← disp ← kbd)).
-    str["i ← 1] ← t.
+         (☛t ← disp ← kbd)).
+    str[☛i ← 1] ← t.
     repeat
       (i = l⇒(done)
-       10 = str["i ← i + 1] ← disp ← kbd⇒(done)).
-    !str)
+       10 = str[☛i ← i + 1] ← disp ← kbd⇒(done)).
+    ⇑str)
 
 
 to stream in : i s l( 
@@ -486,31 +486,31 @@ to stream in : i s l(
     ∢←⇒
       (
         (i = l⇒
-           ("s ← s[1 to "l ← 2 * l]))
-       !s["i ← i + 1] ← :)
+           (☛s ← s[1 to ☛l ← 2 * l]))
+       ⇑s[☛i ← i + 1] ← :)
     ∢next⇒
-      (i = l⇒(!0)
-       !s["i ← i + 1])
+      (i = l⇒(⇑0)
+       ⇑s[☛i ← i + 1])
     ∢contents⇒
-      (!s[1 to i])
+      (⇑s[1 to i])
      ^h60.←f0.'
     ∢reset⇒
-      ("i ← 0)
+      (☛i ← 0)
     isnew⇒
-      ("s ←
+      (☛s ←
         (∢of⇒(:)
          string 10).
-       "i ←
+       ☛i ←
         (∢from⇒((:)
             - 1)
          0).
-       "l ←
+       ☛l ←
         (∢to⇒(:)
          s length))
     ∢is⇒
       (ISIT eval)
     ∢end⇒
-      (!i = l)
+      (⇑i = l)
     ∢print⇒
       (
         (i > 0⇒
@@ -520,23 +520,23 @@ to stream in : i s l(
        s[i + 1 to l] print))
 
 to obset i input : vec size end (
-	∢add⇒((size="end←end+1⇒("vec←vec[1 to "size←size+10]))
+	∢add⇒((size=☛end←end+1⇒(☛vec←vec[1 to ☛size←size+10]))
 		vec[end]←:)
 	∢←⇒(0=vec[1 to end] find first :input⇒
 		(SELF add input))
-	∢delete⇒(0="i←vec[1 to end] find first :input⇒(!false)
-		vec[i to end]←vec[i+1 to end+1]. "end←end-1)
-	∢unadd⇒("input←vec[end]. vec[end]←nil.
-		"end←end-1. !input)
-	∢vec⇒(!vec[1 to end])
+	∢delete⇒(0=☛i←vec[1 to end] find first :input⇒(⇑false)
+		vec[i to end]←vec[i+1 to end+1]. ☛end←end-1)
+	∢unadd⇒(☛input←vec[end]. vec[end]←nil.
+		☛end←end-1. ⇑input)
+	∢vec⇒(⇑vec[1 to end])
 	∢map⇒(:input. for i ← end to 1 by ¬1 (input eval))
-	∢print⇒(SELF map "(vec[i] print. sp))
+	∢print⇒(SELF map ☛(vec[i] print. sp))
 	∢is⇒(ISIT eval)
-	isnew⇒("end←0. "vec←vector "size←4)
+	isnew⇒(☛end←0. ☛vec←vector ☛size←4)
 	)
 
-to { set ("set←stream of vector 10. repeat(
-	∢}⇒(!set contents)
+to { set (☛set←stream of vector 10. repeat(
+	∢}⇒(⇑set contents)
 	set ← :)
 	)
 
@@ -550,22 +550,22 @@ PRETTY-PRINT
 	'
 
 to show func t (
-	:#func. "t←GET func "DO.
-	null t ⇒ (!"(no code)) pshow t 0.)
+	:#func. ☛t←GET func ☛DO.
+	null t ⇒ (⇑☛(no code)) pshow t 0.)
 to pshow ptr dent i t :: x tabin index (:ptr :dent.
 	(ptr length>4⇒(tabin dent)) disp←40.
 	for i to ptr length-1
-		("t ← ptr[i].
+		(☛t ← ptr[i].
 		t is vector ⇒(pshow t dent+3.
 			i=ptr length-1⇒()
-			". = "x←ptr[i+1]⇒()
+			☛. = ☛x←ptr[i+1]⇒()
 			x is vector⇒()
 			tabin dent)
 		i=1 ⇒(t print)
-		0<"x←index "(. , ⓢ [ ] ⇒) t⇒
+		0<☛x←index ☛(. , ⓢ [ ] ⇒) t⇒
 			(x=1⇒(t print. ptr[i+1] is vector⇒() tabin dent)
 							t print)
-		0=index "(: " # ! [ ∢ ⇒ &  ) ptr[i-1]⇒(disp←32. t print)
+		0=index ☛(: ☛ # ⇑ [ ∢ ⇒ &  ) ptr[i-1]⇒(disp←32. t print)
 		t print)
 	disp←41)
 to t tabin index (ev)
@@ -573,43 +573,43 @@ t
 to tabin n :: x (:n. disp←13. repeat
         (n > 6⇒
            (disp ← x[6].
-            "n ← n - 6)
+            ☛n ← n - 6)
          done)
       disp ← x[n + 1])
-(PUT tabin "x {string 0 32 fill string 2 fill string 3
+(PUT tabin ☛x {string 0 32 fill string 2 fill string 3
 	fill string 4 fill string 5 fill string 6}).
                        'leave these blanks'
-PUT pshow "tabin #tabin.
+PUT pshow ☛tabin #tabin.
 to index op byte s lb ub s2 lb2 ub2 (
-	:s. :byte. "op←"lb←"s2←"lb2←"ub2←1. "ub←9999. CODE 40)
+	:s. :byte. ☛op←☛lb←☛s2←☛lb2←☛ub2←1. ☛ub←9999. CODE 40)
 	'
 	A piece of substr which runs faster.
 	'
-PUT pshow "index #index.
+PUT pshow ☛index #index.
 done
 
 '
 FLOATING POINT
 '
 
-PUT float "DO "(0 CODE 42
+PUT float ☛DO ☛(0 CODE 42
        ∢ipart⇒(1 CODE 42)
        ∢fpart⇒(2 CODE 42)
        ∢ipow⇒
-         (:x = 0⇒(!1.0)
+         (:x = 0⇒(⇑1.0)
           x = 1⇒()
           x > 1⇒
             (1 = x mod 2⇒
-               (!SELF *(SELF * SELF)
+               (⇑SELF *(SELF * SELF)
                 ipow x / 2)
-             !(SELF * SELF)
+             ⇑(SELF * SELF)
              ipow x / 2)
-          !1.0 / SELF ipow 0-x)
+          ⇑1.0 / SELF ipow 0-x)
        ∢epart⇒
-         (SELF < :x⇒(!0)
-          SELF < x * x⇒(!1)
-          !
-            ("y ← 2 * SELF epart x * x)
+         (SELF < :x⇒(⇑0)
+          SELF < x * x⇒(⇑1)
+          ⇑
+            (☛y ← 2 * SELF epart x * x)
           +
             (SELF / x ipow y)
           epart x)
@@ -626,37 +626,37 @@ t
 to fprint n i p q s : : fuzz ( 
     '^f1.Normalize to [1,10)^f0.'
       (:n < 1⇒
-         ("p ← -(10.0 / n)
+         (☛p ← -(10.0 / n)
           epart 10.0)
-       "p ← n epart 10.0)
-       "n ← fuzz + n / 10.0 ipow p.
+       ☛p ← n epart 10.0)
+       ☛n ← fuzz + n / 10.0 ipow p.
     '^f1.Scientific or decimal^f0.'
-      ("q ← p.
-       "s ← fuzz*2.
+      (☛q ← p.
+       ☛s ← fuzz*2.
        p > 6⇒
-         ("p ← 0)
+         (☛p ← 0)
        p < ¬3⇒
-         ("p ← 0)
-       "q ← 0.
+         (☛p ← 0)
+       ☛q ← 0.
        p < 0⇒
          (disp ← 48. disp←46.
           for i ← p to ¬2(disp ← 48))
-       "s ← s * 10.0 ipow p)
+       ☛s ← s * 10.0 ipow p)
     '^f1.Now print (s suppresses trailing zeros)^f0.'
     for i to 9
       (disp ← 48 + n ipart.
-       "p ← p - 1.
-       "n ← 10.0 * n fpart.
+       ☛p ← p - 1.
+       ☛n ← 10.0 * n fpart.
        p < 0⇒
          (
             (p = ¬1⇒(disp ← 46))
-          n < "s ← 10.0 * s⇒(done)))
+          n < ☛s ← 10.0 * s⇒(done)))
       (p = ¬1⇒(disp ← 48))
     q = 0⇒()
     disp←0145.
     q print)
-PUT fprint "fuzz 5.0 * 10.0 ipow ¬9.
-PUT float "fprint #fprint.
+PUT fprint ☛fuzz 5.0 * 10.0 ipow ¬9.
+PUT float ☛fprint #fprint.
 done
     
 '
@@ -665,7 +665,7 @@ TEXT DISPLAY ROUTINES
 
 
 Display frames are declared with five parameters. They are a left x, a width, a top y, a height, and a string.  Hence --
-	"yourframe←dispframe 16 256 16 256 string 400.
+	☛yourframe←dispframe 16 256 16 256 string 400.
 -- gets you an area on the upper left portion of the display that starts at x,y 16,16 and is 256 bits(raster units) wide and 256 bits high. The string (buf) serves as the text buffer, and is altered by ← and scrolling.
 
 There are actually two entities associated with display frames--frames and windows. Currently both are given the same dimensions upon declaration (see isnew).  
@@ -688,8 +688,8 @@ The ↪reply↪ variable in the instance may be helpful in controlling things.  
 
 ↪justify↪ is a toggle for right justifying the  contents of a dispframe.  The default is  0 and means no justification.  Setting it to 1 causes justification on frame boundaries.
 
-The ↪font↪ variable allows for the association of a font other than the default font with the display frame.  To get a different font into core say "something ← file <fontfilename> intostring. Then you can say dispⓢ ("font←something) or you can declare the font at the same time as the tdispframe is declared as e.g.
- "yourframe ← dispframe 3 40 3 40 string 20 font something.
+The ↪font↪ variable allows for the association of a font other than the default font with the display frame.  To get a different font into core say ☛something ← file <fontfilename> intostring. Then you can say dispⓢ (☛font←something) or you can declare the font at the same time as the tdispframe is declared as e.g.
+ ☛yourframe ← dispframe 3 40 3 40 string 20 font something.
 '  
 
 
@@ -704,12 +704,12 @@ The ↪font↪ variable allows for the association of a font other than the defa
 		error.
 	'
 
-∢ⓢ⇒(!⦂eval)
+∢ⓢ⇒(⇑⦂eval)
 	'
 	Allows access to instance variables. For example, 
-		yourframeⓢ ("winx←32) 
+		yourframeⓢ (☛winx←32) 
 	will alter the value of window x in the instance of dispframe
-	called "yourframe".
+	called ☛yourframe☛.
 	'
 
 ∢show⇒(4 CODE 51 3 CODE 51)
@@ -721,7 +721,7 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	way to clean up a cluttered world.
   	'
 
-∢hasmouse⇒(frmx<mx<frmx+frmwd⇒(!frmy<my<frmy+frmht)!false)
+∢hasmouse⇒(frmx<mx<frmx+frmwd⇒(⇑frmy<my<frmy+frmht)⇑false)
 	'
 	Tells you if the mouse is within a frame.
 	'
@@ -735,8 +735,8 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	is in fact your ↪window↪ on that frame.
 	'
 
-∢put⇒(:input. ∢at. "winx←"frmx←:. "winy←"frmy←"chary←:.
-	"last←0. "lstln←1. SELF←input. !charx-winx)
+∢put⇒(:input. ∢at. ☛winx←☛frmx←:. ☛winy←☛frmy←☛chary←:.
+	☛last←0. ☛lstln←1. SELF←input. ⇑charx-winx)
 	'
 	For them as would rather do it themselves.
 	'
@@ -772,7 +772,7 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	If vec[1] is -1 x,y is after the end of the string.
 	If vec[2] is -2 x,y is not in the window.
 	Sample call:
-		"myvec←yourframe mfindc mx my.
+		☛myvec←yourframe mfindc mx my.
 	'
 
 ∢mfindw ⇒(8 CODE 51)
@@ -787,7 +787,7 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	If vec[1] is -1 x,y is after the end of the string.
 	If vec[2] is -2 x,y is not in the window.
 	Sample call:
-		"myvec←yourframe mfindw mx my.
+		☛myvec←yourframe mfindw mx my.
 	'
 
 ∢mfindt ⇒(6 CODE 51)
@@ -810,21 +810,21 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	If vec[1] is -1 x,y is after the end of the string or not in frame.
 	If vec[2] is -2 x,y is not in the window.
 	A sample call--
-		"variable←yourframe mfindt mx my.
+		☛variable←yourframe mfindt mx my.
 	'
 
-∢read⇒(!dread)
+∢read⇒(⇑dread)
 	'
 	Makes a code vector out of keyboard input. See dread below.
 	'
 
-∢reread⇒(!reread :)
+∢reread⇒(⇑reread :)
 	'
 	Used by redo and fix.  Goes back n(its argument), prompts and does
 	a read from there. See reread below.
 	'
 
-∢sub⇒("input ← sub :. SELF show. !input)
+∢sub⇒(☛input ← sub :. SELF show. ⇑input)
 	'
 	Evals its argument in a sub-window.  Used by fix and shift-esc.
 	 See sub below.
@@ -847,21 +847,21 @@ The ↪font↪ variable allows for the association of a font other than the defa
 
 ∢is ⇒(ISIT eval)
 
-isnew ⇒ ("winx←:frmx. "winwd←:frmwd. "chary←"winy←:frmy.
-	:frmht."winht←682-winy. :buf. "lstln←1.
-	"mark←"last←"charx←"reply←"justify←0.
-	"font ← (∢font⇒(:input is string⇒(input) defont)defont)	∢noframe⇒() frame black)  ))
+isnew ⇒ (☛winx←:frmx. ☛winwd←:frmwd. ☛chary←☛winy←:frmy.
+	:frmht.☛winht←682-winy. :buf. ☛lstln←1.
+	☛mark←☛last←☛charx←☛reply←☛justify←0.
+	☛font ← (∢font⇒(:input is string⇒(input) defont)defont)	∢noframe⇒() frame black)  ))
  
 dispframe knows
 to dread t flag (
-	disp←20. "flag←false. "mark←last.
+	disp←20. ☛flag←false. ☛mark←last.
 	(null #DRIBBLE⇒() DRIBBLE flush)
-	repeat (050>disp←"t←kbd⇒(
+	repeat (050>disp←☛t←kbd⇒(
 		t=010⇒(last<mark⇒(disp←buf[last+1]) 
 		'
 		Backspace only up to prompt.
 		'
-			buf[last+1]=047⇒("flag←flag is false))
+			buf[last+1]=047⇒(☛flag←flag is false))
 			'
 			Backspace out of string flips flag.
 			'
@@ -869,25 +869,25 @@ to dread t flag (
 		'
 		DOIT checks if in a string.
 		'
-		t=047⇒("flag←flag is false)
+		t=047⇒(☛flag←flag is false)
 		'
 		Flag is true if in a string
 		'
-		t=05⇒(sub "(ev). "last←last-1. disp show)
+		t=05⇒(sub ☛(ev). ☛last←last-1. disp show)
 		'
 		Shift-Esc make sub-eval.
 		'
-		t=04⇒(disp←010. "done print. disp←036. !"(done))
+		t=04⇒(disp←010. ☛done print. disp←036. ⇑☛(done))
 		))
-	disp←13. !read of stream of buf from mark+1 to last)
+	disp←13. ⇑read of stream of buf from mark+1 to last)
 to sub disp (
-	"disp←dispframe winx+48 winwd-64 winy+14 winht-28 string 300	font font. 
+	☛disp←dispframe winx+48 winwd-64 winy+14 winht-28 string 300	font font. 
 disp clear. (:)eval)
 	'
 	Opens a sub-frame, and evals its argument in that context.
 	'
 
-to frame a ("a ← turtle at frmx - 1 frmy - 1.
+to frame a (☛a ← turtle at frmx - 1 frmy - 1.
 	aⓢwidth ← 2 . aⓢink←(∢white⇒(¬1) ∢black⇒(¬3) ∢color⇒(:) ¬3)
 	do 2 (a turn 90 go frmwd + 2 turn 90 go frmht + 2)	)
 	'
@@ -895,13 +895,13 @@ to frame a ("a ← turtle at frmx - 1 frmy - 1.
 	'
 
 
-to reread n i p reader ((null :n⇒("n←1))
-	"p←mark. "last←mark-2. disp show.
+to reread n i p reader ((null :n⇒(☛n←1))
+	☛p←mark. ☛last←mark-2. disp show.
 	 for i to n
-		("p←buf[1 to p-1] find last 20.
+		(☛p←buf[1 to p-1] find last 20.
 		p<1⇒(done))
-	i<n+1⇒(error "(no code))
-	!read of stream of buf from p+1 to last)
+	i<n+1⇒(error ☛(no code))
+	⇑read of stream of buf from p+1 to last)
 	'
 	Counts back n prompts (n is integer arg) and then does a read from
 	there. Also erases	the line just typed.
@@ -947,15 +947,15 @@ to dmovec (CODE 55)
 	'
 
  
-to redo (!(disp reread :) eval)
+to redo (⇑(disp reread :) eval)
 	'
 	Causes re-evaluation of the input typed n prompts before this.
 	Setting last←mark-2 makes the redo statement and its prompt
 	disappear with a disp show.
 	'
 
-to fix vec ("vec←disp reread :.
-	(disp sub "(veced vec)) eval)
+to fix vec (☛vec←disp reread :.
+	(disp sub ☛(veced vec)) eval)
 	'
 	Like redo, except that the previous input is given to the editor in a
 	subwindow.  When editing is done, the resulting code is evalled
@@ -971,26 +971,26 @@ to turtle var : pen ink width dir x xf y yf frame : f (
 	CODE 21  '∢go⇒(draw a line of length :)
 	          ∢turn⇒(turn right : (degrees))
 	          ∢goto⇒(draw a line to :(x), :(y))'
-	∢ⓢ⇒(:"var. ∢←⇒(!var ← :)
-		      !var eval)
-	∢pendn⇒("pen ← 1. !SELF)
-	∢penup⇒("pen ← 0. !SELF)
-	∢black⇒("ink ← ¬3. !SELF)
-	∢white⇒("ink ← ¬1. !SELF)
-	∢xor⇒("ink ← ¬2. !SELF)
+	∢ⓢ⇒(:☛var. ∢←⇒(⇑var ← :)
+		      ⇑var eval)
+	∢pendn⇒(☛pen ← 1. ⇑SELF)
+	∢penup⇒(☛pen ← 0. ⇑SELF)
+	∢black⇒(☛ink ← ¬3. ⇑SELF)
+	∢white⇒(☛ink ← ¬1. ⇑SELF)
+	∢xor⇒(☛ink ← ¬2. ⇑SELF)
 	∢is⇒(ISIT eval)
-	∢home⇒("x ← frame ⓢ frmwd/2.
-	       "y ← frame ⓢ frmht/2.
-	       "xf ← "yf ← 0. "dir←270. !SELF)
-	∢erase⇒(frame fclear. !SELF)
-	∢up⇒("dir ← 270. !SELF)
-	isnew⇒("ink ← ¬3. "pen ← "width ← 1.
-		(∢frame⇒("frame ← :) "frame ← f)
-		∢at⇒(:x. :y. "xf ← "yf ← 0. "dir←270)
+	∢home⇒(☛x ← frame ⓢ frmwd/2.
+	       ☛y ← frame ⓢ frmht/2.
+	       ☛xf ← ☛yf ← 0. ☛dir←270. ⇑SELF)
+	∢erase⇒(frame fclear. ⇑SELF)
+	∢up⇒(☛dir ← 270. ⇑SELF)
+	isnew⇒(☛ink ← ¬3. ☛pen ← ☛width ← 1.
+		(∢frame⇒(☛frame ← :) ☛frame ← f)
+		∢at⇒(:x. :y. ☛xf ← ☛yf ← 0. ☛dir←270)
 		SELF home)
 	)
-PUT turtle "f dispframe 0 512 0 684 string 1 noframe.
-"@ ← turtle.
+PUT turtle ☛f dispframe 0 512 0 684 string 1 noframe.
+☛@ ← turtle.
 
 
 '
@@ -1004,10 +1004,10 @@ xfer, xplot
 
 a file is found in a directory (↪dirinst↪) by its file name (↪fname↪), and has a one ↪page↪, 512 character string (↪sadr↪).  ↪rvec↪ is an optional vector of disk addresses used for random page access.
 
-"fi ←
+☛fi ←
  <directory> file <string> old -- finds an old file named <string> in <directory> or returns false if does not exist or a disk error occurs.
 
-"fi ←
+☛fi ←
  <directory> file <string> new -- creates a new file or returns false if it already exists.  if neither old or new is specified, an existing file named <string> will be found or a new file created. if <directory> is not specified, the current default directory is used.
 
 <directory> file <string> delete -- deletes a file from a directory and deallocates its pages.  do not delete the system directory (SYSDIR.) or bittable (SYS.STAT.), or any directories you create.
@@ -1038,7 +1038,7 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 		fi←<integer>, <string>, or <file> --  
 		:x is string⇒ (for i to x length (SELF←x[i]))
 		x is file⇒ (repeat (x end⇒ (done) SELF←x next))
-		(numch<"bytec←bytec+1⇒ 
+		(numch<☛bytec←bytec+1⇒ 
 		  (SELF set to write (pagen+bytec/512) bytec mod 512))
 		sadr[bytec]←x &*  0377
 		'
@@ -1047,29 +1047,29 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 			'
 			fi next word←<integer> -- write integer.
 			possibly increment pointer to word boundary.
-			(0=bytec &*  1⇒ () "bytec←bytec+1)
+			(0=bytec &*  1⇒ () ☛bytec←bytec+1)
 			SELF ← :x/256. SELF ← x mod 256.
 			'
 
 			 6)
 			'
 			fi next word -- read an integer
-			(0=bytec &*  1⇒ () "bytec←bytec+1)
-			!(SELF next*256) + SELF next
+			(0=bytec &*  1⇒ () ☛bytec←bytec+1)
+			⇑(SELF next*256) + SELF next
 			'
 
 		  ∢into⇒ (16)
 			'
 			fi next into <string> -- read a string
-			for i to :x length(x[i]←SELF next).!x
+			for i to :x length(x[i]←SELF next).⇑x
 			'
 
 		  25) CODE 50)
 			'
 			fi next -- read a character
-			(numch<"bytec←bytec+1⇒
+			(numch<☛bytec←bytec+1⇒
 			 (SELF set to read (pagen+bytec/512) 
-			   bytec mod 512⇒ () !0))  !sadr[bytec]
+			   bytec mod 512⇒ () ⇑0))  ⇑sadr[bytec]
 			'
 
 	∢set⇒ (∢to. (∢end⇒(13)
@@ -1086,7 +1086,7 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 			occurs, flush current page. read pages until
 			pagen=spage. allocate new pages after end if
 			necessary (-1 512 is treated as start of next
-			page, i.e. pagen+1 0). "bytec←schar
+			page, i.e. pagen+1 0). ☛bytec←schar
 			'
 
 		∢read. 4) CODE 50)
@@ -1099,16 +1099,16 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 		fi skipnext <integer> -- set character pointer relative to
 		current position. (useful for skipping rather than reading,
 		or for reading and backing up, but ↪end↪ may not work if
-		↪bytec↪ points off the current page)  "bytec← bytec + :.
+		↪bytec↪ points off the current page)  ☛bytec← bytec + :.
 		'
 
 	∢end⇒ (10 CODE 50)
 		'
 		fi end -- return false if end of file has not occurred.
-		nextp=0⇒ (bytec<numch⇒(!false))!false
+		nextp=0⇒ (bytec<numch⇒(⇑false))⇑false
 		'
 
-	∢ⓢ⇒ (!⦂ eval)
+	∢ⓢ⇒ (⇑⦂ eval)
 
 	∢flush⇒ (12 CODE 50)
 		'
@@ -1135,9 +1135,9 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 		'
 
 	∢close⇒ (dirinst ⓢ bitinst flush.
-		 SELF flush. SELF remove. !"closed)
+		 SELF flush. SELF remove. ⇑☛closed)
 		'
-		fi close or "fi←fi close (if fi is global) -- flush bittable
+		fi close or ☛fi←fi close (if fi is global) -- flush bittable
 		and current page, remove instance from filesopen list of
 		directory
 		'
@@ -1145,8 +1145,8 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 	∢shorten⇒ (∢to. ∢here⇒ (SELF shorten pagen bytec) 14 CODE 50)
 		'
 		fi shorten to <integer> <integer> -- shorten a file SELF set
-		to read :spage :schar. "x←nextp. "nextp←0.
-		"numch←schar. "dirty←1. deallocate x and successors
+		to read :spage :schar. ☛x←nextp. ☛nextp←0.
+		☛numch←schar. ☛dirty←1. deallocate x and successors
 		'
 
 	∢print⇒ (disp ← fname)
@@ -1161,10 +1161,10 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 		'
 
 	∢intostring⇒(SELF set to end.
-  		"x ← string bytec + 512 * pagen - 1.
-    		SELF reset.  !SELF next into x)
+  		☛x ← string bytec + 512 * pagen - 1.
+    		SELF reset.  ⇑SELF next into x)
 
-	∢random⇒ (SELF set to end. "rvec ← vector pagen.
+	∢random⇒ (SELF set to end. ☛rvec ← vector pagen.
 		  for x to rvec length (SELF set x 0. rvec[x] ← curadr))
 		'
 		fi random -- initialize a random access vector to be used
@@ -1187,39 +1187,39 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 		buffer) or 256 for using consecutive pages of core.  use
 		label block from instance of ↪fi↪. copy label block from
 		instance. perform i/o call. copy ↪curadr↪ and label block
-		into instance. if -1=coreaddress copy buffer to "sadr".
+		into instance. if -1=coreaddress copy buffer to ☛sadr☛.
 		' 
 
-	isnew⇒ ("fname←ncheck :. fname is false⇒
-			(error "(bad file name) !nil) 
-		(null "dirinst ← #curdir⇒ 			("dirinst ← directory ⓢ defdir.  dirinst open)).
+	isnew⇒ (☛fname←ncheck :. fname is false⇒
+			(error ☛(bad file name) ⇑nil) 
+		(null ☛dirinst ← #curdir⇒ 			(☛dirinst ← directory ⓢ defdir.  dirinst open)).
 			'
 			set directory instance for file. if curdir is nil
 			because file was not called from the context of a 			directory instance, use the default directory
 			'
 
-		∢exists⇒ (24 CODE 50. !fname)
+		∢exists⇒ (24 CODE 50. ⇑fname)
 			'
 			return false if file name does not occur in the
 			directory
 			'
 
-		∢delete⇒ (15 CODE 50. !"deleted)
+		∢delete⇒ (15 CODE 50. ⇑☛deleted)
 			'
 			delete a file (see intro)
 			'
 
-		"sadr ← (∢using⇒ (:) string 512).
+		☛sadr ← (∢using⇒ (:) string 512).
 			'
 			set up file string buffer
 			'
 
-		∢rename⇒ ("x ← ncheck :. x is false⇒
-				(error "(bad new name)!nil)
-			  file x exists⇒ (error "(name already in use))
-			  2 CODE 50.  "fname ← x.  23 CODE 50.
+		∢rename⇒ (☛x ← ncheck :. x is false⇒
+				(error ☛(bad new name)⇑nil)
+			  file x exists⇒ (error ☛(name already in use))
+			  2 CODE 50.  ☛fname ← x.  23 CODE 50.
 			  SELF set 0 12.  SELF ← fname length.
-			  SELF ← fname.  SELF flush.  !fname)
+			  SELF ← fname.  SELF flush.  ⇑fname)
 			'
 			check that the new name is not already in use.
 			lookup the original file and change its name in its
@@ -1249,35 +1249,35 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 			allocate a file, close the directory (other files			e.g. DRIBBLE, and directories should be already			closed), and write out the memory image as a Swat			file.  when arriving here from a ↪load↪, return false;			otherwise return the file instance.
 			'
 
-		∢intostring⇒(!SELF intostring)
+		∢intostring⇒(⇑SELF intostring)
 		dirinst remember SELF) ))
 			'
 			finally, file puts itself into the filesopen list of its
 			directory
 			'
 file ⓢ(ev)
-to ncheck str i x :: legal ("str←:.
-	(str is string⇒(str length < 255⇒() !false) !false)
+to ncheck str i x :: legal (☛str←:.
+	(str is string⇒(str length < 255⇒() ⇑false) ⇑false)
 	for i to str length
-		("x ← str[i].
+		(☛x ← str[i].
 		0140 < x < 0173⇒ ('lowercase')
 		 057 < x <  072⇒ ('digit')
 	  	   0 < legal[1 to 6] find x⇒ ('legal')
 		0100 < x < 0133⇒ ('uppercase')
-		!false)
-	x=056⇒(!str) !str+ ".chars)
+		⇑false)
+	x=056⇒(⇑str) ⇑str+ ☛.chars)
 '
 check that the file name is a proper length string containing only lower/upper case letters, digits, or legal characters. if name does not end with a period, append one.
 '
 
-PUT ncheck "legal fill string 6
-+-$!⇒.   
+PUT ncheck ☛legal fill string 6
++-$⇑⇒.   
 done
 
 '
 a directory is found in a directory (↪dirinst↪), has a bittable file (↪bitinst↪) for allocating new pages, a file of file entries (↪filinst↪ -- file names, disk addresses etc.), and a list of currently open files (↪filesopen↪ which is an ↪obset↪). the top level, ↪distinguished node↪ of the directory structure is the system directory ↪dp0↪ (see ↪directory knows↪ below if you also want ↪dp1↪). dp0 knows the disk number (↪dirinst↪) and the true identity of the bittable. each file must ask its directory for the bittable when page allocation is necessary, and the system directory (via its local directory) for the disk number.
 
-"di ←
+☛di ←
  <directory> directory <string> old/new 
 
 currently, <directory> and old or new must be specified.
@@ -1288,15 +1288,15 @@ currently, <directory> and old or new must be specified.
 (to directory name exp : dirinst bitinst filinst filesopen : dirname bitname
 	curdir defdir (
 
-	∢file⇒ (SELF open. !apply file)
+	∢file⇒ (SELF open. ⇑apply file)
 		'
 		di file <string>... -- open directory. create file instance
 		(see file intro)
 		'
 
-	∢open⇒ ("curdir ← SELF.  filinst is file⇒ () 
-		 bitinst⇒("filinst ← file filinst old. "bitinst ← file bitinst old)
-		 "filinst ← (∢new⇒(file filinst new) file filinst old).  		 "bitinst ← dirinst ⓢ bitinst.  dirinst remember SELF)
+	∢open⇒ (☛curdir ← SELF.  filinst is file⇒ () 
+		 bitinst⇒(☛filinst ← file filinst old. ☛bitinst ← file bitinst old)
+		 ☛filinst ← (∢new⇒(file filinst new) file filinst old).  		 ☛bitinst ← dirinst ⓢ bitinst.  dirinst remember SELF)
 		'
 		di open -- (normally not user-called since access to the		directory always reopens it) initialize directory file and		bittable instances:  a ↪subdirectory↪ uses the bittable of		its system directory and puts itself into that filesopen list.
 		'
@@ -1314,68 +1314,68 @@ currently, <directory> and old or new must be specified.
 		di or di print. --print the filesopen list.
 		'
 
-	∢map⇒ (SELF open. "exp ← :. filinst reset.
+	∢map⇒ (SELF open. ☛exp ← :. filinst reset.
 		repeat (filinst end⇒ (cr. done)
-		 1024 > "name← filinst next word⇒
+		 1024 > ☛name← filinst next word⇒
 			(name < 2⇒ () filinst skipnext 2*name-1)
 		filinst skipnext 10.
-		"name ← filinst next into string filinst next.
+		☛name ← filinst next into string filinst next.
 		exp eval))
 		'
 		di map <expression> -- evaluate an expression for each
 		file name
 		'
 
-	∢list⇒ (SELF map "(disp←name. sp))
+	∢list⇒ (SELF map ☛(disp←name. sp))
 		'
 		di list -- print the entry names contained in filinst
 		'
 
-	∢close⇒ ((filinst is file⇒ (filesopen map "(vec[end] close).
-		"filinst ← filinst ⓢ fname.  bitinst flush.
-		dirinst is directory⇒ (dirinst forget SELF.  "bitinst ← false)  		"bitinst ← bitinst ⓢ fname)). !"closed)
+	∢close⇒ ((filinst is file⇒ (filesopen map ☛(vec[end] close).
+		☛filinst ← filinst ⓢ fname.  bitinst flush.
+		dirinst is directory⇒ (dirinst forget SELF.  ☛bitinst ← false)  		☛bitinst ← bitinst ⓢ fname)). ⇑☛closed)
 		'
-		di close (e.g. dp0 close) or "di←di close (to release
+		di close (e.g. dp0 close) or ☛di←di close (to release
 		instance) --close a directory by closing all files and
 		directories in its filesopen list and deleting it from the
 		filesopen list of its directory.  this is currently one way		to regain space by closing unwanted file instances, and		to change disk packs.
 		'
 
-	∢use⇒ ("defdir ← SELF)
+	∢use⇒ (☛defdir ← SELF)
 		'
 		di use -- change the default directory.
 		'
 
-	∢ⓢ⇒ (!⦂ eval)
-  	∢free⇒ (SELF open.  "exp ← 0.		bitinst set to 1  609*dirinst &/ ¬1.  		do 609  (255 = "name ← bitinst next⇒ ("exp ← exp + 8)  		name = 0⇒ ()  		repeat ("exp ← exp + name &* 1.     		  0 = "name ← name &/ ¬1⇒(done))).  !4872 - exp)
+	∢ⓢ⇒ (⇑⦂ eval)
+  	∢free⇒ (SELF open.  ☛exp ← 0.		bitinst set to 1  609*dirinst &/ ¬1.  		do 609  (255 = ☛name ← bitinst next⇒ (☛exp ← exp + 8)  		name = 0⇒ ()  		repeat (☛exp ← exp + name &* 1.     		  0 = ☛name ← name &/ ¬1⇒(done))).  ⇑4872 - exp)
 		'
 		di free -- return number of free pages from the		bittable associated with this directory.
 		'
-	∢directory⇒ (SELF open. !apply directory)
+	∢directory⇒ (SELF open. ⇑apply directory)
 		'
 		di directory <string>... -- open directory. create directory
 		instance
 		'
 
-	isnew⇒ ("filesopen ← obset.  		∢device⇒("dirinst ← :.  "filinst ← dirname.		     "bitinst ← (1<dirinst⇒(bitname + "two chars) bitname))
-		 "dirinst ← curdir.  "filinst ← :.  "bitinst ← false. 		∢new⇒(SELF open new) ∢old.  SELF open)))
+	isnew⇒ (☛filesopen ← obset.  		∢device⇒(☛dirinst ← :.  ☛filinst ← dirname.		     ☛bitinst ← (1<dirinst⇒(bitname + ☛two chars) bitname))
+		 ☛dirinst ← curdir.  ☛filinst ← :.  ☛bitinst ← false. 		∢new⇒(SELF open new) ∢old.  SELF open)))
 		'
 		store the directory file name in filinst; ↪subdirectories↪ use		↪curdir↪ as their directory, are flagged by ↪false bitinst↪ and		then opened.  for system directories, dirinst is a number		indicating physical device location and size,  and bitinst		contains the file name for the appropriate bittable.  the		directory is not immediately opened.
 		'
 
 directory ⓢ(ev)
-"dirname ← fill string 7
+☛dirname ← fill string 7
 SYSDIR.
-"bitname ← fill string 9
+☛bitname ← fill string 9
 SYS.STAT.
 	'
 	names of the system directory and bittable
 	'
 
-"dp0 ← directory device 0. 
-"dp1 ← directory device 1.
-"dp2 ← directory device 2.
-"dp3 ← directory device 3.
+☛dp0 ← directory device 0. 
+☛dp1 ← directory device 1.
+☛dp2 ← directory device 2.
+☛dp3 ← directory device 3.
 	'
 	create some system directory instances which are initially closed.	dp0 is the same directory that the Operating System believes in.	dp1 can be used to similarly access another Model 31 disk or a Model 44.	dp2 and dp3 provide a mechanism for writing on the other halves of a	Model 44, with some preliminary initialization; files written through	dp2 (dp3) can be read by dp0 (dp1) also.  do not rewrite or delete	such files except through the ↪parent directory↪, e.g. if a file	created by dp2 is deleted using dp0 or the Operating System, strange	(maybe bad) things can happen.
 	'
@@ -1386,38 +1386,38 @@ donedp0 use
 	'
 
  to error adr ptr arec class :: c shocode find sub (
-	(0="adr←mem 0102⇒(∢knows⇒(ev !) dson. :ptr))
-	"arec←leech AREC.
-	disp sub "((0=adr⇒(ptr print)
+	(0=☛adr←mem 0102⇒(∢knows⇒(ev ⇑) dson. :ptr))
+	☛arec←leech AREC.
+	disp sub ☛((0=adr⇒(ptr print)
 		mem 0102←0. disp←0377&*  mem adr.
 		for adr←adr+1 to adr+(mem adr)&/ ¬9 (
-			"ptr←mem adr.
+			☛ptr←mem adr.
 			disp←ptr&/ ¬8. disp←ptr&*  0377))
 	cr c ev))  
 error knows
 to c class code cpc (
-	null arec[5]⇒(.) "arec←leech arec[5]. "class←arec[0].
-	(GET class "TITLE) print. ": print.
+	null arec[5]⇒(.) ☛arec←leech arec[5]. ☛class←arec[0].
+	(GET class ☛TITLE) print. ☛: print.
 	arec[6] is vector⇒(find arec[1]&   arec[6] ⇒ (shocode))
-	find arec[1]&   GET class "DO ⇒ (shocode).
+	find arec[1]&   GET class ☛DO ⇒ (shocode).
 	)
 to shocode i (
 	for i←1 to code length
 		(i<cpc-5⇒(disp←056) i>cpc+5⇒(disp←056)
 		sp. (i=cpc⇒(disp←031))
-		code[i] is vector⇒("$ print) code[i] print).
+		code[i] is vector⇒(☛$ print) code[i] print).
 	)
 to find adr vec vadr l (
 	'a tree search in vec for the address adr'
-	"adr←:. "l←leech :vec.
-	vec is vector is false⇒(!false)
-	"vadr←(leech l)[1]&   +1.
+	☛adr←:. ☛l←leech :vec.
+	vec is vector is false⇒(⇑false)
+	☛vadr←(leech l)[1]&   +1.
 	(adr>vadr⇒(adr<vadr+vec length+1⇒
-		("cpc ← adr-vadr. "l←0. "code←vec. !true)))
-	"l←0. for l to vec length
-		(vec[l] is vector⇒(find adr vec[l]⇒(!true)))
-	!false)
-to sub disp ("disp ← GET USER "disp. (:) eval)
+		(☛cpc ← adr-vadr. ☛l←0. ☛code←vec. ⇑true)))
+	☛l←0. for l to vec length
+		(vec[l] is vector⇒(find adr vec[l]⇒(⇑true)))
+	⇑false)
+to sub disp (☛disp ← GET USER ☛disp. (:) eval)
 done
  
 to kbck (1 CODE 20)
@@ -1425,7 +1425,7 @@ to kbck (1 CODE 20)
 	Returns true if the keyboard has been hit.
 	'
 
-to button n (!:n=mouse 7)
+to button n (⇑:n=mouse 7)
 	'
 	Returns true if that pattern is being held down
 	'
@@ -1437,11 +1437,11 @@ THE SMALLTALK EDITOR ---
  
  
 to edit func t (:#func. 
-	"t←GET func "DO. 
-	null t ⇒ (!"(no code))
+	☛t←GET func ☛DO. 
+	null t ⇒ (⇑☛(no code))
 	∢title⇒ ((veced classprint func header) eval)
-	PUT func "DO veced t. 
-	!"edited)  
+	PUT func ☛DO veced t. 
+	⇑☛edited)  
 	'
 	Edit picks up a code vector, makes sure it is not empty and calls
 	veced to edit the code body.  If you say edit foo title, veced will
@@ -1459,26 +1459,26 @@ to edit func t (:#func.
 (to veced back newdisp  menu x ::  menuwidth menulen menustr
 ed edpush edtarget gettwo bugin getvec  (
 	∢knows⇒(ev)
-	"back←false. 
+	☛back←false. 
 	disp fclear.
-	dispⓢ ("menu←dispframe winx+winwd-menuwidth menuwidth
+	dispⓢ (☛menu←dispframe winx+winwd-menuwidth menuwidth
 			winy (winht>139⇒(winht) 140) string 70			font font.
 		menu ← menustr.
 		mem 0425 ← winy + 103.
-		"newdisp ← dispframe winx winwd-menuwidth+2
+		☛newdisp ← dispframe winx winwd-menuwidth+2
 			winy winht string buf length 			font font noframe)
-	:x. "x ← indisp newdisp (ed x). 
+	:x. ☛x ← indisp newdisp (ed x). 
 	disp show.
-	!x)   )
+	⇑x)   )
 
 
 veced knows
 
-"menuwidth ← 64.
-"menustr←string 0.
-"menulen ← 10.
-do menulen ("x←fill string 9.
-	"menustr←menustr+x[1 to x[1 to 9]find 13]).
+☛menuwidth ← 64.
+☛menustr←string 0.
+☛menulen ← 10.
+do menulen (☛x←fill string 9.
+	☛menustr←menustr+x[1 to x[1 to 9]find 13]).
  Add
  Insert
  Replace
@@ -1490,45 +1490,45 @@ do menulen ("x←fill string 9.
  Leave
  Exit
 
-to indisp disp (:disp. !⦂eval)
+to indisp disp (:disp. ⇑⦂eval)
 	'
 	used to make DISP a new local.
 	'
 
 to ed ptr l n nrun command temp i nv n1 fnth hfnth   (
-	"command ← 0.
-	:ptr. 	"fnth ← (leech dispⓢfont)[2]&  .
-	"hfnth ← fnth/2.
+	☛command ← 0.
+	:ptr. 	☛fnth ← (leech dispⓢfont)[2]&  .
+	☛hfnth ← fnth/2.
 	repeat(
-		"l←ptr length.
+		☛l←ptr length.
 		back⇒(done with ptr) 
 		mem 0424 ← menu ⓢ winx + 48.
 		menu show. disp clear
-		"nv←0.
+		☛nv←0.
 		for n to l-1
 			(ptr[n] is vector⇒(disp←044. sp
-				"nv←nv+1. "n1←n)
+				☛nv←nv+1. ☛n1←n)
 			ptr[n] print. disp←32) 
 		cr cr.
-		"command ← edcomp bugin menu menulen both.
+		☛command ← edcomp bugin menu menulen both.
 		mem 0424 ← disp ⓢ (winx + winwd/2).
 
-		"(  
-		("ptr←vecmod ptr l 0 read) 
-		("ptr←vecmod ptr edcomp edtarget both 0 read) 
-		(gettwo.  "ptr←vecmod ptr n nrun read)
-		(gettwo. "ptr←vecmod ptr n nrun nil)
-		(gettwo. "temp ← ptr[n to n+nrun]
+		☛(  
+		(☛ptr←vecmod ptr l 0 read) 
+		(☛ptr←vecmod ptr edcomp edtarget both 0 read) 
+		(gettwo.  ☛ptr←vecmod ptr n nrun read)
+		(gettwo. ☛ptr←vecmod ptr n nrun nil)
+		(gettwo. ☛temp ← ptr[n to n+nrun]
 			temp[nrun + 1] ← nil.
-			"i←edcomp edtarget both.
-			"ptr←vecmod ptr n nrun nil.
-			(i>n ⇒ ("i←i-nrun))
-			"ptr←vecmod ptr i 0 temp)
-		(getvec⇒("ptr←vecmod ptr n 1 ptr[n]) again) 
+			☛i←edcomp edtarget both.
+			☛ptr←vecmod ptr n nrun nil.
+			(i>n ⇒ (☛i←i-nrun))
+			☛ptr←vecmod ptr i 0 temp)
+		(getvec⇒(☛ptr←vecmod ptr n 1 ptr[n]) again) 
 		(gettwo. edpush)
 		(getvec⇒(ptr[n]←ed ptr[n]) again)
 		(done with ptr)	
-		("back←true. done with ptr)
+		(☛back←true. done with ptr)
 			) [command] eval.
 		)
 	)
@@ -1541,27 +1541,27 @@ to ed ptr l n nrun command temp i nv n1 fnth hfnth   (
 	'
 
 
-to edpush ins ("ins←vector 2. 
+to edpush ins (☛ins←vector 2. 
 	ins[1]← ptr[n to n+nrun].  ins[1][nrun+1]←nil.
-	"ptr←vecmod ptr n nrun ins)
+	☛ptr←vecmod ptr n nrun ins)
 
-to gettwo t1 n2 ("n←edcomp edtarget top. 
-                 "n2←edcomp edtarget bot.
-	"nrun ← 1+n2-n.
-	nrun<1⇒("n←n2. "nrun←2-nrun))
+to gettwo t1 n2 (☛n←edcomp edtarget top. 
+                 ☛n2←edcomp edtarget bot.
+	☛nrun ← 1+n2-n.
+	nrun<1⇒(☛n←n2. ☛nrun←2-nrun))
 
 to bugin  someframe  max index(
 	:someframe.
-	"max ← 1+:.
+	☛max ← 1+:.
 	repeat (button 0 ⇒ (repeat (
-			button 7 ⇒(disp sub "(ev))
+			button 7 ⇒(disp sub ☛(ev))
 			button 0 ⇒()
 			done) 
 		done) 
 		) 
-        "index←someframe mfindt mx my
+        ☛index←someframe mfindt mx my
 	0<index[1]< max ⇒
-		(!index)
+		(⇑index)
 	'
 	returns token index, if within range, else
 	'
@@ -1572,18 +1572,18 @@ to bugin  someframe  max index(
 	'
 	)
 
-to edtarget (! bugin disp l)
+to edtarget (⇑ bugin disp l)
  
-to getvec (nv=1⇒("n←n1. !true)
-	!ptr["n←edcomp edtarget both] is vector)
+to getvec (nv=1⇒(☛n←n1. ⇑true)
+	⇑ptr[☛n←edcomp edtarget both] is vector)
 
 to edcomp compvec y hth (:compvec.
-	"y←compvec[4].
-	"hth←(∢both⇒(fnth)∢top⇒(hfnth)
-		∢bot⇒("y←y+hfnth. hfnth))
+	☛y←compvec[4].
+	☛hth←(∢both⇒(fnth)∢top⇒(hfnth)
+		∢bot⇒(☛y←y+hfnth. hfnth))
 
 	dcomp compvec[2] compvec[3] y hth
-	!compvec[1]
+	⇑compvec[1]
 	)
 done
 
@@ -1592,9 +1592,9 @@ BOOTSTRAPPING REVISITED
 '
 
 to classprint fn a b i j k flags clsv clsm arecv arecm instv instm code (
-	:#fn. "code ← GET fn "DO. null code⇒("(no code))
-	"a←leech #fn. "b←vector 1. "b←leech b.  "clsm←"arecm←"instm←0.
-	"k←a[1]&  . "clsv←vector k. "arecv←vector k. "instv←vector k.
+	:#fn. ☛code ← GET fn ☛DO. null code⇒(☛(no code))
+	☛a←leech #fn. ☛b←vector 1. ☛b←leech b.  ☛clsm←☛arecm←☛instm←0.
+	☛k←a[1]&  . ☛clsv←vector k. ☛arecv←vector k. ☛instv←vector k.
 	'
 	Pull symbols out of class table
 	'
@@ -1602,40 +1602,40 @@ to classprint fn a b i j k flags clsv clsm arecv arecm instv instm code (
 	'
 	k is no. dbl entries -1, here
 	'
-		("k←a[i]&  .
-		k=(0-1)⇒(again).  "flags ← k&/ ¬14.
+		(☛k←a[i]&  .
+		k=(0-1)⇒(again).  ☛flags ← k&/ ¬14.
 		'
 		0=class, 2=arec, 3=inst
 		'
-		flags=0⇒(0="(DO TITLE SIZE) [1 to 3] find a[i]⇒
-			(clsv["clsm←clsm+1] ← a[i]))
-		b[2]&   ← k&*03777.  "j←a[i+1]&  .
-		(flags=2⇒(arecv[j-6] ← b[2]. arecm<j-6⇒("arecm←j-6))
-			instv[j+1] ← b[2]. instm<j+1⇒("instm←j+1))
+		flags=0⇒(0=☛(DO TITLE SIZE) [1 to 3] find a[i]⇒
+			(clsv[☛clsm←clsm+1] ← a[i]))
+		b[2]&   ← k&*03777.  ☛j←a[i+1]&  .
+		(flags=2⇒(arecv[j-6] ← b[2]. arecm<j-6⇒(☛arecm←j-6))
+			instv[j+1] ← b[2]. instm<j+1⇒(☛instm←j+1))
 		)
 
 	'
 	Now make up input form.
 	'
-	"a ← vector 6+arecm+instm+clsm.
-	a[1] ← "to. a[2] ← GET fn "TITLE.
-	a[3 to "j←2+arecm] ← arecv.
-	(0<instm+clsm⇒ (a["j←j+1]←":. a[j+1 to "j←j+instm] ← instv.
-		0<clsm⇒ (a["j←j+1]←":. a[j+1 to "j←j+clsm] ← clsv)))
-	∢header⇒(a[j+1]←code. !a)
+	☛a ← vector 6+arecm+instm+clsm.
+	a[1] ← ☛to. a[2] ← GET fn ☛TITLE.
+	a[3 to ☛j←2+arecm] ← arecv.
+	(0<instm+clsm⇒ (a[☛j←j+1]←☛:. a[j+1 to ☛j←j+instm] ← instv.
+		0<clsm⇒ (a[☛j←j+1]←☛:. a[j+1 to ☛j←j+clsm] ← clsv)))
+	∢header⇒(a[j+1]←code. ⇑a)
 	for i to j (a[i] print. disp←32)
 	showpretty⇒(pshow code 3) code print)
  
-to show showpretty ("showpretty←true. showev ⦂)
+to show showpretty (☛showpretty←true. showev ⦂)
  
 to showev shAtom shVal (:shAtom. cr.
 	(shAtom is atom⇒
-		("shVal ← shAtom eval.
-		(null GET shVal "DO⇒
-			("" print. shAtom print. "← print.
-			(shVal is vector⇒ ("" print)
-				null shVal⇒("nil print))
-			shVal print. ". print)
+		(☛shVal ← shAtom eval.
+		(null GET shVal ☛DO⇒
+			(☛☛ print. shAtom print. ☛← print.
+			(shVal is vector⇒ (☛☛ print)
+				null shVal⇒(☛nil print))
+			shVal print. ☛. print)
 		classprint shVal))
 	shAtom print)
 	disp←30.)
@@ -1643,8 +1643,8 @@ to showev shAtom shVal (:shAtom. cr.
 *****Keyboard translation*****
 '
 
-to kbd (!kmap[TTY])
-"kmap ← string 0377.
+to kbd (⇑kmap[TTY])
+☛kmap ← string 0377.
 	for i←0200 to 0377(kmap[i] ← 0177) '^f1.ILLEGAL GETS ^f0.'
 	for i←001 to 0177(kmap[i] ← i) '^f1.^f1.REGULAR ASCII|S^f0.'
 
@@ -1687,11 +1687,11 @@ kmap[0220]←kmap[0210]←kmap[020]←010. '^f1.ALL BS|S^f0.'
 kmap[0225]←kmap[0215]←kmap[025]←015. '^f1.ALL CR|S^f0.'
 kmap[0240]←kmap[0230]←kmap[030]←040. '^f1.ALL SP|S^f0.'
 
-to filout disp flist i showpretty ("showpretty ← ∢pretty.
-	dsoff (:disp is string⇒ ("disp←file disp⇒ () error "(file error)))
+to filout disp flist i showpretty (☛showpretty ← ∢pretty.
+	dsoff (:disp is string⇒ (☛disp←file disp⇒ () error ☛(file error)))
 	(∢add⇒(disp set to end))
-	(null :flist⇒(defs map "(showev vec[i]. cr))
-	(flist is atom⇒ (showev flist. "flist←flist eval))
+	(null :flist⇒(defs map ☛(showev vec[i]. cr))
+	(flist is atom⇒ (showev flist. ☛flist←flist eval))
 	for i to flist length-1 (showev flist[i]. cr)) 
 	disp shorten to here. disp close. dson.)
 	'
@@ -1703,9 +1703,9 @@ to filout disp flist i showpretty ("showpretty ← ∢pretty.
 	used.
 	'
  
-to filin fi :: ev (∢ⓢ⇒(!⦂eval)     dsoff. 
-    (:fi is string⇒("fi ← file fi old⇒()
-		dson !false))
+to filin fi :: ev (∢ⓢ⇒(⇑⦂eval)     dsoff. 
+    (:fi is string⇒(☛fi ← file fi old⇒()
+		dson ⇑false))
     repeat
       (fi end⇒(done)
        dsoff.
@@ -1719,18 +1719,18 @@ to filin fi :: ev (∢ⓢ⇒(!⦂eval)     dsoff.
 	'
 
 to type f t ((:f is string⇒(
-		"f ← file f old⇒(f remove)
-		!false))
-	"t←string 30.
+		☛f ← file f old⇒(f remove)
+		⇑false))
+	☛t←string 30.
 	repeat(f end⇒(done) disp←f next into t))
 
-to t fool  :: fontname (dispframe ⓢ ("defont ←  file fontname intostring).	"disp←dispframe 16 480 514 168 string 520.
-	disp ← version. "defs ← obset.
-	"fool←#to. to to toAtm (CODE 19 defs←toAtm. toAtm)
-	PUT USER "DO "(cr read eval print). "t←0.)PUT t "fontname fill string 6ST8.AL
-"version←fill string 34Welcome to SMALLTALK [May 5]               
+to t fool  :: fontname (dispframe ⓢ (☛defont ←  file fontname intostring).	☛disp←dispframe 16 480 514 168 string 520.
+	disp ← version. ☛defs ← obset.
+	☛fool←#to. to to toAtm (CODE 19 defs←toAtm. toAtm)
+	PUT USER ☛DO ☛(cr read eval print). ☛t←0.)PUT t ☛fontname fill string 6ST8.AL
+☛version←fill string 34Welcome to SMALLTALK [May 5]               
 
-to expand x (:x. disp ⓢ ("winy←"frmy←winy-x. frame black)
+to expand x (:x. disp ⓢ (☛winy←☛frmy←winy-x. frame black)
 	disp show CODE 38)
 	'
 	t is called to set up a display frame, and defs and then self-destructs
@@ -1745,78 +1745,78 @@ THE SMALLTALK READ ROUTINE (name changed to protect ev)
 
 (to junta scanner : : read1 tablscan rdnum mknum rdstr rtb1 type
 	letbit digbit sepbit atbits qtbit
-   (∢ⓢ⇒(!⦂eval)
+   (∢ⓢ⇒(⇑⦂eval)
     ∢of⇒((:scanner is string⇒
-        ("scanner ← stream of scanner))
-    "scanner ← tablscan scanner type.
-    !read1 rtb1)
-    !disp read))
+        (☛scanner ← stream of scanner))
+    ☛scanner ← tablscan scanner type.
+    ⇑read1 rtb1)
+    ⇑disp read))
 
 junta ⓢ(ev)
 
 to read1 rbuf rdtb flag ( 
     :rdtb.
-    "rbuf ← stream of vector 10.
+    ☛rbuf ← stream of vector 10.
     scanner read.
-    !rbuf contents)
+    ⇑rbuf contents)
 
 to tablscan mask : source type seq isfil nxtchr ( 
     ∢next⇒
       (CODE 14 next.
        'CODE 14 is equivalent to...
-       :mask=0⇒("t←string 1. t[1]←nxtchr.
-		"nxtchr←source next. !atom t)
+       :mask=0⇒(☛t←string 1. t[1]←nxtchr.
+		☛nxtchr←source next. ⇑atom t)
        seq reset.
        repeat
         (0 = nxtchr⇒(done).
          0 = mask &*  type[nxtchr + 1]⇒(done).
          seq ← nxtchr.
-         "nxtchr ← source next)
-       !seq contents')
-    ∢skip⇒("nxtchr ← source next)
+         ☛nxtchr ← source next)
+       ⇑seq contents')
+    ∢skip⇒(☛nxtchr ← source next)
     ∢read⇒(repeat
         (rdtb[nxtchr + 1] eval))
     isnew⇒
       (:source.
        :type.
-       "seq ← stream.
-       (source is file⇒("isfil ← 1))
+       ☛seq ← stream.
+       (source is file⇒(☛isfil ← 1))
        SELF skip))
 
 to rdnum sign base n fs( 
-    "sign ← (nxtchr=025⇒(scanner skip. ¬1)1).
-    "base ← (nxtchr=060⇒(8)10).
-    "n ← mknum scanner next digbit base.
-    "flag ← false.
+    ☛sign ← (nxtchr=025⇒(scanner skip. ¬1)1).
+    ☛base ← (nxtchr=060⇒(8)10).
+    ☛n ← mknum scanner next digbit base.
+    ☛flag ← false.
     056 = nxtchr⇒
       (scanner skip.
-       "fs ← scanner next digbit
-       0=fs length⇒("flag←true. !sign*n)
-       "n ← n + (mknum fs 10)/10.0 ipow fs length.
-       nxtchr=0145⇒(scanner skip. !n*(10.0 ipow rdnum)*sign)
-       !n*sign)
-    !sign*n)
+       ☛fs ← scanner next digbit
+       0=fs length⇒(☛flag←true. ⇑sign*n)
+       ☛n ← n + (mknum fs 10)/10.0 ipow fs length.
+       nxtchr=0145⇒(scanner skip. ⇑n*(10.0 ipow rdnum)*sign)
+       ⇑n*sign)
+    ⇑sign*n)
 
 to mknum str base n i( 
     :str.
     :base.
-    "n ← 0.0.
+    ☛n ← 0.0.
     for i to str length
-      ("n ← (n*base) + str[i]-060)
-    !n)
+      (☛n ← (n*base) + str[i]-060)
+    ⇑n)
 
 to rdstr t (scanner skip.
-	"t←scanner next qtbit.
+	☛t←scanner next qtbit.
 	scanner skip.
-	nxtchr=047⇒(seq←047. !seq contents+rdstr)
-	!t)
+	nxtchr=047⇒(seq←047. ⇑seq contents+rdstr)
+	⇑t)
 
 'INITIALIZATION OF READ TABLES
 '
-"rtb1 ← vector 256.
-"type ← string 256.
-"sepbit ← 2 * "letbit ← 2 * "digbit ← 2 * "qtbit ← 1.
-"atbits ← letbit + digbit
+☛rtb1 ← vector 256.
+☛type ← string 256.
+☛sepbit ← 2 * ☛letbit ← 2 * ☛digbit ← 2 * ☛qtbit ← 1.
+☛atbits ← letbit + digbit
 to scanner n v i j (
 	:n. :v. repeat (
 	:i.
@@ -1824,58 +1824,58 @@ to scanner n v i j (
 		type[k]←n. rtb1[k]←v))
 	type[i+1]←n. rtb1[i+1]←v)
 	∢and⇒() done))
-scanner 0 "(rbuf←scanner next 0) 0 to 0377.
-scanner letbit "(rbuf←atom scanner next atbits) 0101 to 0132 and 0141 to 0172.  'letters'
-scanner digbit "(rbuf←rdnum. flag⇒(rbuf←".)) 060 to 071.  'digits'
-scanner 0 "(rbuf←rdnum. flag⇒(rbuf←".)) 025.  'high-minus'
-scanner sepbit "(scanner next sepbit) 011 and 014 and 015 and 040.  'tab, LF, FF, CR, blank'
-scanner qtbit "(rbuf ← rdstr) 047.  'string-quote'
-scanner 0 "(scanner skip. rbuf ← (read1 rtb1) eval) 020.  'eval-paren'
-scanner 0 "(scanner skip. rbuf ← read1 rtb1) 050.  'left-paren'
-scanner 0 "(scanner skip. rbuf ← nil. done) 051.  'right-paren'
-scanner 0 "(rbuf ← nil. done) 0 and 036.  'null and DOIT'
+scanner 0 ☛(rbuf←scanner next 0) 0 to 0377.
+scanner letbit ☛(rbuf←atom scanner next atbits) 0101 to 0132 and 0141 to 0172.  'letters'
+scanner digbit ☛(rbuf←rdnum. flag⇒(rbuf←☛.)) 060 to 071.  'digits'
+scanner 0 ☛(rbuf←rdnum. flag⇒(rbuf←☛.)) 025.  'high-minus'
+scanner sepbit ☛(scanner next sepbit) 011 and 014 and 015 and 040.  'tab, LF, FF, CR, blank'
+scanner qtbit ☛(rbuf ← rdstr) 047.  'string-quote'
+scanner 0 ☛(scanner skip. rbuf ← (read1 rtb1) eval) 020.  'eval-paren'
+scanner 0 ☛(scanner skip. rbuf ← read1 rtb1) 050.  'left-paren'
+scanner 0 ☛(scanner skip. rbuf ← nil. done) 051.  'right-paren'
+scanner 0 ☛(rbuf ← nil. done) 0 and 036.  'null and DOIT'
 for i to type length (type[i] ← type[i] &-  qtbit)
 done
-"read ← #junta.
-PUT read "TITLE "read. 'cover our tracks'
+☛read ← #junta.
+PUT read ☛TITLE ☛read. 'cover our tracks'
 
 to quit f s t : : r b   (dsoff.
       (null :s⇒()
-       "f ← file r.
-       "t ← f intostring.
+       ☛f ← file r.
+       ☛t ← f intostring.
        f reset.
        f ← s.
        f ← 13.
        f ← t.
        f close).
     file b load)
-PUT quit "r fill string 7REM.CM.
-PUT quit "b fill string 5BOOT.
+PUT quit ☛r fill string 7REM.CM.
+PUT quit ☛b fill string 5BOOT.
 
-to os s : : r b   ("s ← :.
+to os s : : r b   (☛s ← :.
     file b save⇒
       (quit s + r))
-PUT os "b fill string 9BREAK.SV.
-PUT os "r fill string 17;RESUME BREAK.SV.
+PUT os ☛b fill string 9BREAK.SV.
+PUT os ☛r fill string 17;RESUME BREAK.SV.
 
-"fill ← nil
+☛fill ← nil
 
-to newchars fil i j new old str    ("fil ← file(:)
+to newchars fil i j new old str    (☛fil ← file(:)
     old.
-    "str ← fil intostring.
+    ☛str ← fil intostring.
     for i to 3
-      ("old ← "(94 22 10)
+      (☛old ← ☛(94 22 10)
       [i].
-       "new ← "(19 21 30)
+       ☛new ← ☛(19 21 30)
       [i].
-       "j ← 1.
+       ☛j ← 1.
        repeat
-        (0 = "j ← str[j to 32767] find first old⇒(done)
+        (0 = ☛j ← str[j to 32767] find first old⇒(done)
          str[j] ← disp ← new))
     fil reset.
     fil ← str.
     fil close)
 
-to junta (PUT USER "DO "(t). CODE 31)
+to junta (PUT USER ☛DO ☛(t). CODE 31)
 	'allocates display over OS after setting up t'
 f
