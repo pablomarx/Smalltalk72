@@ -19,4 +19,4 @@ let CRANK() be [
 	RESETS(VMS)
 	WRITEVEC(VMS,MEMBITS,MEMSIZE)
 	CLOSEAFILE(VMS)
-	finish]A
+	finish]

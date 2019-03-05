@@ -607,6 +607,7 @@ ssmap:
 	lda 2,ssav2	;// restore ac2
 	jmp smfgo-smfra,3	;// return to smf or sms
 
-LASTOFCODE:	0
+
+LASTOFCODE:	0
 	.end
 g

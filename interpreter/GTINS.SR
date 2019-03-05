@@ -90,4 +90,4 @@ CLEAN:
 	STA 0,.FONT
 	JMP @RETRN
 
-.ENDT
+.END
