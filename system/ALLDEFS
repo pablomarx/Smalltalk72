@@ -19,14 +19,34 @@ DONT EDIT ABOVE HERE⇑--These classes and atoms mentioned early to guarantee ad
 
  
 
-HEREWITH A SOMEWHAT WHIMSICAL ANNOTATED VERSION OF SYSDEFS. ANNOTATIONS ARE IN ITALICS.  WHILE  IT IS HOPED THAT THIS WILL PROVIDE SOME ELUCIDATION OF THE CODE ESCAPES, OBSCURITIES WILL NO DOUBT PERSIST .  THE ANNOTATIONS ARE INTENDED TO BE BUT DIMLY LIGHTED MARKERS ON THE ROAD TO TRUE ILLUMINATION.TO PRINT ALLDEFS -----	Get ALLDEFS into Bravo (with font ST8.AL, already FONT.0 for those	who have run any of the STBRAVO*.CM command files) and translate	onto another file (e.g. ALLDEFS.TR).  Get ALLDEFS.EC from MAXC and	type it.  You must have all the .EP files listed therein.  Then you may type		GEARS/D ALLDEFS/G ALLDEFS.TR
-
+HEREWITH A SOMEWHAT WHIMSICAL ANNOTATED VERSION OF SYSDEFS. ANNOTATIONS ARE IN ITALICS.  WHILE  IT IS HOPED THAT THIS WILL PROVIDE SOME ELUCIDATION OF THE CODE ESCAPES, OBSCURITIES WILL NO DOUBT PERSIST .  THE ANNOTATIONS ARE INTENDED TO BE BUT DIMLY LIGHTED MARKERS ON THE ROAD TO TRUE ILLUMINATION.
+
+
+TO PRINT ALLDEFS -----
+
+	Get ALLDEFS into Bravo (with font ST8.AL, already FONT.0 for those
+	who have run any of the STBRAVO*.CM command files) and translate
+	onto another file (e.g. ALLDEFS.TR).  Get ALLDEFS.EC from MAXC and
+	type it.  You must have all the .EP files listed therein.  Then you may type
+
+		GEARS/D ALLDEFS/G ALLDEFS.TR
+
+
+
+
+
+
+
 
 BOOTSTRAPPING MAGIC.
 
+
 	to isnew (null instance⇒(☛instance←allocate permsize.
 		instance[0]←class. ⇑true)
-	⇑false).'
+	⇑false).
+
+
+'
 
 to print (∢..)
 	'
@@ -850,7 +870,8 @@ The ↪font↪ variable allows for the association of a font other than the defa
 isnew ⇒ (☛winx←:frmx. ☛winwd←:frmwd. ☛chary←☛winy←:frmy.
 	:frmht.☛winht←682-winy. :buf. ☛lstln←1.
 	☛mark←☛last←☛charx←☛reply←☛justify←0.
-	☛font ← (∢font⇒(:input is string⇒(input) defont)defont)	∢noframe⇒() frame black)  ))
+	☛font ← (∢font⇒(:input is string⇒(input) defont)defont)
+	∢noframe⇒() frame black)  ))
  
 dispframe knows
 to dread t flag (
@@ -881,7 +902,8 @@ to dread t flag (
 		))
 	disp←13. ⇑read of stream of buf from mark+1 to last)
 to sub disp (
-	☛disp←dispframe winx+48 winwd-64 winy+14 winht-28 string 300	font font. 
+	☛disp←dispframe winx+48 winwd-64 winy+14 winht-28 string 300
+	font font. 
 disp clear. (:)eval)
 	'
 	Opens a sub-frame, and evals its argument in that context.
@@ -1192,10 +1214,12 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 
 	isnew⇒ (☛fname←ncheck :. fname is false⇒
 			(error ☛(bad file name) ⇑nil) 
-		(null ☛dirinst ← #curdir⇒ 			(☛dirinst ← directory ⓢ defdir.  dirinst open)).
+		(null ☛dirinst ← #curdir⇒ 
+			(☛dirinst ← directory ⓢ defdir.  dirinst open)).
 			'
 			set directory instance for file. if curdir is nil
-			because file was not called from the context of a 			directory instance, use the default directory
+			because file was not called from the context of a 
+			directory instance, use the default directory
 			'
 
 		∢exists⇒ (24 CODE 50. ⇑fname)
@@ -1228,8 +1252,10 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 
 		 ∢load⇒ (2 CODE 50. 8 CODE 50)
 			'
-			lookup an old file and load (overlay) a Swat			memory image; return via save.
+			lookup an old file and load (overlay) a Swat
+			memory image; return via save.
 			'
+
 		(∢old⇒ (2)
 		 sadr[13] ← fname length.
 		 sadr[14 to 13 + fname length] ← fname.
@@ -1246,7 +1272,11 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 			dirinst close.  9 CODE 50)
 
 			'
-			allocate a file, close the directory (other files			e.g. DRIBBLE, and directories should be already			closed), and write out the memory image as a Swat			file.  when arriving here from a ↪load↪, return false;			otherwise return the file instance.
+			allocate a file, close the directory (other files
+			e.g. DRIBBLE, and directories should be already
+			closed), and write out the memory image as a Swat
+			file.  when arriving here from a ↪load↪, return false;
+			otherwise return the file instance.
 			'
 
 		∢intostring⇒(⇑SELF intostring)
@@ -1296,9 +1326,13 @@ currently, <directory> and old or new must be specified.
 
 	∢open⇒ (☛curdir ← SELF.  filinst is file⇒ () 
 		 bitinst⇒(☛filinst ← file filinst old. ☛bitinst ← file bitinst old)
-		 ☛filinst ← (∢new⇒(file filinst new) file filinst old).  		 ☛bitinst ← dirinst ⓢ bitinst.  dirinst remember SELF)
+		 ☛filinst ← (∢new⇒(file filinst new) file filinst old).
+  		 ☛bitinst ← dirinst ⓢ bitinst.  dirinst remember SELF)
 		'
-		di open -- (normally not user-called since access to the		directory always reopens it) initialize directory file and		bittable instances:  a ↪subdirectory↪ uses the bittable of		its system directory and puts itself into that filesopen list.
+		di open -- (normally not user-called since access to the
+		directory always reopens it) initialize directory file and
+		bittable instances:  a ↪subdirectory↪ uses the bittable of
+		its system directory and puts itself into that filesopen list.
 		'
 
 	∢is⇒ (ISIT eval)
@@ -1309,6 +1343,7 @@ currently, <directory> and old or new must be specified.
 		'
 		add or delete file instances in filesopen.
 		'
+
 	∢print⇒ (disp←0133. filesopen print. disp←0135)
 		'
 		di or di print. --print the filesopen list.
@@ -1333,12 +1368,15 @@ currently, <directory> and old or new must be specified.
 
 	∢close⇒ ((filinst is file⇒ (filesopen map ☛(vec[end] close).
 		☛filinst ← filinst ⓢ fname.  bitinst flush.
-		dirinst is directory⇒ (dirinst forget SELF.  ☛bitinst ← false)  		☛bitinst ← bitinst ⓢ fname)). ⇑☛closed)
+		dirinst is directory⇒ (dirinst forget SELF.  ☛bitinst ← false)
+  		☛bitinst ← bitinst ⓢ fname)). ⇑☛closed)
 		'
 		di close (e.g. dp0 close) or ☛di←di close (to release
 		instance) --close a directory by closing all files and
 		directories in its filesopen list and deleting it from the
-		filesopen list of its directory.  this is currently one way		to regain space by closing unwanted file instances, and		to change disk packs.
+		filesopen list of its directory.  this is currently one way
+		to regain space by closing unwanted file instances, and
+		to change disk packs.
 		'
 
 	∢use⇒ (☛defdir ← SELF)
@@ -1347,20 +1385,37 @@ currently, <directory> and old or new must be specified.
 		'
 
 	∢ⓢ⇒ (⇑⦂ eval)
-  	∢free⇒ (SELF open.  ☛exp ← 0.		bitinst set to 1  609*dirinst &/ ¬1.  		do 609  (255 = ☛name ← bitinst next⇒ (☛exp ← exp + 8)  		name = 0⇒ ()  		repeat (☛exp ← exp + name &* 1.     		  0 = ☛name ← name &/ ¬1⇒(done))).  ⇑4872 - exp)
+
+  	∢free⇒ (SELF open.  ☛exp ← 0.
+		bitinst set to 1  609*dirinst &/ ¬1.
+  		do 609  (255 = ☛name ← bitinst next⇒ (☛exp ← exp + 8)
+  		name = 0⇒ ()
+  		repeat (☛exp ← exp + name &* 1.
+     		  0 = ☛name ← name &/ ¬1⇒(done))).  ⇑4872 - exp)
 		'
-		di free -- return number of free pages from the		bittable associated with this directory.
+		di free -- return number of free pages from the
+		bittable associated with this directory.
 		'
+
 	∢directory⇒ (SELF open. ⇑apply directory)
 		'
 		di directory <string>... -- open directory. create directory
 		instance
 		'
 
-	isnew⇒ (☛filesopen ← obset.  		∢device⇒(☛dirinst ← :.  ☛filinst ← dirname.		     ☛bitinst ← (1<dirinst⇒(bitname + ☛two chars) bitname))
-		 ☛dirinst ← curdir.  ☛filinst ← :.  ☛bitinst ← false. 		∢new⇒(SELF open new) ∢old.  SELF open)))
+	isnew⇒ (☛filesopen ← obset.  
+		∢device⇒(☛dirinst ← :.  ☛filinst ← dirname.
+		     ☛bitinst ← (1<dirinst⇒(bitname + ☛two chars) bitname))
+
+		 ☛dirinst ← curdir.  ☛filinst ← :.  ☛bitinst ← false. 
+		∢new⇒(SELF open new) ∢old.  SELF open)))
 		'
-		store the directory file name in filinst; ↪subdirectories↪ use		↪curdir↪ as their directory, are flagged by ↪false bitinst↪ and		then opened.  for system directories, dirinst is a number		indicating physical device location and size,  and bitinst		contains the file name for the appropriate bittable.  the		directory is not immediately opened.
+		store the directory file name in filinst; ↪subdirectories↪ use
+		↪curdir↪ as their directory, are flagged by ↪false bitinst↪ and
+		then opened.  for system directories, dirinst is a number
+		indicating physical device location and size,  and bitinst
+		contains the file name for the appropriate bittable.  the
+		directory is not immediately opened.
 		'
 
 directory ⓢ(ev)
@@ -1377,13 +1432,24 @@ SYS.STAT.
 ☛dp2 ← directory device 2.
 ☛dp3 ← directory device 3.
 	'
-	create some system directory instances which are initially closed.	dp0 is the same directory that the Operating System believes in.	dp1 can be used to similarly access another Model 31 disk or a Model 44.	dp2 and dp3 provide a mechanism for writing on the other halves of a	Model 44, with some preliminary initialization; files written through	dp2 (dp3) can be read by dp0 (dp1) also.  do not rewrite or delete	such files except through the ↪parent directory↪, e.g. if a file	created by dp2 is deleted using dp0 or the Operating System, strange	(maybe bad) things can happen.
+	create some system directory instances which are initially closed.
+	dp0 is the same directory that the Operating System believes in.
+	dp1 can be used to similarly access another Model 31 disk or a Model 44.
+
+	dp2 and dp3 provide a mechanism for writing on the other halves of a
+	Model 44, with some preliminary initialization; files written through
+	dp2 (dp3) can be read by dp0 (dp1) also.  do not rewrite or delete
+	such files except through the ↪parent directory↪, e.g. if a file
+	created by dp2 is deleted using dp0 or the Operating System, strange
+	(maybe bad) things can happen.
 	'
-donedp0 use
+done
+dp0 use
 
 	'
 	make dp0 the default directory.
 	'
+
 
  to error adr ptr arec class :: c shocode find sub (
 	(0=☛adr←mem 0102⇒(∢knows⇒(ev ⇑) dson. :ptr))
@@ -1462,11 +1528,13 @@ ed edpush edtarget gettwo bugin getvec  (
 	☛back←false. 
 	disp fclear.
 	dispⓢ (☛menu←dispframe winx+winwd-menuwidth menuwidth
-			winy (winht>139⇒(winht) 140) string 70			font font.
+			winy (winht>139⇒(winht) 140) string 70
+			font font.
 		menu ← menustr.
 		mem 0425 ← winy + 103.
 		☛newdisp ← dispframe winx winwd-menuwidth+2
-			winy winht string buf length 			font font noframe)
+			winy winht string buf length 
+			font font noframe)
 	:x. ☛x ← indisp newdisp (ed x). 
 	disp show.
 	⇑x)   )
@@ -1497,7 +1565,8 @@ to indisp disp (:disp. ⇑⦂eval)
 
 to ed ptr l n nrun command temp i nv n1 fnth hfnth   (
 	☛command ← 0.
-	:ptr. 	☛fnth ← (leech dispⓢfont)[2]&  .
+	:ptr. 
+	☛fnth ← (leech dispⓢfont)[2]&  .
 	☛hfnth ← fnth/2.
 	repeat(
 		☛l←ptr length.
@@ -1584,7 +1653,8 @@ to edcomp compvec y hth (:compvec.
 
 	dcomp compvec[2] compvec[3] y hth
 	⇑compvec[1]
-	)
+
+	)
 done
 
 '
@@ -1703,7 +1773,8 @@ to filout disp flist i showpretty (☛showpretty ← ∢pretty.
 	used.
 	'
  
-to filin fi :: ev (∢ⓢ⇒(⇑⦂eval)     dsoff. 
+to filin fi :: ev (∢ⓢ⇒(⇑⦂eval)
+     dsoff. 
     (:fi is string⇒(☛fi ← file fi old⇒()
 		dson ⇑false))
     repeat
@@ -1712,7 +1783,9 @@ to filin fi :: ev (∢ⓢ⇒(⇑⦂eval)     dsoff.
        cr (read of fi) eval print.
        dson).
     fi close.
-   )filinⓢ (to ev (repeat(cr (read of fi) eval print)))
+   )
+filinⓢ (to ev (repeat(cr (read of fi) eval print)))
+
 	'
 	Filin basically does a read-eval-print loop, but gets its input from a
 	file instead of a dispframe.
@@ -1724,11 +1797,15 @@ to type f t ((:f is string⇒(
 	☛t←string 30.
 	repeat(f end⇒(done) disp←f next into t))
 
-to t fool  :: fontname (dispframe ⓢ (☛defont ←  file fontname intostring).	☛disp←dispframe 16 480 514 168 string 520.
+to t fool  :: fontname (dispframe ⓢ (☛defont ←  file fontname intostring).
+	☛disp←dispframe 16 480 514 168 string 520.
 	disp ← version. ☛defs ← obset.
 	☛fool←#to. to to toAtm (CODE 19 defs←toAtm. toAtm)
-	PUT USER ☛DO ☛(cr read eval print). ☛t←0.)PUT t ☛fontname fill string 6ST8.AL
-☛version←fill string 34Welcome to SMALLTALK [May 5]               
+	PUT USER ☛DO ☛(cr read eval print). ☛t←0.)
+PUT t ☛fontname fill string 6
+ST8.AL
+☛version←fill string 34
+Welcome to SMALLTALK [May 5]               
 
 to expand x (:x. disp ⓢ (☛winy←☛frmy←winy-x. frame black)
 	disp show CODE 38)
@@ -1849,14 +1926,18 @@ to quit f s t : : r b   (dsoff.
        f ← t.
        f close).
     file b load)
-PUT quit ☛r fill string 7REM.CM.
-PUT quit ☛b fill string 5BOOT.
+PUT quit ☛r fill string 7
+REM.CM.
+PUT quit ☛b fill string 5
+BOOT.
 
 to os s : : r b   (☛s ← :.
     file b save⇒
       (quit s + r))
-PUT os ☛b fill string 9BREAK.SV.
-PUT os ☛r fill string 17;RESUME BREAK.SV.
+PUT os ☛b fill string 9
+BREAK.SV.
+PUT os ☛r fill string 17
+;RESUME BREAK.SV.
 
 ☛fill ← nil
 
