@@ -441,7 +441,7 @@ PUT number ☛nprint #nprint.
 	'
  
 to substr op byte s lb ub s2 lb2 ub2 (
-	:#s. :lb. :ub. :MESS. ☛GLOB←ub.  '^f1.tee hee
+	:#s. :lb. :ub. :MESS. ☛GLOB←ub.  'tee hee
 '
 	:ub. (∢]⇒() error ☛(missing right bracket))
 	☛byte ← ☛lb2 ← ☛ub2 ← 1.
@@ -644,13 +644,13 @@ PUT float ☛DO ☛(0 CODE 42
 to t fprint (ev)
 t
 to fprint n i p q s : : fuzz ( 
-    '^f1.Normalize to [1,10)^f0.'
+    'Normalize to [1,10)'
       (:n < 1⇒
          (☛p ← -(10.0 / n)
           epart 10.0)
        ☛p ← n epart 10.0)
        ☛n ← fuzz + n / 10.0 ipow p.
-    '^f1.Scientific or decimal^f0.'
+    'Scientific or decimal'
       (☛q ← p.
        ☛s ← fuzz*2.
        p > 6⇒
@@ -662,7 +662,7 @@ to fprint n i p q s : : fuzz (
          (disp ← 48. disp←46.
           for i ← p to ¬2(disp ← 48))
        ☛s ← s * 10.0 ipow p)
-    '^f1.Now print (s suppresses trailing zeros)^f0.'
+    'Now print (s suppresses trailing zeros)'
     for i to 9
       (disp ← 48 + n ipart.
        ☛p ← p - 1.
@@ -1715,47 +1715,47 @@ to showev shAtom shVal (:shAtom. cr.
 
 to kbd (⇑kmap[TTY])
 ☛kmap ← string 0377.
-	for i←0200 to 0377(kmap[i] ← 0177) '^f1.ILLEGAL GETS ^f0.'
-	for i←001 to 0177(kmap[i] ← i) '^f1.^f1.REGULAR ASCII’S^f0.'
+	for i←0200 to 0377(kmap[i] ← 0177) 'ILLEGAL GETS '
+	for i←001 to 0177(kmap[i] ← i) '^f1.REGULAR ASCII’S'
 
-                                 '^f1.CHAR -- KEYBOARD^f0.'
+                                 'CHAR -- KEYBOARD'
 kmap[0341]←kmap[0301]←kmap[0274]←kmap[0254]←01.
-                                                       '^f1.≤ -- ^^A or ^^, or ^^SHF,^f0.'
+                                                       '≤ -- ^^A or ^^, or ^^SHF,'
 kmap[0342]←kmap[0302]←kmap[0236]←kmap[0237]←kmap[037]←kmap[036]←02.
-                                             '^f1.  -- ^^B or any TOP BLANK KEY.^f0.'
+                                             '  -- ^^B or any TOP BLANK KEY.'
 
-kmap[0343]←kmap[0303]←kmap[0272]←03. '^f1.⦂ -- ^^C or ^^SHF;^f0.'
-kmap[0344]←kmap[0304]←04. 'f1.^^D  ’done’ ^f0.'
-kmap[0345]←kmap[0305]←kmap[023]←05. '^f1. -- ^^E or ^^SHF ESC^f0.'
-kmap[0346]←kmap[0306]←kmap[0262]←06. '^f1.≡ -- ^^F or ^^2^f0.'
-kmap[0347]←kmap[0307]←kmap[0273]←07. '^f1.◦ -- ^^G or ^^;^f0.'
-kmap[0353]←kmap[0313]←kmap[0245]←013. '^f1. -- ^^K or ^^SHF5^f0.'
-kmap[0356]←kmap[0316]←kmap[0275]←016. '^f1.≠ -- ^^N or ^^=^f0.'
-kmap[0357]←kmap[0317]←kmap[0242]←017. '^f1.↪ -- ^^O or ^^SHF’^f0.'
-kmap[0360]←kmap[0320]←kmap[0271]←020. '^f1. -- ^^P or ^^9^f0.'
-kmap[0361]←kmap[0321]←kmap[0261]←021. '^f1.⇑ -- ^^Q or ^^1^f0.'
-kmap[0362]←kmap[0322]←kmap[0300]←022. '^f1.≥ -- ^^R or ^^SHF2^f0.'
-kmap[0363]←kmap[0323]←023.            '^f1.ⓢ -- ^^s^f0.'
-kmap[0364]←kmap[0324]←024.            '^f1. -- ^^T^f0.'
-kmap[0365]←kmap[0325]←kmap[0255]←kmap[0140]←025. '^f1.¬ -- ^^U or ^^-^f0.'
-kmap[0366]←kmap[0326]←kmap[0265]←026. '^f1.∢ -- ^^V or ^^5^f0.'
-kmap[0367]←kmap[0327]←kmap[0376]←027. '^f1.⌾ -- ^^W or ^^SHF6^f0.'
-kmap[0370]←kmap[0330]←kmap[0246]←030. '^f1.▱ -- ^^X or ^^SHF7^f0.'
-kmap[0371]←kmap[0331]←kmap[0277]←031. '^f1.➲ -- ^^Y or ^^SHF/^f0.'
+kmap[0343]←kmap[0303]←kmap[0272]←03. '⦂ -- ^^C or ^^SHF;'
+kmap[0344]←kmap[0304]←04. 'f1.^^D  ’done’ '
+kmap[0345]←kmap[0305]←kmap[023]←05. ' -- ^^E or ^^SHF ESC'
+kmap[0346]←kmap[0306]←kmap[0262]←06. '≡ -- ^^F or ^^2'
+kmap[0347]←kmap[0307]←kmap[0273]←07. '◦ -- ^^G or ^^;'
+kmap[0353]←kmap[0313]←kmap[0245]←013. ' -- ^^K or ^^SHF5'
+kmap[0356]←kmap[0316]←kmap[0275]←016. '≠ -- ^^N or ^^='
+kmap[0357]←kmap[0317]←kmap[0242]←017. '↪ -- ^^O or ^^SHF’'
+kmap[0360]←kmap[0320]←kmap[0271]←020. ' -- ^^P or ^^9'
+kmap[0361]←kmap[0321]←kmap[0261]←021. '⇑ -- ^^Q or ^^1'
+kmap[0362]←kmap[0322]←kmap[0300]←022. '≥ -- ^^R or ^^SHF2'
+kmap[0363]←kmap[0323]←023.            'ⓢ -- ^^s'
+kmap[0364]←kmap[0324]←024.            ' -- ^^T'
+kmap[0365]←kmap[0325]←kmap[0255]←kmap[0140]←025. '¬ -- ^^U or ^^-'
+kmap[0366]←kmap[0326]←kmap[0265]←026. '∢ -- ^^V or ^^5'
+kmap[0367]←kmap[0327]←kmap[0376]←027. '⌾ -- ^^W or ^^SHF6'
+kmap[0370]←kmap[0330]←kmap[0246]←030. '▱ -- ^^X or ^^SHF7'
+kmap[0371]←kmap[0331]←kmap[0277]←031. '➲ -- ^^Y or ^^SHF/'
 kmap[0372]←kmap[0332]←kmap[0276]←kmap[0256]←032.
-                                                        '^f1. -- ^^Z or ^^. or ^^SHF.^f0.'
-kmap[0333]←kmap[0264]←033. '^f1.⇒ -- ^^[ or ^^4^f0.'
-kmap[0334]←kmap[0267]←034. '^f1. -- ^^\ or ^^7^f0.'
-kmap[0335]←kmap[0375]←035. '^f1. -- ^^]^f0.'
+                                                        ' -- ^^Z or ^^. or ^^SHF.'
+kmap[0333]←kmap[0264]←033. '⇒ -- ^^[ or ^^4'
+kmap[0334]←kmap[0267]←034. ' -- ^^\ or ^^7'
+kmap[0335]←kmap[0375]←035. ' -- ^^]'
 kmap[0337]←kmap[0336]←kmap[0222]←kmap[0212]←kmap[022]←kmap[012]←036.
-                          '^f1. -- LF or ^^ ← or ^^SHF←^f0.'
-kmap[0247]←0174.            '^f1.’ -- SHF\ or ^^’^f0.'
-kmap[0257]←0176.            '^f1.~ -- SHF6 or ^^/^f0.'
-kmap[0263]←043.            '^f1.# -- SHF3 or ^^3^f0.'
-kmap[0270]←052.            '^f1.* -- SHF8 or ^^8^f0.'
-kmap[0220]←kmap[0210]←kmap[020]←010. '^f1.ALL BS’S^f0.'
-kmap[0225]←kmap[0215]←kmap[025]←015. '^f1.ALL CR’S^f0.'
-kmap[0240]←kmap[0230]←kmap[030]←040. '^f1.ALL SP’S^f0.'
+                          ' -- LF or ^^ ← or ^^SHF←'
+kmap[0247]←0174.            '’ -- SHF\ or ^^’'
+kmap[0257]←0176.            '~ -- SHF6 or ^^/'
+kmap[0263]←043.            '# -- SHF3 or ^^3'
+kmap[0270]←052.            '* -- SHF8 or ^^8'
+kmap[0220]←kmap[0210]←kmap[020]←010. 'ALL BS’S'
+kmap[0225]←kmap[0215]←kmap[025]←015. 'ALL CR’S'
+kmap[0240]←kmap[0230]←kmap[030]←040. 'ALL SP’S'
 
 to filout disp flist i showpretty (☛showpretty ← ∢pretty.
 	dsoff (:disp is string⇒ (☛disp←file disp⇒ () error ☛(file error)))
