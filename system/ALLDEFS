@@ -12,7 +12,7 @@ to isnew (CODE 5)
  length eval or and mod chars error
  ".,/;:-[]~|ⓢ!#$%}←={}*+?<> go goto turn next contents end &   ≤⦂≠)
 
-'^h75.^f1.
+'
 DONT EDIT ABOVE HERE!--These classes and atoms mentioned early to guarantee addresses for machine code.
  
  
@@ -21,36 +21,36 @@ DONT EDIT ABOVE HERE!--These classes and atoms mentioned early to guarantee addr
 
 HEREWITH A SOMEWHAT WHIMSICAL ANNOTATED VERSION OF SYSDEFS. ANNOTATIONS ARE IN ITALICS.  WHILE  IT IS HOPED THAT THIS WILL PROVIDE SOME ELUCIDATION OF THE CODE ESCAPES, OBSCURITIES WILL NO DOUBT PERSIST .  THE ANNOTATIONS ARE INTENDED TO BE BUT DIMLY LIGHTED MARKERS ON THE ROAD TO TRUE ILLUMINATION.TO PRINT ALLDEFS -----	Get ALLDEFS into Bravo (with font ST8.AL, already FONT.0 for those	who have run any of the STBRAVO*.CM command files) and translate	onto another file (e.g. ALLDEFS.TR).  Get ALLDEFS.EC from MAXC and	type it.  You must have all the .EP files listed therein.  Then you may type		GEARS/D ALLDEFS/G ALLDEFS.TR
 
-^h90.^f2.
+
 BOOTSTRAPPING MAGIC.
-^h75.^f1.
+
 	to isnew (null instance?("instance←allocate permsize.
 		instance[0]←class. !true)
-	!false).^h60.^f0.'
+	!false).'
 
 to print (%..)
-	'^h75.^f1.
+	'
 	:x.Print its address in octal.
 	Printing goes to the same place as CODE 20. This is used primarily
 	for bootstrapping. All system classes will print themselves.
-	^h60.^f0.'
+	'
 
 to read (CODE 2)
-	'^h75.^f1.
+	'
 	Read keyboard input into a vector.  This is almost identical
 	in function to the SMALLTALK read routine, except that DOIT is
 	signalled by <CR> at zero-th parenthesis level, and single-quote
 	strings are ignored.  It is only available in Nova versions.
-	^h60.^f0.'
+	'
 
  
 
-'^h90.^f2.
+'
 MESSAGE HANDLING
-^h60.^f0.'
+'
 
 to : (CODE 18)
-	'^h75.^f1.
+	'
 	to : name
 
 	%" ?(:"name nil ?(!name←caller message quotefetch)
@@ -70,157 +70,157 @@ to : (CODE 18)
 
 	Fetch the next thing in the message stream evaluated
 	and bind it to the name if one is there.
-	^h60.^f0.'
+	'
 
 to % (CODE 17)
-	'^h75.^f1.
+	'
 	:"token. token=caller.message.code[caller.message.pc]?
 		(caller.message.pc←caller.message.pc+1. !true) !false.
 	That is, if a match for the token is found in the message, then
  	gobble it up and return true, else return false.
-	^h60.^f0.'
+	'
 
 to  ( CODE 39 )
 
 to ⦂ ( CODE 36 )
 
 to ! (CODE 13)
-	'^h75.^f1.
+	'
 	:x. then do a return, and apply x to any further message. Note
 	that in (... !x+3. "y←y-2), the assignment to y will never
 	happen, since ! causes a return.
-	^h60.^f0.'
+	'
 
 to " (CODE 9)
-	'^h75.^f1.
+	'
 	!:". That is, get the next thing in the message stream unevalled
 	and active return it (which	causes it to be applied to the message).
-	^h60.^f0.'
+	'
 
 to # (:#)
-	'^h75.^f1.
+	'
 	Returns a REFERENCE to its argument|s binding.
-	^h60.^f0.'
+	'
 
 
-'^h90.^f2.
+'
 CONTROL CLASSES
-^h60.^f0.'
+'
  
 to repeat token (:#token. CODE 1)
-	'^h75.^f1.
+	'
 	repeat (token eval) Not a true apply to eval, and therefore token
 	MUST be a vector.
-	^h60.^f0.'
+	'
 
 to done x (%with?(:x. CODE 25) CODE 25)
-	'^h75.^f1.
+	'
 	done causes a pop out of the nearest enclosing repeat, for, or do.  
 	↪done with val↪ will cause the repeat to have value val
-	^h60.^f0.'
+	'
 
 to again (CODE 6)
-	'^h75.^f1.
+	'
 	repeat ("active←active caller. eq active. class #repeat?(done)).
 	That is, redo the most recent repeat, for, or do loop.
-	^h60.^f0.'
+	'
 
 to if exp (:exp?(%then?(:exp. %else?(:". exp)exp)error "(no then))
 		%then?(:".   %else?(:exp) false)error "(no then))
-	'^h75.^f1.
+	'
 	The ALGOL ↪if ... then ... else ...↪
-	^h60.^f0.'
+	'
 
 to for token step stop var start exp (
 	:"var. (%←?(:start.)"start←1).
 	(%to?(:stop.)"stop←start.)
 	(%by?(:step.)"step←1.)
 	%do. :#exp. CODE 24)
-	'^h75.^f1.
+	'
 	An Algol-like ↪for↪.
 	Note the default values if ↪←↪,↪to↪,↪by↪,etc., are omitted.
 	CODE 24 means  --repeat(exp eval).	This implies ↪done↪ and ↪again↪
 	will work, which is correct.
-	^h60.^f0.'
+	'
 
 to do token step stop var start exp (
 	"step←"start←1. :stop. :#exp. CODE 24)
 
 
 
-'^h90.^f2.
+'
 INITIALIZING SYSTEM CLASSES
 
 
-	^h75.^f1.
+	
 	Here are the main kludges which remain from the time when we
 	really didn|t understand classes very well, but wanted a working
 	SMALLTALK. PUT and GET are two of the principle actions of class
 	class. The new verson of SMALLTALK will have class as a class
 	with these actions intensional.
-	^h60.^f0.'
+	'
 
 to PUT x y z (:#x. :y. :z. CODE 12)
-	'^h75.^f1.
+	'
 	The first argument MUST be an atom which is bound to a class
 	table.  The third argument is installed in the value side of that table
 	corresponding to the name (atom) which was the second argument.
-	^h60.^f0.'  
+	'  
 
 to GET x y (:#x. :y. CODE 28)
-	'^h75.^f1.
+	'
 	If ↪x↪ is a class table then the binding of the atom in ↪y↪ will be
 	fetched.
-	^h60.^f0.'
+	'
 
 to leech field bits : ptr (
 	isnew?(:ptr)
 	CODE 27)
-	'^h75.^f1.
+	'
 	Lets you subscript any instance
 	a[0] gives you the class, a[1] gives the first field, etc.
 	a[2] gives you the pointer; a[2]&   returns the BITS in an integer
 	a[2]←foo will dereference count previous contents, but a[2]&← foo
 	will not.
-	^h60.^f0.'
+	'
 
 PUT USER "TITLE "USER
 PUT falseclass "TITLE "false
 
 PUT atom "DO "(CODE 29
-	'^h75.^f1.
+	'
 	%←?(:x.  !x -- Lookup SELF and replace its value by x.)
 	%eval?(! -- Lookup the binding of SELF)
 	%=?(!SELF=:)
 	%chars?(! -- printname of SELF (a string))
-	^h60.^f0.'
+	'
 
 	%is?(ISIT eval)
 	%print?(disp←SELF chars) )
-	'^h75.^f1.
+	'
 	Done this way (PUT used rather than using ↪to↪) because we
 	wanted to know where the system classes are. Hence the initial
 	↪to atom x y ()↪ , for example, in ↪Bootstrapping Magic↪ followed
 	by the behavior here.
-	^h60.^f0.'
+	'
 
 to ev (repeat (cr read eval print))
 
 PUT falseclass "DO "(CODE 11
-	'^h75.^f1.
+	'
 	%?? (:".)
 	%or? (!:)
 	%and? (:.)
 	%<? (:.)
 	%=? (:.)
 	%>? (:.)
-	^h60.^f0.'
+	'
 
 	%is?(%false?(!true) %~? (!"false) :".)
 	%print?("false print) )
 
 PUT vector "DO "(CODE 3 ?(!substr SELF x GLOB MESS)
-	'^h75.^f1.
+	'
 	isnew?(Allocate vector of length :.
 		Fill vector with nils.)
 	%[?(:x. %].
@@ -231,7 +231,7 @@ PUT vector "DO "(CODE 3 ?(!substr SELF x GLOB MESS)
 		(null SELF["pc←pc+1]?(done)
 		"val←SELF[pc] eval)
 		!val) sort of...
-	^h60.^f0.'
+	'
 	%is?(ISIT eval)
 	%print?(disp←40. for x to SELF length
 		(disp←32. SELF[x] print). disp←41)
@@ -240,13 +240,13 @@ PUT vector "DO "(CODE 3 ?(!substr SELF x GLOB MESS)
 
 PUT string "DO "(CODE 3 ?(!substr SELF x GLOB MESS)
 
-	'^h75.^f1.
+	'
 	isnew?(Allocate string of length :.
 		Fill string with 0377s.)
 	%[?(:x. %].
 		(%←?(:y. !y -- store y into xth element. )
 		!  xth element) )
-	%length?(! length of string or vector)^h60.^f0.
+	%length?(! length of string or vector)
 '
 
 	%is?(ISIT eval)
@@ -261,7 +261,7 @@ PUT string "DO "(CODE 3 ?(!substr SELF x GLOB MESS)
 		error "(string not found)) )
 
 PUT number "DO "(CODE 4
-	'^h75.^f1.
+	'
 	%+?(!val+:)
 	%-?(!val-:)
 	%*?(!val*:)
@@ -273,55 +273,55 @@ PUT number "DO "(CODE 4
 		%-?(!val XOR :)
 		%*?(!val AND :)
 		%/?(!val LSHIFT :))
-	^h60.^f0.'
+	'
 
 	%is?(ISIT eval)
 	%print?(SELF>0?(nprint SELF)
 		SELF=0?(disp←060)
 		SELF=0100000?(disp←base8 SELF)
 		disp←025. nprint 0-SELF) )
-	'^h75.^f1.
+	'
 	For floating point stuff see FLOAT
-	^h60.^f0.'
+	'
 
 to - x (:x*¬1)
-	'^h75.^f1.
+	'
 	An often used abbreviation, has to work for float as well.
-	^h60.^f0.'
+	'
 
 to base8 i x s (:x. "s←string 7. for i to 7
 	(s[8-i] ← 060 + x &* 7. "x ← x &/ ¬3). !s)
-	'^h75.^f1.
+	'
 	Returns a string containing the octal representation (unsigned) of its
 	integer argument.
-	^h60.^f0.'
+	'
  
 
 "ISIT ← "(%~?(!TITLE) !TITLE=:").
 
 to nil x (#x)
-	'^h75.^f1.
+	'
 	nil is an ↪unbound pointer↪, which is used	to fill vectors and
 	tables.
-	^h60.^f0.'
+	'
 
 to null x (:x. 1 CODE 37)
-	'^h75.^f1.
+	'
 	Null returns true if its message is ↪nil↪, otherwise false.
-	^h60.^f0.'
+	'
 
 to eq x (CODE 15)
  
-	'^h75.^f1.
+	'
 	(!:x is-identical-to :) - compare 2 SMALLTALK pointers.
-	^h60.^f0.'
+	'
 
-'^h90.^f2.
+'
 UTILITIES
-^h60.^f0.'
+'
  
 to mem x y (:x. CODE 26)
-	'^h75.^f1.
+	'
 	to mem x y (:x. %←?(!core/mem x ←:)!core/mem x)
 	mem loads integers from and stores them into real core.
 	Tee hee...
@@ -335,93 +335,93 @@ to mem x y (:x. CODE 26)
 	mem 0420.  --get pointer to display control block
 	mem 0177034.  --reads the first of 4 keyboard input words
 	mem 0177030. --reads the word with mouse and keyset bits.
-	^h60.^f0.'
+	'
 	
 to mouse x (:x. CODE 35)
-	'^h75.^f1.
+	'
  	x = 0-7  are a map on the mouse buttons. E.g. (4=mouse 4) comes
 	back true if the top mouse button is depressed, (1=mouse 1)) comes
 	back true if bottom mouse button depressed, (7=mouse 7)) comes
 	back true if all three mouse buttons depressed, etc.  Mouse 8
 	returns the x coordinate of the mouse and mouse 9 returns the y
 	coordinate.
-	^h60.^f0.'
+	'
 to mx (!mouse 8)
 to my (!mouse 9)
 
 to core ((mem 077)-mem 076)
-	'^h75.^f1.
+	'
 	Returns the amount of space left in your Smalltalk.
-	^h60.^f0.'
+	'
 to kbd (0 CODE 20)
-	'^h75.^f1.
+	'
 	Waits until a key is struck. Returns an ascii code when a key is
 	struck on the keyboard. Use to kbck (1 CODE 20) to return true if
 	kbd has a character, otherwise false. Used in multiprocessing.
-	^h60.^f0.'
+	'
 
 to disp x i (
 	%←?(:x is string?(for i to x length (TTY←x[i])) TTY←x)
 	%clear?() %sub?(:x eval))
-	'^h75.^f1.
+	'
 	This disp is used for bootstrapping. Later in these definitions
 	(READER)it will be restored to an instance of ↪display frame.↪
-	^h60.^f0.'
+	'
 
 to TTY (0 CODE 20)
-	'^h75.^f1.
+	'
 	TTY←<integer> will print an ascii  on the Nova tty. On altos, TTY
 	prints in little error window at bottom of screen.
-	^h60.^f0.'
+	'
 
 to dsoff (mem 272←0)
-	'^h75.^f1.
+	'
 	Turns display off by storing 0 in display control block ptr. Speeds
 	up Alto Smalltalk by factor of 2.
-	^h60.^f0.'
+	'
 
 to dson (mem 0420 ← 072)
-	'^h75.^f1.
+	'
 	Turns display back on by refreshing display control block
 	pointer.
-	^h60.^f0.'
+	'
 
 to apply x y  (:#x. %to?(:y. %in?(:GLOB. CODE 10) CODE 10)
 		%in?(:GLOB. CODE 10) CODE 10)
 to evapply x y (:x. %to?(:y. %in?(:GLOB. CODE 10) CODE 10)
 		%in?(:GLOB. CODE 10) CODE 10)
-	'^h75.^f1.
+	'
 	Causes its argument to be applied to the message stream of the
 	caller, or, in the case of apply foo to <vector>, to that vector.	
 	Note that only the message is changed, and that the caller is not
 	bypassed in any global symbol lookup unless the in-clause is used to
 	specify another context.
-	^h60.^f0.'
+	'
 
 to cr (disp←13).  to sp (disp←32)
 
 "true←"true
 "eval←"eval
 to is ( %~?(!"untyped):". !false)
-	'^h75.^f1.
+	'
 	These are used to handle messages to classes which can|t answer
 	queston invoking ↪is↪, ↪eval↪, etc.
-	^h60.^f0.'
+	'
 
 to t nprint substr (ev). t
-	'^h75.^f1.
+	'
 	prevent -to- from making these global.
-	^h60.^f0.'
+	'
  
 to nprint digit n (:n=0?()
 	"digit←n mod 10. nprint n/10. disp←060+digit)
 PUT number "nprint #nprint.
-	'^h75.^f1.
+	'
 	Prints (non-neg) integers in decimal	with leading zeroes suppressed⇑
-	^h60.^f0.'
+	'
  
 to substr op byte s lb ub s2 lb2 ub2 (
-	:#s. :lb. :ub. :MESS. "GLOB←ub.  '^f1.tee hee^h60.^f0.
+	:#s. :lb. :ub. :MESS. "GLOB←ub.  '^f1.tee hee
 '
 	:ub. (%]?() error "(missing right bracket))
 	"byte ← "lb2 ← "ub2 ← 1.
@@ -436,7 +436,7 @@ to substr op byte s lb ub s2 lb2 ub2 (
 PUT string "substr #substr.
 PUT vector "substr #substr.
 done
-	'^h75.^f1.
+	'
 	substr takes care of copying, moving and searching within strings
 	and vectors.  It first gets its father (string/vector) and the lower
 	bound, and then proceeds to fetch the rest of the message from
@@ -445,7 +445,7 @@ done
 		"(a b c d e)[1 to 5] find "c  -> 3
 		"(a b c d e)[1 to 5] find "x  -> 0
 	See vecmod for more examples.  String syntax is identical.
-	^h60.^f0.'
+	'
  
 to vecmod new end old posn ndel nins ins ("end←10000.
 	:old. :posn. :ndel. :ins.
@@ -454,17 +454,17 @@ to vecmod new end old posn ndel nins ins ("end←10000.
 	(ins is vector?(new[posn to end] ← ins[1 to nins]) new[posn]←ins).
 	new[posn+nins to end] ← old[posn+ndel to end].
 	!new)
-	'^h75.^f1.
+	'
 	Vecmod makes a copy of old vector with ndel elements deleted
 	beginning at posn.  If ins is a vector, its elements are inserted	at
 	the same place. It is the heart of edit.
-	^h60.^f0.'
+	'
 
 to addto func v w (:#func. :w. "v←GET func "DO. null v?(error "(no code))
 	PUT func "DO vecmod v v length 0 w)
-	'^h75.^f1.
+	'
 	Addto appends code to a class definition.
-	^h60.^f0.'
+	'
 
 
 to fill t i l str ( 
@@ -481,7 +481,7 @@ to fill t i l str (
 
 to stream in : i s l( 
    CODE 22
-    '^h75.^f1.
+    '
     CODE 22 is equivalent to...
     %←?
       (
@@ -541,13 +541,13 @@ to { set ("set←stream of vector 10. repeat(
 	)
 
 
-'^h90.^f2.
+'
 PRETTY-PRINT
-^h60.^f0.
+
  
-	^h75.^f1.
+	
 	This prints the code; classprint makes the header.
-	^h60.^f0.'
+	'
 
 to show func t (
 	:#func. "t←GET func "DO.
@@ -582,14 +582,14 @@ to tabin n :: x (:n. disp←13. repeat
 PUT pshow "tabin #tabin.
 to index op byte s lb ub s2 lb2 ub2 (
 	:s. :byte. "op←"lb←"s2←"lb2←"ub2←1. "ub←9999. CODE 40)
-	'^h75.^f1.
+	'
 	A piece of substr which runs faster.
-	^h60.^f0.'
+	'
 PUT pshow "index #index.
 done
 
-'^h90.^f2.
-FLOATING POINT^h60.^f0.
+'
+FLOATING POINT
 '
 
 PUT float "DO "(0 CODE 42
@@ -659,11 +659,11 @@ PUT fprint "fuzz 5.0 * 10.0 ipow ¬9.
 PUT float "fprint #fprint.
 done
     
-'^h90.^f2.
+'
 TEXT DISPLAY ROUTINES
-^h60.^f0.
 
-^h75.^f1.
+
+
 Display frames are declared with five parameters. They are a left x, a width, a top y, a height, and a string.  Hence --
 	"yourframe←dispframe 16 256 16 256 string 400.
 -- gets you an area on the upper left portion of the display that starts at x,y 16,16 and is 256 bits(raster units) wide and 256 bits high. The string (buf) serves as the text buffer, and is altered by ← and scrolling.
@@ -690,7 +690,7 @@ The ↪reply↪ variable in the instance may be helpful in controlling things.  
 
 The ↪font↪ variable allows for the association of a font other than the default font with the display frame.  To get a different font into core say "something ← file <fontfilename> intostring. Then you can say dispⓢ ("font←something) or you can declare the font at the same time as the tdispframe is declared as e.g.
  "yourframe ← dispframe 3 40 3 40 string 20 font something.
-^h60.^f0.'  
+'  
 
 
 (to dispframe input
@@ -698,70 +698,70 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	last mark lstln charx chary reply justify buf font editor
 	: sub frame dread reread defont (
 % ← ?(0 CODE 51)
-	'^h75.^f1.
+	'
 	:s. s is number ? (append this ascii char)
 		s is string ?(append string)
 		error.
-	^h60.^f0.'
+	'
 
 %ⓢ?(!⦂eval)
-	'^h75.^f1.
+	'
 	Allows access to instance variables. For example, 
 		yourframeⓢ ("winx←32) 
 	will alter the value of window x in the instance of dispframe
 	called "yourframe".
-	^h60.^f0.'
+	'
 
 %show?(4 CODE 51 3 CODE 51)
 
 %display?(SELF show. frame black)
-	'^h75.^f1.
+	'
 	Show clears the intersection of window and frame (see fclear,
 	below) and displays buf from the beginning through last. A handy
 	way to clean up a cluttered world.
-  	^h60.^f0.'
+  	'
 
 %hasmouse?(frmx<mx<frmx+frmwd?(!frmy<my<frmy+frmht)!false)
-	'^h75.^f1.
+	'
 	Tells you if the mouse is within a frame.
-	^h60.^f0.'
+	'
 
 %fclear?(4 CODE 51)
-	'^h75.^f1.
+	'
 	Fclear clears the intersection of the window and frame. Hence if
 	the frame is defined as smaller than the window, only the frame
 	area will be cleared.  If the frame is defined as larger than the
 	window, only the window area will be cleared, since that space
 	is in fact your ↪window↪ on that frame.
-	^h60.^f0.'
+	'
 
 %put?(:input. %at. "winx←"frmx←:. "winy←"frmy←"chary←:.
 	"last←0. "lstln←1. SELF←input. !charx-winx)
-	'^h75.^f1.
+	'
 	For them as would rather do it themselves.
-	^h60.^f0.'
+	'
 
 %wclear?(5 CODE 51)
-	'^h75.^f1.
+	'
 	Wclear clears the intersection of a window and the physical
 	display.
-	^h60.^f0.'
+	'
 
 %scroll?(2 CODE 51)
-	'^h75.^f1.
+	'
 	Scroll removes the top line of text from the frame|s string buffer,
 	and moves the text up one line.
-	^h60.^f0.'
+	'
 
 %clear?(1 CODE 51)
-	'^h75.^f1.
+	'
 	Clear does an fclear and sets the ↪last↪ pointer into the string buffer
 	to 0 and ↪lstln↪ to 1. It has the effect of cleaning out the string
 	buffer as well as clearing the frame area.
-	^h60.^f0.'
+	'
 
 %mfindc ?(7 CODE 51)
-	'^h75.^f1.
+	'
  	Find character.
 	Takes two arguments -- x and y (typically msex and msey).
 	Returns vector:
@@ -773,10 +773,10 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	If vec[2] is -2 x,y is not in the window.
 	Sample call:
 		"myvec←yourframe mfindc mx my.
-	^h60.^f0.'
+	'
 
 %mfindw ?(8 CODE 51)
-	'^h75.^f1.
+	'
  	Find word.
 	Takes two arguments -- x and y (typically msex and msey).
 	Returns vector:
@@ -788,10 +788,10 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	If vec[2] is -2 x,y is not in the window.
 	Sample call:
 		"myvec←yourframe mfindw mx my.
-	^h60.^f0.'
+	'
 
 %mfindt ?(6 CODE 51)
-	'^h75.^f1.
+	'
  	Find token.
 	Takes two arguments -- x and y (typically msex and msey).
 	Returns vector:
@@ -811,39 +811,39 @@ The ↪font↪ variable allows for the association of a font other than the defa
 	If vec[2] is -2 x,y is not in the window.
 	A sample call--
 		"variable←yourframe mfindt mx my.
-	^h60.^f0.'
+	'
 
 %read?(!dread)
-	'^h75.^f1.
+	'
 	Makes a code vector out of keyboard input. See dread below.
-	^h60.^f0.'
+	'
 
 %reread?(!reread :)
-	'^h75.^f1.
+	'
 	Used by redo and fix.  Goes back n(its argument), prompts and does
 	a read from there. See reread below.
-	^h60.^f0.'
+	'
 
 %sub?("input ← sub :. SELF show. !input)
-	'^h75.^f1.
+	'
 	Evals its argument in a sub-window.  Used by fix and shift-esc.
 	 See sub below.
-	^h60.^f0.'
+	'
 
 %knows?(ev)
-	'^h75.^f1.
+	'
 	Whilst at the KEYBOARD, one can say 
 		↪yourframe knows(DOIT)↪
 	and get a copy of the evaluator in the context of that instance of
 	dispframe.  Allows access to instance variables without going through
 	the ⓢ path.
-	^h60.^f0.'
+	'
 
 %frame ? (apply frame)
-	'^h75.^f1.
+	'
 	Draws a border of the given color around the frame.  E.g., 
 		yourframe frame -1.
-	^h60.^f0.'
+	'
 
 %is ?(ISIT eval)
 
@@ -858,41 +858,41 @@ to dread t flag (
 	(null #DRIBBLE?() DRIBBLE flush)
 	repeat (050>disp←"t←kbd?(
 		t=010?(last<mark?(disp←buf[last+1]) 
-		'^h75.^f1.
+		'
 		Backspace only up to prompt.
-		^h60.^f0.'
+		'
 			buf[last+1]=047?("flag←flag is false))
-			'^h75.^f1.
+			'
 			Backspace out of string flips flag.
-			^h60.^f0.'
+			'
 		t=036?(flag?() done)  
-		'^h75.^f1.
+		'
 		DOIT checks if in a string.
-		^h60.^f0.'
+		'
 		t=047?("flag←flag is false)
-		'^h75.^f1.
+		'
 		Flag is true if in a string
-		^h60.^f0.'
+		'
 		t=05?(sub "(ev). "last←last-1. disp show)
-		'^h75.^f1.
+		'
 		Shift-Esc make sub-eval.
-		^h60.^f0.'
+		'
 		t=04?(disp←010. "done print. disp←036. !"(done))
 		))
 	disp←13. !read of stream of buf from mark+1 to last)
 to sub disp (
 	"disp←dispframe winx+48 winwd-64 winy+14 winht-28 string 300	font font. 
 disp clear. (:)eval)
-	'^h75.^f1.
+	'
 	Opens a sub-frame, and evals its argument in that context.
-	^h60.^f0.'
+	'
 
 to frame a ("a ← turtle at frmx - 1 frmy - 1.
 	aⓢwidth ← 2 . aⓢink←(%white?(¬1) %black?(¬3) %color?(:) ¬3)
 	do 2 (a turn 90 go frmwd + 2 turn 90 go frmht + 2)	)
-	'^h75.^f1.
+	'
 	Draws a double line around the frame.
-	^h60.^f0.'
+	'
 
 
 to reread n i p reader ((null :n?("n←1))
@@ -902,40 +902,40 @@ to reread n i p reader ((null :n?("n←1))
 		p<1?(done))
 	i<n+1?(error "(no code))
 	!read of stream of buf from p+1 to last)
-	'^h75.^f1.
+	'
 	Counts back n prompts (n is integer arg) and then does a read from
 	there. Also erases	the line just typed.
-	^h60.^f0.'
+	'
 
 done
  
 to dclear (CODE 52)
-	'^h75.^f1.
+	'
 	This function takes five parameters -- 
 	x width y height value, and ↪clears↪ the display rectangle thus
 	defined to the ↪value↪ given. A 0 value, for example, puts all
 	zeros into  the rectangle.
-	^h60.^f0.'
+	'
 
 
 to dcomp (CODE 53)
-	'^h75.^f1.
+	'
 	Just like dclear only complement rectangle.
-	^h60.^f0.'
+	'
 
 
 to dmove (CODE 54)
-	'^h75.^f1.
+	'
 	This function takes six parameters -- source x width source y
 	height destination x destination y.  It takes the source rectangle
 	(x and width mod 16|d as in dclear) and moves it to the destination
 	x and y. Clipping will occur on display boundaries. The source will
 	remain intact unless  it overlaps with the destination, in which case
 	the over- lapping portion of the destination wins.
-	^h60.^f0.'
+	'
 
 to dmovec (CODE 55)
-	'^h75.^f1.
+	'
 	Dmovec takes the same parameters as dmove, but in addition clears
 	the non-intersecting source material. It is the general case of what
 	happens on the display screen during a scroll, i.e. scrolling could be
@@ -944,28 +944,28 @@ to dmovec (CODE 55)
 		dmovec 0 256 0 256 256 256. 
 	This will move whatever is in the upper left hand corner of the
 	display to x,y   256,256 -- and then erase the source area. 
-	^h60.^f0.'
+	'
 
  
 to redo (!(disp reread :) eval)
-	'^h75.^f1.
+	'
 	Causes re-evaluation of the input typed n prompts before this.
 	Setting last←mark-2 makes the redo statement and its prompt
 	disappear with a disp show.
-	^h60.^f0.'
+	'
 
 to fix vec ("vec←disp reread :.
 	(disp sub "(veced vec)) eval)
-	'^h75.^f1.
+	'
 	Like redo, except that the previous input is given to the editor in a
 	subwindow.  When editing is done, the resulting code is evalled
 	before returning.
-	^h60.^f0.'
+	'
  
 
-'^h90.^f2.
+'
 TURTLES
-^h60.^f0.'
+'
 
 to turtle var : pen ink width dir x xf y yf frame : f (
 	CODE 21  '%go?(draw a line of length :)
@@ -993,10 +993,10 @@ PUT turtle "f dispframe 0 512 0 684 string 1 noframe.
 "@ ← turtle.
 
 
-'^h90.^f2.
+'
 THE TRUTH ABOUT FILES
 
-^h75.^f1.
+
 FILESMALL: *****Smalltalk file and directory definitions*****
 
 also see <SMALLTALK> on Maxc for:
@@ -1027,59 +1027,59 @@ a file is found in a directory (↪dirinst↪) by its file name (↪fname↪), a
 the next 8 integers are the alto disk label block.  ↪nextp↪ and ↪backp↪ are the forward and backward alto address pointers. ↪lnused↪ is currently unused. ↪numch↪ is number of characters on the current page, numch must be 512, except on the last page. ↪pagen↪ is the current page number. page numbers are non-negative integers, and the format demands that the difference in consecutive page numbers is 1. normal file access starts at page 1, although all files possess page 0 (the ↪leader↪ page). ↪version↪ numbers > 1 are not implemented. ↪sn1↪ and ↪sn2↪ are the unique 2-word serial number for the file. 
 
 the class function ↪ncheck↪ checks that file names contain alphabetic or ↪legal↪ characters or digits, and end with a period.
-^h60.^f0.'
+'
 
 
 (to file : dirinst fname sadr rvec leader curadr bytec dirty status nextp
 	backp lnused numch pagen version sn1 sn2 : ncheck x (
 
 	%←? (17 CODE 50)
-		'^h75.^f1.
+		'
 		fi←<integer>, <string>, or <file> --  
 		:x is string? (for i to x length (SELF←x[i]))
 		x is file? (repeat (x end? (done) SELF←x next))
 		(numch<"bytec←bytec+1? 
 		  (SELF set to write (pagen+bytec/512) bytec mod 512))
 		sadr[bytec]←x &*  0377
-		^h60.^f0.'
+		'
 
 	%next? ((%word? (%←? (7)
-			'^h75.^f1.
+			'
 			fi next word←<integer> -- write integer.
 			possibly increment pointer to word boundary.
 			(0=bytec &*  1? () "bytec←bytec+1)
 			SELF ← :x/256. SELF ← x mod 256.
-			^h60.^f0.'
+			'
 
 			 6)
-			'^h75.^f1.
+			'
 			fi next word -- read an integer
 			(0=bytec &*  1? () "bytec←bytec+1)
 			!(SELF next*256) + SELF next
-			^h60.^f0.'
+			'
 
 		  %into? (16)
-			'^h75.^f1.
+			'
 			fi next into <string> -- read a string
 			for i to :x length(x[i]←SELF next).!x
-			^h60.^f0.'
+			'
 
 		  25) CODE 50)
-			'^h75.^f1.
+			'
 			fi next -- read a character
 			(numch<"bytec←bytec+1?
 			 (SELF set to read (pagen+bytec/512) 
 			   bytec mod 512? () !0))  !sadr[bytec]
-			^h60.^f0.'
+			'
 
 	%set? (%to. (%end?(13)
-			'^h75.^f1.
+			'
 			fi set to end -- set file pointer to end of file.
 			SELF set to read 037777 0
-			^h60.^f0.'
+			'
 
 		 %write?(5) 
-			'^h75.^f1.
+			'
 			fi set to write <integer> <integer> -- set file
 			pointer to :spage :schar. if current page is dirty,
 			or ↪reset↪, ↪set to end↪ or page change
@@ -1087,78 +1087,78 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 			pagen=spage. allocate new pages after end if
 			necessary (-1 512 is treated as start of next
 			page, i.e. pagen+1 0). "bytec←schar
-			^h60.^f0.'
+			'
 
 		%read. 4) CODE 50)
-			'^h75.^f1.
+			'
 			same as ↪write↪ except stop at end
-			^h60.^f0.'
+			'
 
 	%skipnext? (18 CODE 50)
-		'^h75.^f1.
+		'
 		fi skipnext <integer> -- set character pointer relative to
 		current position. (useful for skipping rather than reading,
 		or for reading and backing up, but ↪end↪ may not work if
 		↪bytec↪ points off the current page)  "bytec← bytec + :.
-		^h60.^f0.'
+		'
 
 	%end? (10 CODE 50)
-		'^h75.^f1.
+		'
 		fi end -- return false if end of file has not occurred.
 		nextp=0? (bytec<numch?(!false))!false
-		^h60.^f0.'
+		'
 
 	%ⓢ? (!⦂ eval)
 
 	%flush? (12 CODE 50)
-		'^h75.^f1.
+		'
 		fi flush -- dirty=0? () write current page
-		^h60.^f0.'
+		'
 
 	%writeseq? (22 CODE 50)
-		'^h75.^f1.
+		'
 		transfer words from memory to a file
 		:adr. :count. for i←adr to adr+count-1
 		(SELF next word ← mem i)
-		^h60.^f0.'
+		'
 
 	%readseq? (21 CODE 50)
-		'^h75.^f1.
+		'
 		...from a file to memory...(mem i ← SELF next word)
-		^h60.^f0.'
+		'
 
 	%is? (ISIT eval)
 
 	%remove? (dirinst forget SELF)
-		'^h75.^f1.
+		'
 		remove file from filesopen list of directory
-		^h60.^f0.'
+		'
 
 	%close? (dirinst ⓢ bitinst flush.
 		 SELF flush. SELF remove. !"closed)
-		'^h75.^f1.
+		'
 		fi close or "fi←fi close (if fi is global) -- flush bittable
 		and current page, remove instance from filesopen list of
 		directory
-		^h60.^f0.'
+		'
 
 	%shorten? (%to. %here? (SELF shorten pagen bytec) 14 CODE 50)
-		'^h75.^f1.
+		'
 		fi shorten to <integer> <integer> -- shorten a file SELF set
 		to read :spage :schar. "x←nextp. "nextp←0.
 		"numch←schar. "dirty←1. deallocate x and successors
-		^h60.^f0.'
+		'
 
 	%print? (disp ← fname)
-		'^h75.^f1.
+		'
 		file prints its name
-		^h60.^f0.'
+		'
 
 	%reset? (11 CODE 50)
-		'^h75.^f1.
+		'
 		fi reset -- reposition to beginning of file
 		SELF set 1 0
-		^h60.^f0.'
+		'
 
 	%intostring?(SELF set to end.
   		"x ← string bytec + 512 * pagen - 1.
@@ -1166,14 +1166,14 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 
 	%random? (SELF set to end. "rvec ← vector pagen.
 		  for x to rvec length (SELF set x 0. rvec[x] ← curadr))
-		'^h75.^f1.
+		'
 		fi random -- initialize a random access vector to be used
 		in fi set...  new pages appended to the file will not be
 		randomly accessed
-		^h60.^f0.'
+		'
 
 	%pages? (20 CODE 50)
-		'^h75.^f1.
+		'
 		fi pages <integer> ... <integer> -- out of the same great
 		tradition as ↪mem↪ comes the power to do potentially
 		catastrophic direct disk i/o (not for the faint-hearted).
@@ -1188,31 +1188,31 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 		label block from instance of ↪fi↪. copy label block from
 		instance. perform i/o call. copy ↪curadr↪ and label block
 		into instance. if -1=coreaddress copy buffer to "sadr".
-		^h60.^f0.' 
+		' 
 
 	isnew? ("fname←ncheck :. fname is false?
 			(error "(bad file name) !nil) 
 		(null "dirinst ← #curdir? 			("dirinst ← directory ⓢ defdir.  dirinst open)).
-			'^h75.^f1.
+			'
 			set directory instance for file. if curdir is nil
 			because file was not called from the context of a 			directory instance, use the default directory
-			^h60.^f0.'
+			'
 
 		%exists? (24 CODE 50. !fname)
-			'^h75.^f1.
+			'
 			return false if file name does not occur in the
 			directory
-			^h60.^f0.'
+			'
 
 		%delete? (15 CODE 50. !"deleted)
-			'^h75.^f1.
+			'
 			delete a file (see intro)
-			^h60.^f0.'
+			'
 
 		"sadr ← (%using? (:) string 512).
-			'^h75.^f1.
+			'
 			set up file string buffer
-			^h60.^f0.'
+			'
 
 		%rename? ("x ← ncheck :. x is false?
 				(error "(bad new name)!nil)
@@ -1220,41 +1220,41 @@ the class function ↪ncheck↪ checks that file names contain alphabetic or ↪
 			  2 CODE 50.  "fname ← x.  23 CODE 50.
 			  SELF set 0 12.  SELF ← fname length.
 			  SELF ← fname.  SELF flush.  !fname)
-			'^h75.^f1.
+			'
 			check that the new name is not already in use.
 			lookup the original file and change its name in its
 			directory, and in its leader page
-			^h60.^f0.'
+			'
 
 		 %load? (2 CODE 50. 8 CODE 50)
-			'^h75.^f1.
+			'
 			lookup an old file and load (overlay) a Swat			memory image; return via save.
-			^h60.^f0.'
+			'
 		(%old? (2)
 		 sadr[13] ← fname length.
 		 sadr[14 to 13 + fname length] ← fname.
 		 %new? (dirinst ⓢ filinst is file? (3) 19)
 		 1) CODE 50.
-			'^h75.^f1.
+			'
 			find an old file or add a new entry (with its
 			name as a BCPL string in its leader page. special
 			handling for new directories). machine code may
 			return false
-			^h60.^f0.'
+			'
 
 		%save? (SELF set to write 256 0.  SELF reset.
 			dirinst close.  9 CODE 50)
 
-			'^h75.^f1.
+			'
 			allocate a file, close the directory (other files			e.g. DRIBBLE, and directories should be already			closed), and write out the memory image as a Swat			file.  when arriving here from a ↪load↪, return false;			otherwise return the file instance.
-			^h60.^f0.'
+			'
 
 		%intostring?(!SELF intostring)
 		dirinst remember SELF) ))
-			'^h75.^f1.
+			'
 			finally, file puts itself into the filesopen list of its
 			directory
-			^h60.^f0.'
+			'
 file ⓢ(ev)
 to ncheck str i x :: legal ("str←:.
 	(str is string?(str length < 255?() !false) !false)
@@ -1266,15 +1266,15 @@ to ncheck str i x :: legal ("str←:.
 		0100 < x < 0133? ('uppercase')
 		!false)
 	x=056?(!str) !str+ ".chars)
-'^h75.^f1.
+'
 check that the file name is a proper length string containing only lower/upper case letters, digits, or legal characters. if name does not end with a period, append one.
-^h60.^f0.'
+'
 
 PUT ncheck "legal fill string 6
 +-$!?.   
 done
 
-'^h75.^f1.
+'
 a directory is found in a directory (↪dirinst↪), has a bittable file (↪bitinst↪) for allocating new pages, a file of file entries (↪filinst↪ -- file names, disk addresses etc.), and a list of currently open files (↪filesopen↪ which is an ↪obset↪). the top level, ↪distinguished node↪ of the directory structure is the system directory ↪dp0↪ (see ↪directory knows↪ below if you also want ↪dp1↪). dp0 knows the disk number (↪dirinst↪) and the true identity of the bittable. each file must ask its directory for the bittable when page allocation is necessary, and the system directory (via its local directory) for the disk number.
 
 "di ←
@@ -1283,36 +1283,36 @@ a directory is found in a directory (↪dirinst↪), has a bittable file (↪bit
 currently, <directory> and old or new must be specified.
 
 ↪dirname↪ is the system directory name and ↪bitname↪ is the bittable name. ↪curdir↪ is a class variable bound to the last directory instance ↪opened↪, and provides information ↪who called you↪ (i.e. CALLER) to a file or directory. ↪defdir↪ is a default directory, initially set to dp0, which is invoked when ↪curdir↪ fails to be a directory, i.e. file was not called in the context of a directory, but globally
-^h60.^f0.'
+'
 
 (to directory name exp : dirinst bitinst filinst filesopen : dirname bitname
 	curdir defdir (
 
 	%file? (SELF open. !apply file)
-		'^h75.^f1.
+		'
 		di file <string>... -- open directory. create file instance
 		(see file intro)
-		^h60.^f0.'
+		'
 
 	%open? ("curdir ← SELF.  filinst is file? () 
 		 bitinst?("filinst ← file filinst old. "bitinst ← file bitinst old)
 		 "filinst ← (%new?(file filinst new) file filinst old).  		 "bitinst ← dirinst ⓢ bitinst.  dirinst remember SELF)
-		'^h75.^f1.
+		'
 		di open -- (normally not user-called since access to the		directory always reopens it) initialize directory file and		bittable instances:  a ↪subdirectory↪ uses the bittable of		its system directory and puts itself into that filesopen list.
-		^h60.^f0.'
+		'
 
 	%is? (ISIT eval)
 
 	%remember? (filesopen ← :)
 
 	%forget? (filesopen delete :)
-		'^h75.^f1.
+		'
 		add or delete file instances in filesopen.
-		^h60.^f0.'
+		'
 	%print? (disp←0133. filesopen print. disp←0135)
-		'^h75.^f1.
+		'
 		di or di print. --print the filesopen list.
-		^h60.^f0.'
+		'
 
 	%map? (SELF open. "exp ← :. filinst reset.
 		repeat (filinst end? (cr. done)
@@ -1321,69 +1321,69 @@ currently, <directory> and old or new must be specified.
 		filinst skipnext 10.
 		"name ← filinst next into string filinst next.
 		exp eval))
-		'^h75.^f1.
+		'
 		di map <expression> -- evaluate an expression for each
 		file name
-		^h60.^f0.'
+		'
 
 	%list? (SELF map "(disp←name. sp))
-		'^h75.^f1.
+		'
 		di list -- print the entry names contained in filinst
-		^h60.^f0.'
+		'
 
 	%close? ((filinst is file? (filesopen map "(vec[end] close).
 		"filinst ← filinst ⓢ fname.  bitinst flush.
 		dirinst is directory? (dirinst forget SELF.  "bitinst ← false)  		"bitinst ← bitinst ⓢ fname)). !"closed)
-		'^h75.^f1.
+		'
 		di close (e.g. dp0 close) or "di←di close (to release
 		instance) --close a directory by closing all files and
 		directories in its filesopen list and deleting it from the
 		filesopen list of its directory.  this is currently one way		to regain space by closing unwanted file instances, and		to change disk packs.
-		^h60.^f0.'
+		'
 
 	%use? ("defdir ← SELF)
-		'^h75.^f1.
+		'
 		di use -- change the default directory.
-		^h60.^f0.'
+		'
 
 	%ⓢ? (!⦂ eval)
   	%free? (SELF open.  "exp ← 0.		bitinst set to 1  609*dirinst &/ ¬1.  		do 609  (255 = "name ← bitinst next? ("exp ← exp + 8)  		name = 0? ()  		repeat ("exp ← exp + name &* 1.     		  0 = "name ← name &/ ¬1?(done))).  !4872 - exp)
-		'^h75.^f1.
+		'
 		di free -- return number of free pages from the		bittable associated with this directory.
-		^h60.^f0.'
+		'
 	%directory? (SELF open. !apply directory)
-		'^h75.^f1.
+		'
 		di directory <string>... -- open directory. create directory
 		instance
-		^h60.^f0.'
+		'
 
 	isnew? ("filesopen ← obset.  		%device?("dirinst ← :.  "filinst ← dirname.		     "bitinst ← (1<dirinst?(bitname + "two chars) bitname))
 		 "dirinst ← curdir.  "filinst ← :.  "bitinst ← false. 		%new?(SELF open new) %old.  SELF open)))
-		'^h75.^f1.
+		'
 		store the directory file name in filinst; ↪subdirectories↪ use		↪curdir↪ as their directory, are flagged by ↪false bitinst↪ and		then opened.  for system directories, dirinst is a number		indicating physical device location and size,  and bitinst		contains the file name for the appropriate bittable.  the		directory is not immediately opened.
-		^h60.^f0.'
+		'
 
 directory ⓢ(ev)
 "dirname ← fill string 7
 SYSDIR.
 "bitname ← fill string 9
 SYS.STAT.
-	'^h75.^f1.
+	'
 	names of the system directory and bittable
-	^h60.^f0.'
+	'
 
 "dp0 ← directory device 0. 
 "dp1 ← directory device 1.
 "dp2 ← directory device 2.
 "dp3 ← directory device 3.
-	'^h75.^f1.
+	'
 	create some system directory instances which are initially closed.	dp0 is the same directory that the Operating System believes in.	dp1 can be used to similarly access another Model 31 disk or a Model 44.	dp2 and dp3 provide a mechanism for writing on the other halves of a	Model 44, with some preliminary initialization; files written through	dp2 (dp3) can be read by dp0 (dp1) also.  do not rewrite or delete	such files except through the ↪parent directory↪, e.g. if a file	created by dp2 is deleted using dp0 or the Operating System, strange	(maybe bad) things can happen.
-	^h60.^f0.'
+	'
 donedp0 use
 
-	'^h75.^f1.
+	'
 	make dp0 the default directory.
-	^h60.^f0.'
+	'
 
  to error adr ptr arec class :: c shocode find sub (
 	(0="adr←mem 0102?(%knows?(ev !) dson. :ptr))
@@ -1408,7 +1408,7 @@ to shocode i (
 		code[i] is vector?("$ print) code[i] print).
 	)
 to find adr vec vadr l (
-	'^h75.^f1.a tree search in vec for the address adr^h60.^f0.'
+	'a tree search in vec for the address adr'
 	"adr←:. "l←leech :vec.
 	vec is vector is false?(!false)
 	"vadr←(leech l)[1]&   +1.
@@ -1421,19 +1421,19 @@ to sub disp ("disp ← GET USER "disp. (:) eval)
 done
  
 to kbck (1 CODE 20)
-	'^h75.^f1.
+	'
 	Returns true if the keyboard has been hit.
-	^h60.^f0.'
+	'
 
 to button n (!:n=mouse 7)
-	'^h75.^f1.
+	'
 	Returns true if that pattern is being held down
-	^h60.^f0.'
+	'
 
 
-'^h90.^f2.
+'
 THE SMALLTALK EDITOR ---
-^h60.^f0.'
+'
  
  
 to edit func t (:#func. 
@@ -1442,7 +1442,7 @@ to edit func t (:#func.
 	%title? ((veced classprint func header) eval)
 	PUT func "DO veced t. 
 	!"edited)  
-	'^h75.^f1.
+	'
 	Edit picks up a code vector, makes sure it is not empty and calls
 	veced to edit the code body.  If you say edit foo title, veced will
 	edit the header as well, and the changed form will be evalled upon
@@ -1454,7 +1454,7 @@ to edit func t (:#func.
 	the other becomes the new default window DISP. The new default
 	is passed to an intermediary; and the newly edited vector is
 	returned.
-	^h60.^f0.'
+	'
 
 (to veced back newdisp  menu x ::  menuwidth menulen menustr
 ed edpush edtarget gettwo bugin getvec  (
@@ -1491,9 +1491,9 @@ do menulen ("x←fill string 9.
  Exit
 
 to indisp disp (:disp. !⦂eval)
-	'^h75.^f1.
+	'
 	used to make DISP a new local.
-	^h60.^f0.'
+	'
 
 to ed ptr l n nrun command temp i nv n1 fnth hfnth   (
 	"command ← 0.
@@ -1532,13 +1532,13 @@ to ed ptr l n nrun command temp i nv n1 fnth hfnth   (
 			) [command] eval.
 		)
 	)
-	'^h75.^f1.
+	'
 	The heart of ED is a vector, containing as its elements code
 	vectors.  The giant vector is indexed to get the particular piece of
 	program, and it is sent the message EVAL.  Note that the order of
 	the segments in ED1 should match the order of the atom names in
 	MENUVEC.
-	^h60.^f0.'
+	'
 
 
 to edpush ins ("ins←vector 2. 
@@ -1562,14 +1562,14 @@ to bugin  someframe  max index(
         "index←someframe mfindt mx my
 	0<index[1]< max ?
 		(!index)
-	'^h75.^f1.
+	'
 	returns token index, if within range, else
-	^h60.^f0.'
+	'
 	again
-	'^h75.^f1.
+	'
 	causes an exit out of this command by restarting ed|s
 	repeat
-	^h60.^f0.'
+	'
 	)
 
 to edtarget (! bugin disp l)
@@ -1587,26 +1587,26 @@ to edcomp compvec y hth (:compvec.
 	)
 done
 
-'^h90.^f2.
+'
 BOOTSTRAPPING REVISITED
-^h60.^f0.'
+'
 
 to classprint fn a b i j k flags clsv clsm arecv arecm instv instm code (
 	:#fn. "code ← GET fn "DO. null code?("(no code))
 	"a←leech #fn. "b←vector 1. "b←leech b.  "clsm←"arecm←"instm←0.
 	"k←a[1]&  . "clsv←vector k. "arecv←vector k. "instv←vector k.
-	'^h75.^f1.
+	'
 	Pull symbols out of class table
-	^h60.^f0.'
+	'
 	for i←4 to 4+2*k by 2
-	'^h75.^f1.
+	'
 	k is no. dbl entries -1, here
-	^h60.^f0.'
+	'
 		("k←a[i]&  .
 		k=(0-1)?(again).  "flags ← k&/ ¬14.
-		'^h75.^f1.
+		'
 		0=class, 2=arec, 3=inst
-		^h60.^f0.'
+		'
 		flags=0?(0="(DO TITLE SIZE) [1 to 3] find a[i]?
 			(clsv["clsm←clsm+1] ← a[i]))
 		b[2]&   ← k&*03777.  "j←a[i+1]&  .
@@ -1614,9 +1614,9 @@ to classprint fn a b i j k flags clsv clsm arecv arecm instv instm code (
 			instv[j+1] ← b[2]. instm<j+1?("instm←j+1))
 		)
 
-	'^h75.^f1.
+	'
 	Now make up input form.
-	^h60.^f0.'
+	'
 	"a ← vector 6+arecm+instm+clsm.
 	a[1] ← "to. a[2] ← GET fn "TITLE.
 	a[3 to "j←2+arecm] ← arecv.
@@ -1639,9 +1639,9 @@ to showev shAtom shVal (:shAtom. cr.
 		classprint shVal))
 	shAtom print)
 	disp←30.)
-'^h75.^f1.
+'
 *****Keyboard translation*****
-^h60.^f0.'
+'
 
 to kbd (!kmap[TTY])
 "kmap ← string 0377.
@@ -1694,14 +1694,14 @@ to filout disp flist i showpretty ("showpretty ← %pretty.
 	(flist is atom? (showev flist. "flist←flist eval))
 	for i to flist length-1 (showev flist[i]. cr)) 
 	disp shorten to here. disp close. dson.)
-	'^h75.^f1.
+	'
 	Filout basically does a show in an environment where the display is
 	replaced by a file. filout pretty <file> or <string = file name> add
 	<vector> if ↪pretty↪ is used, the text representation is neater but
 	takes longer to generate. if ↪add↪ is used, function definitions are
 	appended to the file. if <vector> is not specified, ↪defs↪ is
 	used.
-	^h60.^f0.'
+	'
  
 to filin fi :: ev (%ⓢ?(!⦂eval)     dsoff. 
     (:fi is string?("fi ← file fi old?()
@@ -1713,10 +1713,10 @@ to filin fi :: ev (%ⓢ?(!⦂eval)     dsoff.
        dson).
     fi close.
    )filinⓢ (to ev (repeat(cr (read of fi) eval print)))
-	'^h75.^f1.
+	'
 	Filin basically does a read-eval-print loop, but gets its input from a
 	file instead of a dispframe.
-	^h60.^f0.'
+	'
 
 to type f t ((:f is string?(
 		"f ← file f old?(f remove)
@@ -1732,7 +1732,7 @@ to t fool  :: fontname (dispframe ⓢ ("defont ←  file fontname intostring).	
 
 to expand x (:x. disp ⓢ ("winy←"frmy←winy-x. frame black)
 	disp show CODE 38)
-	'^h75.^f1.
+	'
 	t is called to set up a display frame, and defs and then self-destructs
 	to save space. expand can be called to grab some storage from the
 	display area to augment the SMALLTALK workspace. expand 200
@@ -1741,7 +1741,7 @@ to expand x (:x. disp ⓢ ("winy←"frmy←winy-x. frame black)
 
 
 THE SMALLTALK READ ROUTINE (name changed to protect ev)
-^h60.^f0.'
+'
 
 (to junta scanner : : read1 tablscan rdnum mknum rdstr rtb1 type
 	letbit digbit sepbit atbits qtbit
@@ -1811,8 +1811,8 @@ to rdstr t (scanner skip.
 	nxtchr=047?(seq←047. !seq contents+rdstr)
 	!t)
 
-'^h75.^f1.INITIALIZATION OF READ TABLES
-^h60.^f0.'
+'INITIALIZATION OF READ TABLES
+'
 "rtb1 ← vector 256.
 "type ← string 256.
 "sepbit ← 2 * "letbit ← 2 * "digbit ← 2 * "qtbit ← 1.
@@ -1837,7 +1837,7 @@ scanner 0 "(rbuf ← nil. done) 0 and 036.  'null and DOIT'
 for i to type length (type[i] ← type[i] &-  qtbit)
 done
 "read ← #junta.
-PUT read "TITLE "read. '^h75.^f1.cover our tracks^h60.^f0.'
+PUT read "TITLE "read. 'cover our tracks'
 
 to quit f s t : : r b   (dsoff.
       (null :s?()
@@ -1877,5 +1877,5 @@ to newchars fil i j new old str    ("fil ← file(:)
     fil close)
 
 to junta (PUT USER "DO "(t). CODE 31)
-	'^h75.^f1.allocates display over OS after setting up t^h60.^f0.'
+	'allocates display over OS after setting up t'
 f
