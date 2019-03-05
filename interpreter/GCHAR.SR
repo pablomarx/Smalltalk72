@@ -1,0 +1,373 @@
+	.titl	rchar	; gchar.sr / TYPEWRITER VERSION
+	.GETNOLIST	"SMALL.OPS"
+	.BEXT	GCHAR
+	.BEXTZ	.err
+
+	.SREL	;ENTRY POINT
+GCHAR:	GCHARC
+statm1:	state-1
+mkys:	mkeys
+parry:	reg	;lower case table
+	shift	;shift table
+	shift	;shift table
+	shift	;shift table
+	lck	;lock shift table
+	shift	;shift table
+	shift	;shift table
+	shift	;shift table
+
+	.nrel
+
+;This little routine discovers and deciphers new "I/O bit-map" events and 
+;decodes the "typewriter" keyboard part of them into an 8-bit code which is
+;left in register 0. 
+
+;This is Larry Tesler's modification of Alan Kay's code.  It handles the
+;"meta" keys in a different way, namely, they are kept track of individually.
+;It returns an 8-bit code, where the high order bit = CTRL.
+;Shift of every key has a different code from non-shift of that key,
+;even for keys such as space and carriage return.  No two legal keystrokes
+;can produce the same octal code. The character set differs from VTS
+;in that left-arrow and underbar are interchanged; here, 140 is underbar
+;and 137 is left-arrow (this makes left-arrow conform with ASCII and
+;with MAXC, while underbar uses the slot in ASCII for "accent grave").
+;Bottom spare key returns 31 instead of 0.
+
+;	OVERHAULED 10/29/74 BY DAN INGALLS
+
+GCHARC:	sta	3, gcRET	;save return address
+
+;Initialize scanning routine
+	lda	0, nwds	;number of keyboard words
+	sta	0, count	;main loop will decrement this
+	lda	0, keym1	;keyboard-1
+	sta	0, key	;auto indexing may not work
+	lda	0, @.statm1	;previous state buffer - 1
+	sta	0, stt
+
+; L O O K   A T   B U F F E R
+look:	isz	key
+	lda	0,@key	;pick up a keyboard word
+	isz	stt
+	lda	1,@stt	;pick up the corresponding previous
+	seq	0,1
+	 jmp	chang	;if changed
+	dsz	count
+	jmp	look
+nilret:	nil	0,0
+	jmp	@gcRET
+
+gcRET:	0
+ksz = 4
+nwds:	ksz
+count:	0
+keym1:	177034-1
+key:	0
+.statm1:	statm1
+stt:	0
+	.rdx	10
+bitoff:	0	;base bit-addr for each kbd word
+	16
+	32
+	48
+	.rdx	8
+;
+;	/*keyboard state*/
+state:	-1	;inactive keyboard is all one's
+	-1
+	-1
+	-1
+metas:	0	;accumulated code for metas which are down
+
+
+; ac0=new word, ac1=old  -  find which bits changed
+; shift mask (ac3) right; GOTO handle when corres bits differ
+chang:	subzr	3,3	;select-bit starts at left
+	zer	2,2	;bit-number starts at zero
+bitlp:	and#	3,0,snr
+	jmp	new0
+	and#	3,1,snr
+	 jmp	kup
+	jmp	nodif
+new0:	and#	3,1,szr
+	 jmp	kdn
+nodif:	inc	2,2
+	movzr	3,3,szr
+	jmp	bitlp
+	jsr	@.err	;disaster
+
+kdn:	sub	3,1,skp
+kup:	add	3,1
+	sta	1,@stt	;update this bit in state
+	and	3,1	;ac1=0 iff key went DOWN
+	jmp	handle
+
+;meta key locs and codes
+	.rdx	10
+mkeys:	32+4	;ctrl
+	1
+	48+12	;rshift
+	2
+	32+9	;lshift
+	4
+	48+8	;lock
+	8
+	-1	;table end
+	.rdx	8
+.mkeys:	mkys
+.parry:	parry
+
+;H A N D L E takes care of ASCII encoding
+; ac2=bit number, ac1=0 <==> key went down
+handle:	lda	3,stt
+	lda	0,bitoff-state,3	;bit addr rel to buffer
+	add	2,0	;ac0 _ full bit addr
+
+;now see if it is a special meta character
+	lda	2,@.mkeys
+mcloop:	lda	3,0,2
+	snn	3,3	;until -1
+	 jmp	hreg
+	sne	3,0	;compare with meta-key codes
+	 jmp	meta
+	inc	2,2
+	inc	2,2
+	jmp	mcloop
+
+meta:
+	lda	3,1,2	;pick up meta bit
+	lda	2,metas	;previous state of meta keys
+	com	3,3	;turn off the appropriate bit
+	and	3,2
+	snz	1,1	;skip if went OFF
+	 adc	3,2	; else turn it on
+	sta	2,metas
+	jmp	nilret
+
+;now lets look up the character in the right table
+hreg:	sze	1,1
+	 jmp	nilret	;(just a key going up)
+	lda	1,metas	;this is index to pointer array
+	movzr	1,1	;ignore ctl for now
+	lda	2,.parry	;pointer array address
+	add	1,2	;index
+	lda	2,0,2	;fetch address of right table
+	add	0,2	;index by bit position
+	lda	0,0,2	;fetch ascii code and ...
+	lda	1,metas
+	lda	2,c200
+	movzr	1,1,szc	;check for ctl
+	 add 2,0
+	jmp	 @gcRET
+c200:	200
+
+
+reg:	65	; 5
+	64	; 4
+	66	; 6
+	145	; E
+	67	; 7
+	144	; D
+	165	; U
+	166	; V
+	60	; 0
+	153	; K
+	55	; -
+	160	; P
+	57	; /
+	134	; backslash
+	12	; FORTH (LF)
+	10	; BS
+;word 1
+	63	; 3
+	62	; 2
+	167	; W
+	161	; Q
+	163	; S
+	141	; A
+	71	; 9
+	151	; I
+	170	; X
+	157	; O
+	154	; L
+	54	; ,
+	47	; "
+	135	; ]
+	34	; DOWN (middle spare)	* change 
+	36	; UP (top spare)	* change
+;word 2
+	61	; 1
+	33	; BACK (ESC)
+	11	; TAB
+	146	; F
+	0	; (ctrl)
+	143	; C
+	152	; J
+	142	; B
+	172	; Z
+	0	; (shift)
+	56	; :
+	73	; ,
+	15	; RETURN
+	137	; left arrow (_)
+	177	; DEL
+	0	; (unused)
+;word 3
+	162	; R
+	164	; T
+	147	; G
+	171	; Y
+	150	; H
+	70	; 8
+	156	; N
+	155	; M
+	0	; (lock)
+	40	; SPACE
+	133	; [
+	75	; +
+	0	; (shift)
+	31	; INS (bottom spare)	* change
+	0	; (unused)
+	0	; (unused)
+	
+shift:	45	; X
+	44	; X
+	176	; X
+	105	; X
+	46	; X
+	104	; X
+	125	; X
+	126	; X
+	51	; X
+	113	; X
+	140	; X
+	120	; X
+	77	; X
+	174	; X
+	22	; X	* change
+	20	; X	* change
+;word 1
+	43	; X
+	100	; X
+	127	; X
+	121	; X
+	123	; X
+	101	; X
+	50	; X
+	111	; X
+	130	; X
+	117	; X
+	114	; X
+	74	; X
+	42	; X
+	175	; X
+	35	; X	* change
+	37	; X	* change
+;word 2
+	41	; X
+	23	; X	* change
+	21	; X	* change
+	106	; X
+	0	; X
+	103	; X
+	112	; X
+	102	; X
+	132	; X
+	0	; X
+	76	; X
+	72	; X
+	25	; X	* change
+	136	; X
+	27	; X	* change
+	0	; X
+;word 3
+	122	; X
+	124	; X
+	107	; X
+	131	; X
+	110	; X
+	52	; X
+	116	; X
+	115	; X
+	0	; X
+	30	; X	* change
+	173	; X
+	53	; X
+	0	; X
+	32	; X	* change
+	0	; X
+	0	; X
+
+lck:	65	; X
+	64	; X
+	66	; X
+	145-40	; X
+	67	; X
+	144-40	; X
+	165-40	; X
+	166-40	; X
+	60	; X
+	153-40	; X
+	55	; X
+	160-40	; X
+	57	; X
+	134	; X
+	12	; X
+	10	; X
+;word 1
+	63	; X
+	62	; X
+	167-40	; X
+	161-40	; X
+	163-40	; X
+	141-40	; X
+	71	; X
+	151-40	; X
+	170-40	; X
+	157-40	; X
+	154-40	; X
+	54	; X
+	47	; X
+	135	; X
+	34	; X	* change
+	36	; X	* change
+;word 2
+	61	; X
+	33	; X
+	11	; X
+	146-40	; X
+	0	; X
+	143-40	; X
+	152-40	; X
+	142-40	; X
+	172-40	; X
+	0	; X
+	56	; X
+	73	; X
+	15	; X
+	137	; X
+	177	; X
+	0	; X
+;word 3
+	162-40	; X
+	164-40	; X
+	147-40	; X
+	171-40	; X
+	150-40	; X
+	70	; X
+	156-40	; X
+	155-40	; X
+	0	; X
+	40	; X
+	133	; X
+	75	; X
+	0	; X
+	31	; X	* change
+	0	; X
+	0	; X
+
+
+	.end
+	
+	
+   0

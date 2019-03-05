@@ -1,0 +1,612 @@
+;//	SSCAN.SR
+
+	.TITL	SSCAN
+
+	.GETNOLIST	"SMALL.OPS"
+	.GETNOLIST	"SMALL.SYMS"
+
+;	***NOTE ALL STATICS IN THIS MODULE MUST BE REFERRED TO 
+;	IN PAGE1.SR, SO THAT THEY CAN BE RELOCATED WHEN CODE2.SR
+;	GETS MOVED***
+	.SREL
+
+FIRSTOFSSCAN:	SIZEC
+SSCOD:	SSCODC
+SCGTS:	.SCGT
+SCPTS:	.SCPT
+
+	.ZREL
+
+.SSCAN:	SSCAN
+.SMF:	SMF
+.GTB:	GTB
+.PTB:	PTB
+.GNB:	GNB
+.PNB:	PNB
+.GARG:	GARG
+ 
+	.nrel
+SIZEC:	LASTOFCODE-.
+
+
+;// 	SMALLTALK SUBSTRECTOR PACKAGE (STRECTOR = STRING or VECTOR)
+
+;// 	SSCOD is @CODE entry to SSCAN from Smalltalk.
+;// 	Operation codes are:
+;// 		0	S1[LB1 to UB1] _ all BYTE
+;// 		1	S1[LB1 to UB1] find first BYTE
+;// 		2	S1[LB1 to UB1] find last BYTE
+;// 		3	S1[LB1 to UB1] find first non BYTE
+;// 		4	S1[LB1 to UB1] find last non BYTE
+;// 		5	S1[LB1 to UB1] _ S2[LB2 to UB2]
+;// 		6	S2[LB2 to UB2] _ S1[LB1 to UB1]
+;// 	Activation fields are:
+;// 		OP	;// Operation
+;// 		BYTE	;// Byte
+;// 		S1	 ;// Strector 1
+;// 		LB1	;// Lower Bound 1
+;// 		UB1	;// Upper Bound 1
+;// 		S2	;// Strector 2
+;// 		LB2	;// Lower Bound 2
+;// 		UB2	;// Upper Bound 2
+
+
+;// 	THE REST OF THE ROUTINES IN THIS PACKAGE DO NO BOUNDS CHECKING!
+
+;// 	SSCAN creates, inits, searches, and copies substrectors
+;// 		jsr @.sscn
+;// 		Address TBL of argument table (see below)
+;// 	Simple return if result in ac0 is integer (ops 0-5)
+;// 	Skips 1 if result in ac0 is a strector (ops 6-7)
+;// 	TBL:
+;// 		CLASS, 1 for string or 2 for vector
+;// 		OP, a Nova integer
+;// 		BYTE, a Nova integer if substring, a pointer if subvector
+;// 			...op 0 only
+;// 		S1, a strector
+;// 		LB1, a Nova integer	... lower bound
+;// 		UB1, a Nova integer	... upper bound
+;// 		S2, a strector		... only for ops 6-7
+;// 		LB2, a Nova integer	... only for ops 6-7
+;// 		UB2, a Nova integer	... only for ops 6-7
+;// 	OPeration codes are:
+;// 		0	S1[LB1 to UB1] _ all BYTE
+;// 		1	S1[LB1 to UB1] find first BYTE
+;// 		2	S1[LB1 to UB1] find last BYTE
+;// 		3	S1[LB1 to UB1] find first non BYTE
+;// 		4	S1[LB1 to UB1] find last non BYTE
+;// 		5	S1[LB1 to UB1] _ S2[LB2 to UB2]
+;// 		6	S2[LB2 to UB2] _ S1[LB1 to UB1]
+
+;// 	SMF Substrector Map Fetch
+;// 		jsr @.smf
+;// 		dir (+=forward,-=backward;// 1=string,2=vector)
+;// 		ac0 = mapf (map function):
+;// 		  ;// Takes str[i] in ac0
+;// 		  ;// i in ac1,ac2 transparent
+;// 		  ;// May skip-return:
+;// 		  ;//  	Ifso: SMF skip-returns.
+;// 		  ;// If substrector exhausted, no skip-return:
+;// 		ac1 =ptr to [strector ptr, lower bnd, upper bnd]
+;// 		ac2 = transparent
+
+;// 	SMS Substrector Map Store
+;// 		jsr @.sms
+;// 		dir (+=forward,-=backward;// 1=string,2=vector)
+;// 		ac0 = mapf (map function):
+;// 			;//  Takes i in ac1, ac2 transparent
+;// 			;//  Returns X in ac0
+;// 			;//  SMS stores X into str[i]
+;// 		ac1 =ptr to [strector ptr, lower bnd, upper bnd]
+;// 		ac2 = transparent
+
+;// 	Get/Put This/Next/Previous Byte/Word
+;// 			(GTB, PPW, etc.).
+;// 	Arguments are inline:
+;// 		RIPT	Subscript to be incd/decd/used
+;// 		STR	Strector to be scanned
+;// 	AC2 PRESERVED THROUGHOUT !!
+
+;// 	GARG: Get ARGuments from activation
+;// 	  jsr @.garg
+;// 	  no. of first argument
+;// 	  Number of arguments
+;// 	  .rdx 2
+;// 	  10..01;// nth bit from right = 1 if nth arg integer
+;// 	  .rdx 8
+;// 	  arg1	;// address of argument table
+;// 	   . . . . .
+;// 	  arg1:	0	;// argument table
+;// 	  ...
+;// 	  argn:	0
+
+
+;// 	jsr bound
+;// 	pointer to [strector,lb,ub]
+;// 		lb_lb max 1, ub _ ub min length(strector)
+;// 		ac1 and ac2 are preserved
+
+
+
+bdsv2:	0
+bdadr:	0
+bdra:	0
+
+bound:
+	lda 1,0,3	;// ac1_substring ptr
+	ADD	3,1	;// ADD PC TO SUBSTR PTR OFFSET
+	sta 2,bdsv2	;// preserve ac2
+	sta 1,bdadr	;// preserve ac1
+	inc 3,3
+	sta 3,bdra	;// preserve ac3
+	
+	lda 1,@bdadr	;// ac1 ->strector
+	INC	1,1,SNR	;// RETURN IF NIL
+	   jmp @bdra
+
+	load		;// ac0 _ length
+	lda 3,bdadr	;// ac3 -> [strector,lb,ub]
+	lda 1,1,3	;// ac1 = lb
+	lda 2,2,3	;// ac2 = ub
+	sgz 1,1		;// ac1 _ ac1 max 1
+	one 1,1
+	sta 1,1,3	;// lb_ac1
+	sle 2,0		;// ac2 _ ac2 min length
+	mov 0,2
+	sta 2,2,3	;// ub _ ac2
+
+	mov 3,1		;// restore ac1
+	lda 2,bdsv2	;// restore ac2
+	jmp @bdra	;// return
+
+
+		
+;// 	GET ARGUMENTS SUBROUTINE
+
+grgi:	0		;// i'th argument to be fetched next
+grgn:	0		;// there are n arguments altogether
+grgbt:	0		;// the bit table
+grgra:	0		;// return address
+grgar:	0		;// argument table address
+
+garg:
+	lda 2,.larg
+	sta 2,.getr
+	sta 3,grgra	;// save return address
+
+	lda 2,0,3	;// first argument number, I
+	sta 2,grgi
+
+	lda 2,1,3	;// number of arguments N
+	sta 2,grgn
+
+	lda 2,2,3	;// bit table
+	sta 2,grgbt
+
+	lda 2,3,3	;// argument table address
+	ADD	3,2	;// ADD PC TO TABLE OFFSET
+	sta 2,grgar
+
+grglp:
+	lda 1,grgi	;// fetch I'th argument
+	jsr @.getr	;// larg or lins
+	lda 1,grgbt
+	movzr 1,1	;// shift bit table, setting carry bit
+	sta 1,grgbt	;// store back
+	mov# 0,0,szc	;// if bit set, do integer conversion
+	   jsr @.ival
+	sta 0,@grgar	;// store the argument
+	isz grgar	;// step and loop
+	isz grgi
+	dsz grgn
+	   jmp grglp
+
+	lda 3,grgra
+	jmp 4,3		;// return
+.getr:	0
+ 
+
+SSCODC:
+	jsr garg	;// get arguments 0 through 7
+	0
+	10
+	.rdx 2
+	11011001	;// integer, pointer, pointer,  ...
+	.rdx 8
+	3+OP-.		;// argument table address offset
+
+	lda 0,s1
+	jsr @.isit	;// string or vector
+	sclas
+	   jmp itvec
+	lda 0,byte	;// byte should be a Nova integer
+	jsr @.ival
+	sta 0,byte
+	one 2,2,skp	;// 1 = string
+itvec:
+	lda 2,c2	;// 2 = vector
+	sta 2,arg	;// pass to sscan
+
+	jsr bound	;// confine lb1 and ub1
+	s1-.
+	jsr bound	;// confine lb2 and ub2
+	s2-.
+
+	JSR	@.PNT	;// GET POINTER TO "CLASS" IN AC0
+	CLASS-.
+	STA	0,.+2
+	jsr sscan		;// call SSCAN
+	0		;// argument table address
+	   jmp ssrti	;// returns here if an integer result
+	jsr @.sval	;// returns here if a strector result
+	jmp @.eval	;// back to Smalltalk
+ssrti:
+	jsr @.intn
+	jsr @.svli
+	jmp @.eval
+
+arg:
+class:	0
+op:	0
+byte:	0
+s1:	0
+lb1:	0
+ub1:	0
+s2:	0
+lb2:	0
+ub2:	0
+
+
+sscan:
+	lda 2,0,3	;// argument table address
+
+	inc 3,3		;// save return address
+	sta 3,sscra
+
+	lda 0,byte-arg,2;// BYTE
+	sta 0,byte
+
+	lda 1,c3	;// make ac1 -> [str1,lb1,ub1]
+	add 2,1
+
+	LDA	0,OP-ARG,2	;// OPERATION
+	LDA	2,CLASS-ARG,2	;// 1 FOR STRING, 2 FOR VECTOR
+	JSR	.+1	;// GET PC
+	ADD	0,3	;// ADD TO JUMP TABLE OFFSET
+	JMP	2,3	;// jump through transfer vector with:
+				;// ac1->[str1,lb1,ub1]
+				;// ac2 = 1:str/2:vec
+
+	JMP	PROPA		;// propagate
+	JMP	FFB		;// find first byte
+	JMP	FLB		;// find last byte
+	JMP	FFNB		;// find first non byte
+	JMP	FLNB		;// find last non byte
+	JMP	C12		;// copy s1_s2
+	JMP	C21		;// copy s2_s1
+
+SKEQ:	LDA	2,BYTE
+	seq 2,0
+	jmp 0,3
+	jmp 1,3
+
+SKNE:	LDA	2,BYTE
+	sne 2,0
+	jmp 0,3
+	jmp 1,3
+
+LBYTE:	LDA	0,BYTE
+	JMP	0,3
+
+propa:
+	sta 2,prdir	;// store direction (1 or 2)
+	JSR	@.PNT	;// GET POINTER TO LBYTE IN AC0
+	LBYTE-.
+	jsr sms
+prdir:	0	;// forward scan
+	lda 3,sscra	;// return, skipping if non-integer result
+	lda 2,prdir
+	add 2,3
+	jmp -1,3
+
+flnb:	neg 2,2
+FFNB:	JSR	@.PNT	;// GET PTR TO SKNE IN AC0
+	SKNE-.
+	jmp fb
+flb:	neg 2,2
+FFB:	JSR	@.PNT	;// GET PTR TO SKEQ IN AC0
+	SKEQ-.
+fb:	sta 2,fdir	;// store direction (+ or -  1 or 2)
+
+	jsr smf	;// strector map fetch
+fdir:	0	;// direction of scan
+	zer 0,0 skp	;// return 0 in ac0
+	mov 1,0	;// return ac1 in ac0
+	jmp @sscra	;// return normal
+
+sscra:	0	;// return address
+
+c21:
+	lda 0,c3 ;// ac0->[s2,lb2,ub2], ac1->[s1,lb1,ub1]
+	add 1,0
+	jmp sscop
+
+c12:
+	mov 1,0	 ;// ac0->[s1,lb1,ub1], ac0->[s2,lb2,ub2]
+	lda 1,c3
+	add 0,1
+
+;// ac1->[src str,s.lb,s.ub], ac0->[dest str,d.lb,d.ub]
+sscop:
+	sta 0,scdst	;// store dest str
+	sta 1,scsrc	;// store src str
+	sta 2,scdir	;// direction = 1 or 2
+
+	mov 1,2		;// compute scnn = number n of elements to move
+	jsr sslen	;// ac0 _ s.sublength
+	mov 1,0
+	lda 2,scdst	;// ac1 _ d.sublength
+	jsr sslen
+	sle 0,1		;// n _ ac0 _ min s.sublength d.sublength
+	   mov 1,0
+	sgz 0,0		;// if n<1 then return
+	   jmp scend
+	sta 0,scnn
+
+	lda 2,scsrc	;// compute starting positions
+	jsr ssdat	;// scsp _ s, ac0 _ s.lb-1
+	sta 1,scsp
+	mov 2,0
+	lda 2,scdst	;// scdp _ d, ac2 _ d.lb-1
+	jsr ssdat
+	sta 1,scdp
+
+	lda 3,scdir	;// forward or backward?
+	slt 0,2		;// if s.lb < d.lb then...
+	   jmp scfwd
+	neg 3,3		;//     ...scan backwards
+	lda 1,scnn	;// from lb+n-1 to lb
+	inc 1,1		;// ac1 _ n+1
+	add 1,0		;// s.lb+n-1 + 1 = s.lb-1 + n+1
+	add 1,2		;// d.lb+n-1 + 1 = d.lb-1 + n+1
+scfwd:			;// else scan forward
+	sta 0,scsi	;// from lb to lb+n-1
+	sta 2,scdi
+
+	LDA	2,@.SCGT	;// SETUP GETTER. AC3 IS +-1 OR 2
+	ADD	3,2
+	LDA	0,0,2
+	STA	0,SCGET		;// SOME SORT OF JSR GXX
+	LDA	2,@.SCPT	;// SET UP PUTTER. AC3 IS +-1 OR 2
+	ADD	3,2
+	LDA	0,0,2
+	STA	0,SCPUT		;// SOME SORT OF JSR PXX
+
+scget:	0		;// get
+scsi:	0		;// subscript to inc/dec
+scsp:	0		;// strector
+scput:	0		;// put
+scdi:	0		;// subscript
+scdp:	0		;// strector
+	dsz scnn	;// loop
+	jmp scget
+
+scend:
+	lda 0,@scdst	;// return dest str
+	lda 3,sscra
+	jmp 1,3		;// skip return with strector in ac0
+
+scdst:	0	;// destination str
+scsrc:	0	;// source str
+scdir:	0	;// direction of scan
+scnn:	0	;// n
+
+
+
+sslen:		;// substrector sublength subroutine
+	lda 1,2,2	;// takes ac2 -> [s, s.lb, s.ub]
+	lda 2,1,2	;// sets ac2 = s.lb
+	sub 2,1		;// sets ac1 = s.len
+	inc 1,1		;// preserves ac0
+	jmp 0,3
+
+ssdat:			;// substrector start-gn subroutine
+	lda 1,0,2	;// takes ac2 -> [s,s.lb,s.ub]
+	lda 2,1,2	;// sets ac2 = s.lb-1
+	neg 2,2		;// sets ac1 = s
+	com 2,2		;// preserves ac0
+	jmp 0,3
+
+	jsr gpw+.-scget		;// for sscop
+	jsr gpb+.-scget
+.scgt:	SCGTS		;// dummy location
+	jsr gnb+.-scget
+	jsr gnw+.-scget
+
+	jsr ppw+.-scput
+	jsr ppb+.-scput
+.scpt:	SCPTS		;// dummy location
+	jsr pnb+.-scput
+	jsr pnw+.-scput
+
+
+smf:
+	sta 3,smfra	;// save return address
+	jsr ssmap	;// strector map initialization
+smfra:	0		;// return address
+smfmf:	0		;// map function
+
+	jsr gpw+.-smfgp
+	jsr gpb+.-smfgp
+smfnn:	0		;// number of bytes to scan
+	jsr gnb+.-smfgp
+	jsr gnw+.-smfgp
+smfgo:	jmp smflp		;// ssmap returns here
+	0		;// padding for parallelismo
+	0		;// padding for parallelismo
+smflp:			;// loop
+smfgp:	0		;// jsr gnb or gpb
+smfsi:	0		;// starting subscript for gnb or gpb
+smfsp:	0		;// strector pointer
+	lda 1,smfsi
+	jsr @smfmf	;// call map function
+	   jmp smfns	;// no skip
+	lda 3,smfra	;// skip return
+	jmp 1,3
+smfns:
+	dsz smfnn
+	jmp smflp	;// loop
+	jmp @smfra	;// normal return
+
+sms:
+	sta 3,smsra	;// save return address
+	jsr ssmap	;// strector map initialization
+smsra:	0		;// return address
+smsmf:	0		;// map function
+	jsr ppw+.-smsgp
+	jsr ppb+.-smsgp
+smsnn:	0		;// number of bytes to scan
+	jsr pnb+.-smsgp
+	jsr pnw+.-smsgp
+smsgo:			 ;// ssmap returns here
+smslp:			;// loop
+	lda 1,smssi
+	inc 1,1
+	jsr @smsmf	;// call map function
+smsgp:	0		;// jsr pnb or ppb
+smssi:	0		;// starting subscript for pnb or ppb
+smssp:	0		;// strector pointer
+	dsz smsnn
+	jmp smslp	;// loop
+	jmp @smsra	;// return
+
+	
+ppw:
+	dsz 0,3
+	skip
+pnw:
+	isz 0,3
+ptw:
+	sta 3,pgra	;// save ret addr
+	lda 1,1,3		;// vector ptr
+	inc 1,1		;// point to length word
+	lda 3,0,3		;// subscript
+	add 3,1		;// address of element
+	jsr @.stref
+	jsr @.refi
+	lda 3,pgra	;// return
+	jmp 2,3
+
+gpw:
+	dsz 0,3
+	skip
+gnw:
+	isz 0,3
+gtw:
+	sta 3,pgra	;// save ret addr
+	lda 1,1,3	;// vector ptr
+	inc 1,1		;// point to length word
+	lda 3,0,3	;// subscript
+	add 3,1		;// address of element
+	load
+	lda 3,pgra	;// return
+	jmp 2,3
+
+
+gpb:
+	dsz 0,3
+	skip
+gnb:
+	isz 0,3
+gtb:
+	sta 3,pgra	;// save return address
+	lda 0,0,3	;// subscript
+	lda 1,1,3	;// strector
+	inc 1,1		;// point to length
+	inczr 0,0	;// subscript changed to word offset
+	add 0,1		;// addr of the wd with the byte in it
+	load
+	lda 3,@pgra	;// reload subscript to check odd/even
+	sev 3,3
+	   movs 0,0	;// left -- swap
+	lda 1,rbmsk	;// mask right byte
+	and 1,0
+	lda 3,pgra	;// return
+	jmp 2,3
+
+ppb:
+	dsz 0,3
+	skip
+pnb:
+	isz 0,3
+PTB:
+	sta 3,pgra	;// save return address
+	sta 0,pgbyt	;// save byte to store
+	lda 0,0,3	;// subscript
+	lda 1,1,3	;// strector
+	inc 1,1		;// point to length
+	inczr 0,0	;// subscript changed to word offset
+	add 0,1		;// ac1 _ word addr
+	load		;// ac0 _ two-byte word
+	lda 3,@pgra	;// reload subscript to check odd/even
+	sev 3,3
+	 jmp ptlft	;//  odd means put in left byte
+	lda 3,lbmsk
+	and 3,0		;// kill the old right byte
+	lda 3,pgbyt	;// and load up the new one
+	 jmp etc
+ptlft:	lda 3,rbmsk
+	and 3,0		;// kill the old left byte
+	lda 3,pgbyt
+	movs 3,3	;// and get the new one in place
+
+etc:	add 3,0		;// slam in the new byte
+	stor
+	lda 0,pgbyt
+	lda 3,pgra	;// return
+	jmp 2,3
+
+pgra:	0		;// return address
+pgbyt:	0		;// byte to store
+pgadr:	0		;// address of two-byte word
+pgsv2:	0		;// save ac2
+pgsv1:	0		;// save ac1
+pgsv0:	0		;// save ac0
+ssav2:	0		;// ac2 transparent
+
+
+ssmap:
+	sta 0,smfmf-smfra,3	;// map function
+	sta 2,ssav2	;// ac2 transparent
+
+	lda 2,@0,3	;// direction
+	isz 0,3		;// modify return address
+	neg 2,0		;// -direction ... keep around to compute si
+	add 3,2		;// smsra +- direction
+	lda 2,smfnn-smfra,2	;// a jsr
+	sta 2,smfgp-smfra,3	;// store it
+
+	mov 1,2		;// ac2->[str,lb,ub]
+	lda 1,0,2	;// str
+	sta 1,smfsp-smfra,3
+
+	lda 1,1,2	;// lb
+	lda 2,2,2	;// ub
+
+	sp 0,0		;// ac0 _ lb-1 or ub+1
+	nil 0,0,skp
+	inc 2,0,skp
+	add 1,0
+	sta 0,smfsi-smfra,3	;// starting subscript
+
+	inc 2,0		;// ac0 _ ub+1-lb
+	sub 1,0
+	sgz 0,0		;// positive n?
+	   jmp @0,3	;// no - substrector exhausted - return *3jan74
+	sta 0,smfnn-smfra,3
+	lda 2,ssav2	;// restore ac2
+	jmp smfgo-smfra,3	;// return to smf or sms
+
+LASTOFCODE:	0
+	.end
+g
