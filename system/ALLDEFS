@@ -20,9 +20,9 @@ DONT EDIT ABOVE HERE!--These classes and atoms mentioned early to guarantee addr
  
 
 HEREWITH A SOMEWHAT WHIMSICAL ANNOTATED VERSION OF SYSDEFS. ANNOTATIONS ARE IN ITALICS.  WHILE  IT IS HOPED THAT THIS WILL PROVIDE SOME ELUCIDATION OF THE CODE ESCAPES, OBSCURITIES WILL NO DOUBT PERSIST .  THE ANNOTATIONS ARE INTENDED TO BE BUT DIMLY LIGHTED MARKERS ON THE ROAD TO TRUE ILLUMINATION.TO PRINT ALLDEFS -----	Get ALLDEFS into Bravo (with font ST8.AL, already FONT.0 for those	who have run any of the STBRAVO*.CM command files) and translate	onto another file (e.g. ALLDEFS.TR).  Get ALLDEFS.EC from MAXC and	type it.  You must have all the .EP files listed therein.  Then you may type		GEARS/D ALLDEFS/G ALLDEFS.TR
-
+
 ^h90.^f2.
-BOOTSTRAPPING MAGIC.
+BOOTSTRAPPING MAGIC.
 ^h75.^f1.
 	to isnew (null instance?("instance_allocate permsize.
 		instance[0]_class. !true)
@@ -1229,7 +1229,7 @@ the class function ncheck checks that file names contain alphabetic or legal
 		 %load? (2 CODE 50. 8 CODE 50)
 			'^h75.^f1.
 			lookup an old file and load (overlay) a Swat			memory image; return via save.
-			^h60.^f0.'
+			^h60.^f0.'
 		(%old? (2)
 		 sadr[13] _ fname length.
 		 sadr[14 to 13 + fname length] _ fname.
@@ -1308,7 +1308,7 @@ currently, <directory> and old or new must be specified.
 	%forget? (filesopen delete :)
 		'^h75.^f1.
 		add or delete file instances in filesopen.
-		^h60.^f0.'
+		^h60.^f0.'
 	%print? (disp_0133. filesopen print. disp_0135)
 		'^h75.^f1.
 		di or di print. --print the filesopen list.
@@ -1350,7 +1350,7 @@ currently, <directory> and old or new must be specified.
   	%free? (SELF open.  "exp _ 0.		bitinst set to 1  609*dirinst &/ 1.  		do 609  (255 = "name _ bitinst next? ("exp _ exp + 8)  		name = 0? ()  		repeat ("exp _ exp + name &* 1.     		  0 = "name _ name &/ 1?(done))).  !4872 - exp)
 		'^h75.^f1.
 		di free -- return number of free pages from the		bittable associated with this directory.
-		^h60.^f0.'
+		^h60.^f0.'
 	%directory? (SELF open. !apply directory)
 		'^h75.^f1.
 		di directory <string>... -- open directory. create directory
@@ -1384,7 +1384,7 @@ donedp0 use
 	'^h75.^f1.
 	make dp0 the default directory.
 	^h60.^f0.'
-
+
  to error adr ptr arec class :: c shocode find sub (
 	(0="adr_mem 0102?(%knows?(ev !) dson. :ptr))
 	"arec_leech AREC.
@@ -1712,7 +1712,7 @@ to filin fi :: ev (%?(!eval)     dsoff.
        cr (read of fi) eval print.
        dson).
     fi close.
-   )filin (to ev (repeat(cr (read of fi) eval print)))
+   )filin (to ev (repeat(cr (read of fi) eval print)))
 	'^h75.^f1.
 	Filin basically does a read-eval-print loop, but gets its input from a
 	file instead of a dispframe.
