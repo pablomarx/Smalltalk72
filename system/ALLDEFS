@@ -10,7 +10,7 @@ to isnew (CODE 5)
 ☛false←falseclass.
 ☛(TITLE USER DO SIZE CODE SELF AREC GLOB MESS RETN CLAS
  length eval or and mod chars error
- ☛.,/;:-[]~|ⓢ⇑#$∢}←={}*+⇒<> go goto turn next contents end &   ≤⦂≠)
+ ☛.,/;:-[]~’ⓢ⇑#$∢}←={}*+⇒<> go goto turn next contents end &   ≤⦂≠)
 
 '
 DONT EDIT ABOVE HERE⇑--These classes and atoms mentioned early to guarantee addresses for machine code.
@@ -119,7 +119,7 @@ to ☛ (CODE 9)
 
 to # (:#)
 	'
-	Returns a REFERENCE to its argument|s binding.
+	Returns a REFERENCE to its argument’s binding.
 	'
 
 
@@ -174,7 +174,7 @@ INITIALIZING SYSTEM CLASSES
 
 	
 	Here are the main kludges which remain from the time when we
-	really didn|t understand classes very well, but wanted a working
+	really didn’t understand classes very well, but wanted a working
 	SMALLTALK. PUT and GET are two of the principle actions of class
 	class. The new verson of SMALLTALK will have class as a class
 	with these actions intensional.
@@ -424,7 +424,7 @@ to cr (disp←13).  to sp (disp←32)
 ☛eval←☛eval
 to is ( ∢~⇒(⇑☛untyped):☛. ⇑false)
 	'
-	These are used to handle messages to classes which can|t answer
+	These are used to handle messages to classes which can’t answer
 	queston invoking ↪is↪, ↪eval↪, etc.
 	'
 
@@ -769,7 +769,7 @@ The ↪font↪ variable allows for the association of a font other than the defa
 
 ∢scroll⇒(2 CODE 51)
 	'
-	Scroll removes the top line of text from the frame|s string buffer,
+	Scroll removes the top line of text from the frame’s string buffer,
 	and moves the text up one line.
 	'
 
@@ -950,7 +950,7 @@ to dmove (CODE 54)
 	'
 	This function takes six parameters -- source x width source y
 	height destination x destination y.  It takes the source rectangle
-	(x and width mod 16|d as in dclear) and moves it to the destination
+	(x and width mod 16’d as in dclear) and moves it to the destination
 	x and y. Clipping will occur on display boundaries. The source will
 	remain intact unless  it overlaps with the destination, in which case
 	the over- lapping portion of the destination wins.
@@ -1042,7 +1042,7 @@ a file is found in a directory (↪dirinst↪) by its file name (↪fname↪), a
 
 ↪leader↪ and ↪curadr↪ are the alto disk addresses of page 0 and the current page of the file, respectively.  ↪bytec↪ is a character index into ↪sadr↪.
 
-↪dirty↪ = 1 if any label block integers (↪nextp↪ thru ↪sn2↪) have been changed; = -1 if ↪sadr↪ has been changed; = 0 if the current page is clean.  the user need not worry about this unless (s)he deals directly with the label or ↪sadr↪. it might be noted here that multiple instances of the same file do not know of each others activities or ↪sadr|s.
+↪dirty↪ = 1 if any label block integers (↪nextp↪ thru ↪sn2↪) have been changed; = -1 if ↪sadr↪ has been changed; = 0 if the current page is clean.  the user need not worry about this unless (s)he deals directly with the label or ↪sadr↪. it might be noted here that multiple instances of the same file do not know of each others activities or ↪sadr’s.
 
 ↪status↪ is normally 0, -1 if end occurred with the last ↪set↪; a positive number (machine language pointer to offending disk command block (dcb)) signals a disk error.
 
@@ -1636,7 +1636,7 @@ to bugin  someframe  max index(
 	'
 	again
 	'
-	causes an exit out of this command by restarting ed|s
+	causes an exit out of this command by restarting ed’s
 	repeat
 	'
 	)
@@ -1716,7 +1716,7 @@ to showev shAtom shVal (:shAtom. cr.
 to kbd (⇑kmap[TTY])
 ☛kmap ← string 0377.
 	for i←0200 to 0377(kmap[i] ← 0177) '^f1.ILLEGAL GETS ^f0.'
-	for i←001 to 0177(kmap[i] ← i) '^f1.^f1.REGULAR ASCII|S^f0.'
+	for i←001 to 0177(kmap[i] ← i) '^f1.^f1.REGULAR ASCII’S^f0.'
 
                                  '^f1.CHAR -- KEYBOARD^f0.'
 kmap[0341]←kmap[0301]←kmap[0274]←kmap[0254]←01.
@@ -1725,13 +1725,13 @@ kmap[0342]←kmap[0302]←kmap[0236]←kmap[0237]←kmap[037]←kmap[036]←02.
                                              '^f1.  -- ^^B or any TOP BLANK KEY.^f0.'
 
 kmap[0343]←kmap[0303]←kmap[0272]←03. '^f1.⦂ -- ^^C or ^^SHF;^f0.'
-kmap[0344]←kmap[0304]←04. 'f1.^^D  |done| ^f0.'
+kmap[0344]←kmap[0304]←04. 'f1.^^D  ’done’ ^f0.'
 kmap[0345]←kmap[0305]←kmap[023]←05. '^f1. -- ^^E or ^^SHF ESC^f0.'
 kmap[0346]←kmap[0306]←kmap[0262]←06. '^f1.≡ -- ^^F or ^^2^f0.'
 kmap[0347]←kmap[0307]←kmap[0273]←07. '^f1.◦ -- ^^G or ^^;^f0.'
 kmap[0353]←kmap[0313]←kmap[0245]←013. '^f1. -- ^^K or ^^SHF5^f0.'
 kmap[0356]←kmap[0316]←kmap[0275]←016. '^f1.≠ -- ^^N or ^^=^f0.'
-kmap[0357]←kmap[0317]←kmap[0242]←017. '^f1.↪ -- ^^O or ^^SHF|^f0.'
+kmap[0357]←kmap[0317]←kmap[0242]←017. '^f1.↪ -- ^^O or ^^SHF’^f0.'
 kmap[0360]←kmap[0320]←kmap[0271]←020. '^f1. -- ^^P or ^^9^f0.'
 kmap[0361]←kmap[0321]←kmap[0261]←021. '^f1.⇑ -- ^^Q or ^^1^f0.'
 kmap[0362]←kmap[0322]←kmap[0300]←022. '^f1.≥ -- ^^R or ^^SHF2^f0.'
@@ -1749,13 +1749,13 @@ kmap[0334]←kmap[0267]←034. '^f1. -- ^^\ or ^^7^f0.'
 kmap[0335]←kmap[0375]←035. '^f1. -- ^^]^f0.'
 kmap[0337]←kmap[0336]←kmap[0222]←kmap[0212]←kmap[022]←kmap[012]←036.
                           '^f1. -- LF or ^^ ← or ^^SHF←^f0.'
-kmap[0247]←0174.            '^f1.| -- SHF\ or ^^|^f0.'
+kmap[0247]←0174.            '^f1.’ -- SHF\ or ^^’^f0.'
 kmap[0257]←0176.            '^f1.~ -- SHF6 or ^^/^f0.'
 kmap[0263]←043.            '^f1.# -- SHF3 or ^^3^f0.'
 kmap[0270]←052.            '^f1.* -- SHF8 or ^^8^f0.'
-kmap[0220]←kmap[0210]←kmap[020]←010. '^f1.ALL BS|S^f0.'
-kmap[0225]←kmap[0215]←kmap[025]←015. '^f1.ALL CR|S^f0.'
-kmap[0240]←kmap[0230]←kmap[030]←040. '^f1.ALL SP|S^f0.'
+kmap[0220]←kmap[0210]←kmap[020]←010. '^f1.ALL BS’S^f0.'
+kmap[0225]←kmap[0215]←kmap[025]←015. '^f1.ALL CR’S^f0.'
+kmap[0240]←kmap[0230]←kmap[030]←040. '^f1.ALL SP’S^f0.'
 
 to filout disp flist i showpretty (☛showpretty ← ∢pretty.
 	dsoff (:disp is string⇒ (☛disp←file disp⇒ () error ☛(file error)))
